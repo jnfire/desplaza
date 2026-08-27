@@ -61,7 +61,7 @@ watch([originLocation, destLocation], async ([orig, dest]) => {
   } else {
     routeData.value = null;
   }
-});
+}, { immediate: true });
 
 const updateFuelPrice = async () => {
   if (!vehicleConfig.value) return;
@@ -71,7 +71,7 @@ const updateFuelPrice = async () => {
     return;
   }
 
-  if (!originLocation.value) return;
+  if (!originLocation.value || provincesList.value.length === 0) return;
 
   const searchStr = originLocation.value.provinceSearch.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   
@@ -87,7 +87,13 @@ const updateFuelPrice = async () => {
   }
 };
 
-watch([originLocation, () => vehicleConfig.value?.fuelType, () => vehicleConfig.value?.priceSource, () => vehicleConfig.value?.manualPrice], updateFuelPrice);
+watch([
+  originLocation, 
+  () => vehicleConfig.value?.fuelType, 
+  () => vehicleConfig.value?.priceSource, 
+  () => vehicleConfig.value?.manualPrice,
+  provincesList
+], updateFuelPrice, { immediate: true });
 
 const onVehicleConfigUpdate = (state: VehicleState) => {
   vehicleConfig.value = state;
