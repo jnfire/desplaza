@@ -7,6 +7,8 @@ import NativeMap from './components/NativeMap.vue';
 import VehicleConfig, { type VehicleState } from './components/VehicleConfig.vue';
 import SourcesModal from './components/SourcesModal.vue';
 import SettingsView from './components/SettingsView.vue';
+import CookieBanner from './components/CookieBanner.vue';
+import { initAnalytics } from './utils/analytics';
 
 import { getRouteData, type RouteData } from './services/routing';
 import { getProvinces, getAverageFuelPriceByProvince, type Province } from './services/miteco';
@@ -164,6 +166,11 @@ const shareRoute = async () => {
   }
 };
 const showSettings = ref(false);
+
+const handleCookieAccept = () => {
+  const gaId = (import.meta.env.VITE_GA_ID as string) || 'G-XXXXXXXXXX';
+  initAnalytics(gaId);
+};
 </script>
 
 <template>
@@ -289,6 +296,7 @@ const showSettings = ref(false);
     <AppFooter @show-sources="showSourcesModal = true" />
     
     <SourcesModal v-if="showSourcesModal" @close="showSourcesModal = false" />
+    <CookieBanner @accept="handleCookieAccept" />
   </div>
 </template>
 
