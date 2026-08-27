@@ -11,6 +11,8 @@ import SettingsView from './components/SettingsView.vue';
 import { getRouteData, type RouteData } from './services/routing';
 import { getProvinces, getAverageFuelPriceByProvince, type Province } from './services/miteco';
 import { calculateCarCosts, type CostCalculationResult } from './utils/costMath';
+import { encodeStateToUrl } from "./services/shareUrl";
+
 
 // State
 const isDarkMode = ref(false);
@@ -108,9 +110,11 @@ const computedCosts = computed<CostCalculationResult | null>(() => {
   );
 });
 
-const resetApp = () => {
-  originLocation.value = null;
-  destLocation.value = null;
+const goHome = () => {
+  showSettings.value = false;
+  if (typeof window !== 'undefined') {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 };
 
 const updateOriginCoords = (pos: { lat: number, lon: number }) => {
@@ -122,7 +126,6 @@ const updateOriginCoords = (pos: { lat: number, lon: number }) => {
 const updateDestCoords = (pos: { lat: number, lon: number }) => {
   if (destLocation.value) {
     destLocation.value = { ...destLocation.value, lat: pos.lat, lon: pos.lon };
-  }
 };
 import { encodeStateToUrl } from './services/shareUrl';
 
@@ -153,7 +156,7 @@ const showSettings = ref(false);
 
 <template>
   <div class="app-wrapper">
-    <AppHeader :showSettings="showSettings" @toggle-settings="showSettings = !showSettings" @home="resetApp" />
+    <AppHeader :showSettings="showSettings" @toggle-settings="showSettings = !showSettings" @home="goHome" />
 
     <main class="app-container">
       <SettingsView v-if="showSettings" :show="showSettings" />
