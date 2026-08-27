@@ -11,8 +11,9 @@ type MessageSchema = typeof en;
 const supportedLocales = ['en', 'es', 'fr', 'de', 'it', 'pt'] as const;
 type SupportedLocale = (typeof supportedLocales)[number];
 
+const savedLocale = localStorage.getItem('app-locale') as SupportedLocale;
 const browserLocale = navigator.language.split('-')[0] as SupportedLocale;
-const initialLocale = supportedLocales.includes(browserLocale) ? browserLocale : 'en';
+const initialLocale = supportedLocales.includes(savedLocale) ? savedLocale : (supportedLocales.includes(browserLocale) ? browserLocale : 'en');
 
 const i18n = createI18n<[MessageSchema], SupportedLocale>({
   legacy: false, // Use Composition API
@@ -30,6 +31,7 @@ const i18n = createI18n<[MessageSchema], SupportedLocale>({
 });
 
 export const setUiLanguage = (lang: SupportedLocale) => {
+  localStorage.setItem('app-locale', lang);
   const globalI18n = i18n.global as any;
   if (globalI18n.locale && typeof globalI18n.locale.value !== 'undefined') {
     globalI18n.locale.value = lang;

@@ -23,7 +23,8 @@ Consultar `docs/PLAN_MVP.md` para ver el detalle de las 4 fases de desarrollo.
 
 ## Estado de Documentación (Estandarización Portafolio)
 - `README.md` (Inglés) y `README-es.md` (Español) adaptados al estándar de la suite `mini_tools` con enlaces cruzados y sección explícita de licencia de portafolio con todos los derechos reservados.
-- `docs/ARCHITECTURE.md` (Inglés) y `docs/ARCHITECTURE-es.md` (Español) estructurados por capas (Servicios, Dominio/Matemáticas, Componentes, i18n, Privacidad y Pruebas).
-- Archivo `LICENSE` con reserva de derechos para portafolio y código abierto a revisión/auditoría.
+- `docs/ARCHITECTURE.md` (Inglés) y `docs/ARCHITECTURE-es.md` (Español) actualizados con todos los cambios recientes de arquitectura (NativeMap interactivo con ajuste de coordenadas, Web Share API para enlaces mágicos, modos de viaje granular ida/vuelta/recurrente, y diseño adaptativo desktop/mobile).
+- Archivo `LICENSE.md` en Markdown independiente con reserva de derechos para portafolio y código abierto a revisión/auditoría.
+- Enlaces del footer ([`AppFooter.vue`](src/components/AppFooter.vue)) sincronizados para apuntar con exactitud a los releases, al repositorio y al archivo `LICENSE.md`.
 
 ¡A por el MVP!

@@ -57,7 +57,7 @@ El proyecto sigue una arquitectura modular y limpia que separa los clientes de s
    ```
 
 ## 📄 Licencia
-Este proyecto es propietario y tiene todos los derechos reservados por Javier Nicolás Pérez Mesa. Se publica exclusivamente con fines de revisión de portafolio, auditoría de código y uso estrictamente personal. Consulta el archivo `LICENSE` para más detalles.
+Este proyecto es propietario y tiene todos los derechos reservados por Javier Nicolás Pérez Mesa. Se publica exclusivamente con fines de revisión de portafolio, auditoría de código y uso estrictamente personal. Consulta [`LICENSE.md`](LICENSE.md) para más detalles.
 
 ---
 Hecho con :heart: 2026.

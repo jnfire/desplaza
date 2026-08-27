@@ -57,7 +57,7 @@ The project follows a clean, modular architecture separating external API servic
    ```
 
 ## 📄 License
-This project is proprietary and all rights are reserved by Javier Nicolás Pérez Mesa. It is published exclusively for portfolio review, code audit, and personal use. See the `LICENSE` file for details.
+This project is proprietary and all rights are reserved by Javier Nicolás Pérez Mesa. It is published exclusively for portfolio review, code audit, and personal use. See [`LICENSE.md`](LICENSE.md) for details.
 
 ---
 Made with :heart: 2026.

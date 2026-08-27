@@ -38,7 +38,7 @@ const emit = defineEmits<{
         </a>
         <span class="footer__divider">|</span>
         <a
-          href="https://github.com/jnfire/desplaza/blob/main/LICENSE"
+          href="https://github.com/jnfire/desplaza/blob/main/LICENSE.md"
           target="_blank"
           rel="noopener noreferrer"
           class="footer__link"
