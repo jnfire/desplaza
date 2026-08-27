@@ -94,6 +94,18 @@ const resetApp = () => {
   originLocation.value = null;
   destLocation.value = null;
 };
+
+const updateOriginCoords = (pos: { lat: number, lon: number }) => {
+  if (originLocation.value) {
+    originLocation.value = { ...originLocation.value, lat: pos.lat, lon: pos.lon };
+  }
+};
+
+const updateDestCoords = (pos: { lat: number, lon: number }) => {
+  if (destLocation.value) {
+    destLocation.value = { ...destLocation.value, lat: pos.lat, lon: pos.lon };
+  }
+};
 </script>
 
 <template>
@@ -119,6 +131,8 @@ const resetApp = () => {
               :destination="destLocation ? { lat: destLocation.lat, lon: destLocation.lon } : undefined" 
               :route-coordinates="routeData?.coordinates"
               :dark-mode="isDarkMode" 
+              @update:origin="updateOriginCoords"
+              @update:destination="updateDestCoords"
             />
           </section>
 

@@ -8,7 +8,10 @@ const emit = defineEmits<{
   <header class="navbar">
     <div class="navbar-container">
       <button class="navbar-brand" @click="emit('home')" aria-label="Desplaza">
-        <h1 class="title">Desplaza</h1>
+        <div>
+          <h1 class="title">Desplaza</h1>
+          <p class="subtitle">Calcula y compara el coste real de tu movilidad.</p>
+        </div>
       </button>
 
       <div class="navbar-actions">
@@ -24,7 +27,7 @@ const emit = defineEmits<{
   border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 2000;
   padding: 0.75rem 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -62,6 +65,15 @@ const emit = defineEmits<{
   letter-spacing: -0.02em;
   color: var(--color-text);
   margin: 0;
+  text-align: left;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0.15rem 0 0 0;
+  font-weight: 400;
+  text-align: left;
 }
 
 .navbar-actions {
