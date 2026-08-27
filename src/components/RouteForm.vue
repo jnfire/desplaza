@@ -78,14 +78,14 @@ const clearDestination = () => {
 <template>
   <div class="route-form">
     <div class="input-group">
-      <label for="origin">Origen</label>
+      <label for="origin">{{ $t("core.origin") }}</label>
       <div class="input-wrapper">
         <input 
           id="origin" 
           type="text" 
           v-model="originInput" 
           @input="onInputOrigin"
-          placeholder="Ej: Calle de Alcalá, Madrid"
+          :placeholder="$t('core.origin_ph')"
           autocomplete="off"
         />
         <button v-if="originInput" class="clear-btn" @click="clearOrigin">×</button>
@@ -104,14 +104,14 @@ const clearDestination = () => {
     </div>
 
     <div class="input-group">
-      <label for="destination">Destino</label>
+      <label for="destination">{{ $t("core.dest") }}</label>
       <div class="input-wrapper">
         <input 
           id="destination" 
           type="text" 
           v-model="destinationInput" 
           @input="onInputDest"
-          placeholder="Ej: Plaza Catalunya, Barcelona"
+          :placeholder="$t('core.dest_ph')"
           autocomplete="off"
         />
         <button v-if="destinationInput" class="clear-btn" @click="clearDestination">×</button>

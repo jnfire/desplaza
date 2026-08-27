@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
 import NativeMap from './components/NativeMap.vue';
@@ -15,6 +16,7 @@ import { encodeStateToUrl } from "./services/shareUrl";
 
 
 // State
+const { t } = useI18n();
 const isDarkMode = ref(false);
 const showSourcesModal = ref(false);
 
@@ -138,13 +140,13 @@ const shareRoute = async () => {
   try {
     if (navigator.share) {
       await navigator.share({
-        title: 'Mi ruta en Desplaza',
-        text: 'Mira lo que me cuesta este trayecto.',
+        title: t('core.share_title'),
+        text: t('core.share_text'),
         url: url
       });
     } else {
       await navigator.clipboard.writeText(url);
-      alert('¡Enlace copiado al portapapeles!');
+      alert(t('core.share_copied'));
     }
   } catch (err) {
     console.error('Error sharing:', err);
@@ -219,53 +221,53 @@ const showSettings = ref(false);
           <!-- Tarjeta de Resultados -->
           <section class="cost-summary" v-if="routeData && currentFuelPrice && computedCosts">
             <div class="summary-header">
-              <h2>Coste de Desplazamiento</h2>
+              <h2>{{ $t("core.calc_cost") }}</h2>
               <div class="header-actions">
-                <button class="miteco-badge" @click="showSourcesModal = true" title="Ver detalles y metodología">
-                  Fuente: {{ vehicleConfig?.priceSource === 'manual' ? 'Manual' : 'MITECO' }} ({{ formatEuroPrice3(currentFuelPrice) }} €/L)
+                <button class="miteco-badge" @click="showSourcesModal = true" :title="$t('footer.methodology')">
+                  {{ $t("core.source_btn") }} {{ vehicleConfig?.priceSource === 'manual' ? 'Manual' : 'MITECO' }} ({{ formatEuroPrice3(currentFuelPrice) }} €/L)
                 </button>
               </div>
             </div>
             
             <div v-if="vehicleConfig?.tripMode === 'ida'" class="cost-numbers single">
               <div class="cost-item main-cost">
-                <span class="cost-label">Solo Ida</span>
+                <span class="cost-label">{{ $t("core.one_way") }}</span>
                 <span class="cost-value">{{ formatEuro(computedCosts.perTrip) }} <small>€</small></span>
               </div>
             </div>
 
             <div v-else-if="vehicleConfig?.tripMode === 'idavuelta'" class="cost-numbers single">
               <div class="cost-item main-cost">
-                <span class="cost-label">Ida y Vuelta</span>
+                <span class="cost-label">{{ $t("core.round_trip") }}</span>
                 <span class="cost-value">{{ formatEuro(computedCosts.perTrip) }} <small>€</small></span>
               </div>
             </div>
 
             <div v-else class="cost-numbers">
               <div class="cost-item">
-                <span class="cost-label">Mensual</span>
+                <span class="cost-label">{{ $t("core.monthly") }}</span>
                 <span class="cost-value">{{ formatEuro(computedCosts.monthly) }} <small>€</small></span>
               </div>
               <div class="cost-item">
-                <span class="cost-label">Anual ({{ vehicleConfig?.activeMonths }} meses)</span>
+                <span class="cost-label">{{ $t("core.annual") }} ({{ vehicleConfig?.activeMonths }})</span>
                 <span class="cost-value">{{ formatEuro(computedCosts.annual) }} <small>€</small></span>
               </div>
             </div>
             
             <div class="cost-details">
-              <p>Distancia de ruta: <strong>{{ formatEuro(routeData.distanceKm) }} km</strong> (sólo ida)</p>
+              <p>{{ $t("core.route_dist") }} <strong>{{ formatEuro(routeData.distanceKm) }} km</strong> (sólo ida)</p>
               <p v-if="vehicleConfig?.includeWear" class="text-muted">
-                * Incluye un recargo estimado de 0,08 €/km por desgaste, seguro y mantenimiento.
+                {{ $t("core.wear_note") }}
               </p>
             </div>
           </section>
           
           <div v-else-if="isCalculating" class="placeholder-card">
-            <p>Calculando la mejor ruta y precios en tiempo real...</p>
+            <p>{{ $t("core.calc_loading") }}</p>
           </div>
           
           <div v-else class="placeholder-card">
-            <p>Define el origen y el destino para ver el coste real de tu desplazamiento.</p>
+            <p>{{ $t("core.define_route") }}</p>
           </div>
         </div>
       </div>

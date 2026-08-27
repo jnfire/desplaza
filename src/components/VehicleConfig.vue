@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import CustomSelect from './CustomSelect.vue';
 
 export interface VehicleState {
   fuelType: string;
@@ -28,6 +30,21 @@ const tripMode = ref<'ida' | 'idavuelta' | 'ciclo'>(props.initialState?.tripMode
 const daysPerWeek = ref(props.initialState?.daysPerWeek || 5);
 const activeMonths = ref(props.initialState?.activeMonths || 11);
 const includeWear = ref(props.initialState?.includeWear ?? true);
+
+const { t } = useI18n();
+
+const priceSourceOptions = computed(() => [
+  { value: 'auto', label: t('core.source_auto') || 'Automático (España)' },
+  { value: 'manual', label: t('core.source_manual') || 'Personalizado' }
+]);
+
+const fuelOptions = computed(() => [
+  { value: 'Precio Gasolina 95 E5', label: t('core.fuel_gas95') || 'Gasolina 95' },
+  { value: 'Precio Gasolina 98 E5', label: t('core.fuel_gas98') || 'Gasolina 98' },
+  { value: 'Precio Gasoleo A', label: t('core.fuel_diesel') || 'Diésel' },
+  { value: 'Precio Gasoleo Premium', label: t('core.fuel_diesel_prem') || 'Diésel Premium' },
+  { value: 'Precio Gases licuados del petróleo', label: t('core.fuel_glp') || 'GLP' }
+]);
 
 const emitUpdate = () => {
   emit('update', {
@@ -60,11 +77,11 @@ emitUpdate();
       <div class="mode-selector">
         <label class="radio-label">
           <input type="radio" value="ida" v-model="tripMode" />
-          <div class="radio-btn">Solo Ida</div>
+          <div class="radio-btn">{{ $t("core.one_way") }}</div>
         </label>
         <label class="radio-label">
           <input type="radio" value="idavuelta" v-model="tripMode" />
-          <div class="radio-btn">Ida y Vuelta</div>
+          <div class="radio-btn">{{ $t("core.round_trip") }}</div>
         </label>
         <label class="radio-label">
           <input type="radio" value="ciclo" v-model="tripMode" />
@@ -93,7 +110,7 @@ emitUpdate();
             min="1" 
             max="12" 
             v-model="activeMonths" 
-            title="Meses en los que realizas esta rutina (excluye vacaciones)"
+            :title="$t('core.active_months_desc')"
           />
         </div>
       </div>
@@ -108,25 +125,16 @@ emitUpdate();
       <div class="grid-layout">
         <div class="input-group">
           <label for="priceSource">Origen del Precio</label>
-          <select id="priceSource" v-model="priceSource">
-            <option value="auto">Automático (España)</option>
-            <option value="manual">Personalizado</option>
-          </select>
+          <CustomSelect id="priceSource" v-model="priceSource" :options="priceSourceOptions" />
         </div>
 
         <div v-if="priceSource === 'auto'" class="input-group">
-          <label for="fuelType">Combustible</label>
-          <select id="fuelType" v-model="fuelType">
-            <option value="Precio Gasolina 95 E5">Gasolina 95</option>
-            <option value="Precio Gasolina 98 E5">Gasolina 98</option>
-            <option value="Precio Gasoleo A">Diésel</option>
-            <option value="Precio Gasoleo Premium">Diésel Premium</option>
-            <option value="Precio Gases licuados del petróleo">GLP</option>
-          </select>
+          <label for="fuelType">{{ $t("core.fuel_type") }}</label>
+          <CustomSelect id="fuelType" v-model="fuelType" :options="fuelOptions" />
         </div>
 
         <div v-else class="input-group">
-          <label for="manualPrice">Precio (€/L)</label>
+          <label for="manualPrice">{{ $t("core.manual_price") }}</label>
           <input 
             id="manualPrice" 
             type="number" 
@@ -152,7 +160,7 @@ emitUpdate();
         <label class="checkbox-label">
           <input type="checkbox" v-model="includeWear" />
           <span class="checkbox-custom"></span>
-          Incluir desgaste y mantenimiento (0,08 €/km)
+          {{ $t("core.include_wear") }}
         </label>
       </div>
     </div>
