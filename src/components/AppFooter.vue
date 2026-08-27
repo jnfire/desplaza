@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const appVersion = __APP_VERSION__;
+
 const emit = defineEmits<{
   (e: 'show-sources'): void;
 }>();
@@ -10,13 +12,39 @@ const emit = defineEmits<{
       <p class="footer__text">
         Desplaza MVP
         <span class="footer__version">
-          • v1.0.0
+          •
+          <a
+            :href="`https://github.com/jnfire/desplaza/releases/tag/v${appVersion}`"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer__version-link"
+          >
+            v{{ appVersion }}
+          </a>
         </span>
       </p>
       <div class="footer__links">
-        <button class="footer__link" @click="emit('show-sources')">
-          Fuentes y Metodología
+        <button class="footer__link btn-link" @click="emit('show-sources')">
+          Metodología
         </button>
+        <span class="footer__divider">|</span>
+        <a
+          href="https://github.com/jnfire/desplaza"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="footer__link"
+        >
+          Código Fuente
+        </a>
+        <span class="footer__divider">|</span>
+        <a
+          href="https://github.com/jnfire/desplaza/blob/main/LICENSE"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="footer__link"
+        >
+          Licencia
+        </a>
       </div>
     </div>
   </footer>
@@ -43,6 +71,17 @@ const emit = defineEmits<{
   opacity: 0.8;
 }
 
+.footer__version-link {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.footer__version-link:hover {
+  text-decoration: underline;
+  opacity: 1;
+}
+
 .footer__links {
   display: flex;
   justify-content: center;
@@ -55,17 +94,19 @@ const emit = defineEmits<{
   font-size: 0.85rem;
   font-weight: 500;
   text-decoration: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  font-family: inherit;
   transition: opacity 0.2s;
 }
 
 .footer__link:hover {
   opacity: 0.7;
-  text-decoration: underline;
+}
+
+.btn-link {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
 }
 
 .footer__divider {

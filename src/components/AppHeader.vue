@@ -1,6 +1,13 @@
 <script setup lang="ts">
+import SettingsIcon from './SettingsIcon.vue';
+
+defineProps<{
+  showSettings: boolean;
+}>();
+
 const emit = defineEmits<{
   (e: 'home'): void;
+  (e: 'toggle-settings'): void;
 }>();
 </script>
 
@@ -15,7 +22,15 @@ const emit = defineEmits<{
       </button>
 
       <div class="navbar-actions">
-        <!-- Puedes añadir iconos o acciones aquí -->
+        <button
+          class="btn-secondary config-toggle"
+          :class="{ 'config-toggle--active': showSettings }"
+          @click="emit('toggle-settings')"
+          aria-label="Abrir configuración"
+          :aria-expanded="showSettings"
+        >
+          <SettingsIcon class="icon" />
+        </button>
       </div>
     </div>
   </header>
@@ -37,8 +52,6 @@ const emit = defineEmits<{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .navbar-brand {
@@ -80,6 +93,42 @@ const emit = defineEmits<{
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.config-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.config-toggle:hover {
+  background-color: var(--color-bg-hover, rgba(0,0,0,0.05));
+}
+
+.config-toggle--active {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+.config-toggle--active:hover {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  opacity: 0.9;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
 }
 
 @media (max-width: 600px) {

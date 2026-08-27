@@ -1,5 +1,9 @@
 import { createApp } from 'vue'
 import './assets/styles/main.css'
 import App from './App.vue'
+import i18n from './i18n'
+import { initTheme } from './utils/theme'
 
-createApp(App).mount('#app')
+initTheme()
+
+createApp(App).use(i18n).mount('#app')

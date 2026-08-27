@@ -147,7 +147,7 @@ function updateMap() {
 <style>
 .map-container {
   width: 100%;
-  height: 400px;
+  height: 100%;
   background-color: var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -157,7 +157,6 @@ function updateMap() {
 
 @media (min-width: 900px) {
   .map-container {
-    height: 100%;
     min-height: 500px;
   }
 }

@@ -6,6 +6,7 @@ import NativeMap from './components/NativeMap.vue';
 import RouteForm from './components/RouteForm.vue';
 import VehicleConfig, { type VehicleState } from './components/VehicleConfig.vue';
 import SourcesModal from './components/SourcesModal.vue';
+import SettingsView from './components/SettingsView.vue';
 
 import { getRouteData, type RouteData } from './services/routing';
 import { getProvinces, getAverageFuelPriceByProvince, type Province } from './services/miteco';
@@ -23,13 +24,22 @@ const provincesList = ref<Province[]>([]);
 const currentFuelPrice = ref<number | null>(null);
 const isCalculating = ref(false);
 
+const isDesktop = ref(typeof window !== 'undefined' ? window.innerWidth >= 900 : true);
+const isMapVisibleMobile = ref(false);
+
 onMounted(async () => {
-  if (typeof window !== 'undefined' && window.matchMedia) {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    isDarkMode.value = mediaQuery.matches;
-    mediaQuery.addEventListener('change', e => {
-      isDarkMode.value = e.matches;
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', () => {
+      isDesktop.value = window.innerWidth >= 900;
     });
+    
+    if (window.matchMedia) {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      isDarkMode.value = mediaQuery.matches;
+      mediaQuery.addEventListener('change', e => {
+        isDarkMode.value = e.matches;
+      });
+    }
   }
   provincesList.value = await getProvinces();
 });
@@ -45,7 +55,15 @@ watch([originLocation, destLocation], async ([orig, dest]) => {
 });
 
 const updateFuelPrice = async () => {
-  if (!originLocation.value || !vehicleConfig.value) return;
+  if (!vehicleConfig.value) return;
+
+  if (vehicleConfig.value.priceSource === 'manual') {
+    currentFuelPrice.value = vehicleConfig.value.manualPrice;
+    return;
+  }
+
+  if (!originLocation.value) return;
+
   const searchStr = originLocation.value.provinceSearch.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   
   const matchedProv = provincesList.value.find(p => {
@@ -60,7 +78,7 @@ const updateFuelPrice = async () => {
   }
 };
 
-watch([originLocation, () => vehicleConfig.value?.fuelType], updateFuelPrice);
+watch([originLocation, () => vehicleConfig.value?.fuelType, () => vehicleConfig.value?.priceSource, () => vehicleConfig.value?.manualPrice], updateFuelPrice);
 
 const onVehicleConfigUpdate = (state: VehicleState) => {
   vehicleConfig.value = state;
@@ -106,43 +124,108 @@ const updateDestCoords = (pos: { lat: number, lon: number }) => {
     destLocation.value = { ...destLocation.value, lat: pos.lat, lon: pos.lon };
   }
 };
+import { encodeStateToUrl } from './services/shareUrl';
+
+const shareRoute = async () => {
+  const url = encodeStateToUrl({
+    origin: originLocation.value ? { lat: originLocation.value.lat, lon: originLocation.value.lon, label: originLocation.value.label } : undefined,
+    destination: destLocation.value ? { lat: destLocation.value.lat, lon: destLocation.value.lon, label: destLocation.value.label } : undefined,
+    vehicleConfig: vehicleConfig.value || undefined
+  });
+  
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: 'Mi ruta en Desplaza',
+        text: 'Mira lo que me cuesta este trayecto.',
+        url: url
+      });
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert('¡Enlace copiado al portapapeles!');
+    }
+  } catch (err) {
+    console.error('Error sharing:', err);
+  }
+};
+const showSettings = ref(false);
 </script>
 
 <template>
   <div class="app-wrapper">
-    <AppHeader @home="resetApp" />
+    <AppHeader :showSettings="showSettings" @toggle-settings="showSettings = !showSettings" @home="resetApp" />
 
     <main class="app-container">
-      <div class="layout-grid">
+      <SettingsView v-if="showSettings" :show="showSettings" />
+
+      <div class="layout-grid" v-else>
         <!-- Columna Izquierda: Formularios -->
         <div class="forms-column">
           <RouteForm 
             @update:origin="originLocation = $event"
             @update:destination="destLocation = $event"
           />
+
+          <!-- Mobile Map Section -->
+          <div v-if="!isDesktop" class="mobile-map-section">
+            <button 
+              class="map-toggle-btn" 
+              @click="isMapVisibleMobile = !isMapVisibleMobile"
+              :aria-expanded="isMapVisibleMobile"
+            >
+              <span>{{ isMapVisibleMobile ? 'Ocultar mapa' : 'Ver y ajustar en el mapa' }}</span>
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                :style="{ transform: isMapVisibleMobile ? 'rotate(180deg)' : 'rotate(0)' }"
+                style="transition: transform 0.2s;"
+              >
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+
+            <div class="map-wrapper" v-if="isMapVisibleMobile">
+              <NativeMap 
+                :origin="originLocation ? { lat: originLocation.lat, lon: originLocation.lon } : undefined" 
+                :destination="destLocation ? { lat: destLocation.lat, lon: destLocation.lon } : undefined" 
+                :route-coordinates="routeData?.coordinates"
+                :dark-mode="isDarkMode" 
+                @update:origin="updateOriginCoords"
+                @update:destination="updateDestCoords"
+              />
+            </div>
+          </div>
+
           <VehicleConfig @update="onVehicleConfigUpdate" />
         </div>
         
         <!-- Columna Derecha: Mapa y Resultados -->
         <div class="results-column">
-          <section class="map-section">
-            <NativeMap 
-              :origin="originLocation ? { lat: originLocation.lat, lon: originLocation.lon } : undefined" 
-              :destination="destLocation ? { lat: destLocation.lat, lon: destLocation.lon } : undefined" 
-              :route-coordinates="routeData?.coordinates"
-              :dark-mode="isDarkMode" 
-              @update:origin="updateOriginCoords"
-              @update:destination="updateDestCoords"
-            />
+          <!-- Desktop Map Section -->
+          <section class="map-section" v-if="isDesktop">
+            <div class="map-wrapper">
+              <NativeMap 
+                :origin="originLocation ? { lat: originLocation.lat, lon: originLocation.lon } : undefined" 
+                :destination="destLocation ? { lat: destLocation.lat, lon: destLocation.lon } : undefined" 
+                :route-coordinates="routeData?.coordinates"
+                :dark-mode="isDarkMode" 
+                @update:origin="updateOriginCoords"
+                @update:destination="updateDestCoords"
+              />
+            </div>
           </section>
 
           <!-- Tarjeta de Resultados -->
           <section class="cost-summary" v-if="routeData && currentFuelPrice && computedCosts">
             <div class="summary-header">
               <h2>Coste de Desplazamiento</h2>
-              <button class="miteco-badge" @click="showSourcesModal = true" title="Ver detalles y metodología">
-                Fuente: MITECO ({{ formatEuroPrice3(currentFuelPrice) }} €/L)
-              </button>
+              <div class="header-actions">
+                <button class="icon-button" @click="shareRoute" title="Compartir Ruta" aria-label="Compartir enlace de esta ruta">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                </button>
+                <button class="miteco-badge" @click="showSourcesModal = true" title="Ver detalles y metodología">
+                  Fuente: {{ vehicleConfig?.priceSource === 'manual' ? 'Manual' : 'MITECO' }} ({{ formatEuroPrice3(currentFuelPrice) }} €/L)
+                </button>
+              </div>
             </div>
             
             <div v-if="vehicleConfig?.tripMode === 'ida'" class="cost-numbers single">
@@ -228,6 +311,37 @@ const updateDestCoords = (pos: { lat: number, lon: number }) => {
   gap: 1.5rem;
 }
 
+.map-toggle-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.map-toggle-btn:hover {
+  background: var(--color-bg-hover, rgba(0,0,0,0.02));
+}
+
+.map-wrapper {
+  height: 400px;
+}
+
+@media (min-width: 900px) {
+  .map-wrapper {
+    height: 100%;
+  }
+}
+
 .cost-summary {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
@@ -243,6 +357,30 @@ const updateDestCoords = (pos: { lat: number, lon: number }) => {
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
   gap: 1rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon-button {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.icon-button:hover {
+  background: var(--color-border);
+  color: var(--color-text);
 }
 
 .summary-header h2 {

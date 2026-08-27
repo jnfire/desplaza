@@ -8,6 +8,8 @@ export interface VehicleState {
   daysPerWeek: number;
   activeMonths: number;
   includeWear: boolean;
+  priceSource: 'auto' | 'manual';
+  manualPrice: number;
 }
 
 const props = defineProps<{
@@ -18,6 +20,8 @@ const emit = defineEmits<{
   (e: 'update', state: VehicleState): void;
 }>();
 
+const priceSource = ref<'auto' | 'manual'>(props.initialState?.priceSource || 'auto');
+const manualPrice = ref(props.initialState?.manualPrice || 1.55);
 const fuelType = ref(props.initialState?.fuelType || 'Precio Gasolina 95 E5');
 const consumption = ref(props.initialState?.consumption || 6.5);
 const tripMode = ref<'ida' | 'idavuelta' | 'ciclo'>(props.initialState?.tripMode || 'ciclo');
@@ -32,11 +36,13 @@ const emitUpdate = () => {
     tripMode: tripMode.value,
     daysPerWeek: daysPerWeek.value,
     activeMonths: activeMonths.value,
-    includeWear: includeWear.value
+    includeWear: includeWear.value,
+    priceSource: priceSource.value,
+    manualPrice: manualPrice.value
   });
 };
 
-watch([fuelType, consumption, tripMode, daysPerWeek, activeMonths, includeWear], emitUpdate, { deep: true });
+watch([fuelType, consumption, tripMode, daysPerWeek, activeMonths, includeWear, priceSource, manualPrice], emitUpdate, { deep: true });
 
 emitUpdate();
 </script>
@@ -101,6 +107,14 @@ emitUpdate();
 
       <div class="grid-layout">
         <div class="input-group">
+          <label for="priceSource">Origen del Precio</label>
+          <select id="priceSource" v-model="priceSource">
+            <option value="auto">Automático (España)</option>
+            <option value="manual">Personalizado</option>
+          </select>
+        </div>
+
+        <div v-if="priceSource === 'auto'" class="input-group">
           <label for="fuelType">Combustible</label>
           <select id="fuelType" v-model="fuelType">
             <option value="Precio Gasolina 95 E5">Gasolina 95</option>
@@ -109,6 +123,17 @@ emitUpdate();
             <option value="Precio Gasoleo Premium">Diésel Premium</option>
             <option value="Precio Gases licuados del petróleo">GLP</option>
           </select>
+        </div>
+
+        <div v-else class="input-group">
+          <label for="manualPrice">Precio (€/L)</label>
+          <input 
+            id="manualPrice" 
+            type="number" 
+            step="0.01" 
+            min="0" 
+            v-model="manualPrice" 
+          />
         </div>
 
         <div class="input-group">
