@@ -2,6 +2,7 @@
 import { ref, watch, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CustomSelect from './CustomSelect.vue';
+import RouteForm from './RouteForm.vue';
 
 export interface VehicleState {
   fuelType: string;
@@ -20,6 +21,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update', state: VehicleState): void;
+  (e: 'update:origin', location: { lat: number; lon: number; label: string; provinceSearch: string } | null): void;
+  (e: 'update:destination', location: { lat: number; lon: number; label: string; provinceSearch: string } | null): void;
 }>();
 
 const priceSource = ref<'auto' | 'manual'>(props.initialState?.priceSource || 'auto');
@@ -72,6 +75,11 @@ emitUpdate();
       <div class="config-header">
         <h3>{{ $t("core.trip_details") }}</h3>
       </div>
+      
+      <RouteForm 
+        @update:origin="emit('update:origin', $event)"
+        @update:destination="emit('update:destination', $event)"
+      />
       
       <!-- Modo de Viaje -->
       <div class="mode-selector">

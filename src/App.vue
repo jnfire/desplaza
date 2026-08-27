@@ -4,7 +4,6 @@ import { useI18n } from 'vue-i18n';
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
 import NativeMap from './components/NativeMap.vue';
-import RouteForm from './components/RouteForm.vue';
 import VehicleConfig, { type VehicleState } from './components/VehicleConfig.vue';
 import SourcesModal from './components/SourcesModal.vue';
 import SettingsView from './components/SettingsView.vue';
@@ -194,12 +193,11 @@ const showSettings = ref(false);
             </div>
           </div>
 
-          <RouteForm 
+          <VehicleConfig 
+            @update="onVehicleConfigUpdate" 
             @update:origin="originLocation = $event"
             @update:destination="destLocation = $event"
           />
-
-          <VehicleConfig @update="onVehicleConfigUpdate" />
         </div>
         
         <!-- Columna Derecha: Mapa y Resultados -->
