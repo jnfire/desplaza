@@ -1,7 +1,7 @@
 {
   "header": {
-    "title": "Base64 to File",
-    "subtitle": "Convert your Base64 strings to files instantly and securely. Local-first and no registration.",
+    "title": "Desplaza",
+    "subtitle": "Calculate and compare the real cost of your mobility.",
     "badges": {
       "auditable": "Auditable",
       "privacy": "Local-First",
@@ -52,9 +52,10 @@
     "decline": "Decline"
   },
   "footer": {
-    "text": "Local-first development. Your data, your control.",
-    "source": "View Source Code",
-    "license": "All Rights Reserved"
+    "text": "Desplaza MVP",
+    "source": "Source Code",
+    "license": "All rights reserved",
+    "methodology": "Methodology"
   },
   "settings": {
     "title": "Settings",

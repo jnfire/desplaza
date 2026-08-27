@@ -161,11 +161,6 @@ const showSettings = ref(false);
       <div class="layout-grid" v-else>
         <!-- Columna Izquierda: Formularios -->
         <div class="forms-column">
-          <RouteForm 
-            @update:origin="originLocation = $event"
-            @update:destination="destLocation = $event"
-          />
-
           <!-- Mobile Map Section -->
           <div v-if="!isDesktop" class="mobile-map-section">
             <button 
@@ -194,6 +189,11 @@ const showSettings = ref(false);
               />
             </div>
           </div>
+
+          <RouteForm 
+            @update:origin="originLocation = $event"
+            @update:destination="destLocation = $event"
+          />
 
           <VehicleConfig @update="onVehicleConfigUpdate" />
         </div>

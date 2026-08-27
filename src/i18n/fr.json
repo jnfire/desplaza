@@ -1,7 +1,7 @@
 {
   "header": {
-    "title": "Base64 to File",
-    "subtitle": "Convertissez vos chaînes Base64 en fichiers instantanément et en toute sécurité. Local-first et sans inscription.",
+    "title": "Desplaza",
+    "subtitle": "Calculez et comparez le coût réel de votre mobilité.",
     "badges": {
       "auditable": "Auditable",
       "privacy": "Local-First",
@@ -52,9 +52,10 @@
     "decline": "Refuser"
   },
   "footer": {
-    "text": "Développement local-first. Vos données, votre contrôle.",
-    "source": "Voir le Code Source",
-    "license": "Tous Droits Réservés"
+    "text": "Desplaza MVP",
+    "source": "Code Source",
+    "license": "Tous droits réservés",
+    "methodology": "Méthodologie"
   },
   "settings": {
     "title": "Paramètres",

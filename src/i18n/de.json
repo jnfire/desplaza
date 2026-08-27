@@ -1,7 +1,7 @@
 {
   "header": {
-    "title": "Base64 to File",
-    "subtitle": "Konvertieren Sie Ihre Base64-Zeichenfolgen sofort und sicher in Dateien. Local-First und ohne Registrierung.",
+    "title": "Desplaza",
+    "subtitle": "Berechnen und vergleichen Sie die wahren Kosten Ihrer Mobilität.",
     "badges": {
       "auditable": "Überprüfbar",
       "privacy": "Local-First",
@@ -52,9 +52,10 @@
     "decline": "Ablehnen"
   },
   "footer": {
-    "text": "Local-First-Entwicklung. Ihre Daten, Ihre Kontrolle.",
-    "source": "Quellcode Anzeigen",
-    "license": "Alle Rechte Vorbehalten"
+    "text": "Desplaza MVP",
+    "source": "Quellcode",
+    "license": "Alle Rechte vorbehalten",
+    "methodology": "Methodik"
   },
   "settings": {
     "title": "Einstellungen",

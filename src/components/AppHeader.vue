@@ -14,10 +14,10 @@ const emit = defineEmits<{
 <template>
   <header class="navbar">
     <div class="navbar-container">
-      <button class="navbar-brand" @click="emit('home')" aria-label="Desplaza">
+      <button class="navbar-brand" @click="emit('home')" :aria-label="$t('header.title')">
         <div>
-          <h1 class="title">Desplaza</h1>
-          <p class="subtitle">Calcula y compara el coste real de tu movilidad.</p>
+          <h1 class="title">{{ $t('header.title') }}</h1>
+          <p class="subtitle">{{ $t('header.subtitle') }}</p>
         </div>
       </button>
 

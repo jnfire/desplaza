@@ -10,7 +10,7 @@ const emit = defineEmits<{
   <footer class="footer">
     <div class="footer__content">
       <p class="footer__text">
-        Desplaza MVP
+        {{ $t('footer.text') }}
         <span class="footer__version">
           •
           <a
@@ -25,7 +25,7 @@ const emit = defineEmits<{
       </p>
       <div class="footer__links">
         <button class="footer__link btn-link" @click="emit('show-sources')">
-          Metodología
+          {{ $t('footer.methodology') }}
         </button>
         <span class="footer__divider">|</span>
         <a
@@ -34,7 +34,7 @@ const emit = defineEmits<{
           rel="noopener noreferrer"
           class="footer__link"
         >
-          Código Fuente
+          {{ $t('footer.source') }}
         </a>
         <span class="footer__divider">|</span>
         <a
@@ -43,7 +43,7 @@ const emit = defineEmits<{
           rel="noopener noreferrer"
           class="footer__link"
         >
-          Licencia
+          {{ $t('footer.license') }}
         </a>
       </div>
     </div>

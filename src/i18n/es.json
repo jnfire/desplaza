@@ -1,7 +1,7 @@
 {
   "header": {
-    "title": "Base64 to File",
-    "subtitle": "Convierte tus cadenas Base64 a archivos de forma instantánea y segura. Local-first y sin registro.",
+    "title": "Desplaza",
+    "subtitle": "Calcula y compara el coste real de tu movilidad.",
     "badges": {
       "auditable": "Auditable",
       "privacy": "Local-First",
@@ -52,9 +52,10 @@
     "decline": "Rechazar"
   },
   "footer": {
-    "text": "Desarrollo local-first. Tus datos, tu control.",
-    "source": "Ver Código Fuente",
-    "license": "Derechos Reservados"
+    "text": "Desplaza MVP",
+    "source": "Código Fuente",
+    "license": "Derechos Reservados",
+    "methodology": "Metodología"
   },
   "settings": {
     "title": "Configuración",

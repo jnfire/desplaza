@@ -21,4 +21,9 @@
 ## Roadmap MVP
 Consultar `docs/PLAN_MVP.md` para ver el detalle de las 4 fases de desarrollo.
 
+## Estado de Documentación (Estandarización Portafolio)
+- `README.md` (Inglés) y `README-es.md` (Español) adaptados al estándar de la suite `mini_tools` con enlaces cruzados y sección explícita de licencia de portafolio con todos los derechos reservados.
+- `docs/ARCHITECTURE.md` (Inglés) y `docs/ARCHITECTURE-es.md` (Español) estructurados por capas (Servicios, Dominio/Matemáticas, Componentes, i18n, Privacidad y Pruebas).
+- Archivo `LICENSE` con reserva de derechos para portafolio y código abierto a revisión/auditoría.
+
 ¡A por el MVP!
