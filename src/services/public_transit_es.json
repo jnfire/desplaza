@@ -1,0 +1,28 @@
+{
+  "rules": [
+    {
+      "id": "urban",
+      "name": "Abono Urbano Estándar",
+      "maxDistanceKm": 10,
+      "monthlyPrice": 40.00
+    },
+    {
+      "id": "metropolitan",
+      "name": "Abono Metropolitano (Interurbano)",
+      "maxDistanceKm": 30,
+      "monthlyPrice": 65.00
+    },
+    {
+      "id": "cercanias",
+      "name": "Abono Cercanías Renfe",
+      "maxDistanceKm": 80,
+      "monthlyPrice": 90.00
+    },
+    {
+      "id": "media-distancia",
+      "name": "Bono Media Distancia / Regional",
+      "maxDistanceKm": 9999,
+      "monthlyPrice": 200.00
+    }
+  ]
+}

@@ -9,11 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.4.0",
-    "leaflet": "^1.9.4"
+    "vue": "^3.4.0"
   },
   "devDependencies": {
-    "@types/leaflet": "^1.9.8",
     "@types/node": "^20.0.0",
     "@vitejs/plugin-vue": "^5.0.0",
     "typescript": "^5.2.2",
