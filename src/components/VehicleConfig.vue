@@ -70,7 +70,7 @@ emitUpdate();
     <!-- CARD 1: CONFIGURACIÓN DEL VIAJE -->
     <div class="config-card">
       <div class="config-header">
-        <h3>Detalles del Viaje</h3>
+        <h3>{{ $t("core.trip_details") }}</h3>
       </div>
       
       <!-- Modo de Viaje -->
@@ -85,14 +85,14 @@ emitUpdate();
         </label>
         <label class="radio-label">
           <input type="radio" value="ciclo" v-model="tripMode" />
-          <div class="radio-btn">Rutina</div>
+          <div class="radio-btn">{{ $t("core.routine") }}</div>
         </label>
       </div>
 
       <!-- Controles de Ciclo Repetitivo -->
       <div v-if="tripMode === 'ciclo'" class="grid-layout cycle-controls">
         <div class="input-group">
-          <label for="daysPerWeek">Días a la semana</label>
+          <label for="daysPerWeek">{{ $t("core.days_week") }}</label>
           <input 
             id="daysPerWeek" 
             type="number" 
@@ -103,7 +103,7 @@ emitUpdate();
         </div>
 
         <div class="input-group">
-          <label for="activeMonths">Meses al año</label>
+          <label for="activeMonths">{{ $t("core.months_year") }}</label>
           <input 
             id="activeMonths" 
             type="number" 
@@ -119,12 +119,12 @@ emitUpdate();
     <!-- CARD 2: CONFIGURACIÓN DEL VEHÍCULO -->
     <div class="config-card">
       <div class="config-header">
-        <h3>Tu Vehículo</h3>
+        <h3>{{ $t("core.your_vehicle") }}</h3>
       </div>
 
       <div class="grid-layout">
         <div class="input-group">
-          <label for="priceSource">Origen del Precio</label>
+          <label for="priceSource">{{ $t("core.price_origin") }}</label>
           <CustomSelect id="priceSource" v-model="priceSource" :options="priceSourceOptions" />
         </div>
 
@@ -145,7 +145,7 @@ emitUpdate();
         </div>
 
         <div class="input-group">
-          <label for="consumption">Consumo (L/100km)</label>
+          <label for="consumption">{{ $t("core.consumption_short") }}</label>
           <input 
             id="consumption" 
             type="number" 
