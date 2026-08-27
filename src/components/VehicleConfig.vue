@@ -17,6 +17,8 @@ export interface VehicleState {
 
 const props = defineProps<{
   initialState?: Partial<VehicleState>;
+  originLabel?: string;
+  destinationLabel?: string;
 }>();
 
 const emit = defineEmits<{
@@ -77,6 +79,8 @@ emitUpdate();
       </div>
       
       <RouteForm 
+        :origin-label="originLabel"
+        :destination-label="destinationLabel"
         @update:origin="emit('update:origin', $event)"
         @update:destination="emit('update:destination', $event)"
       />

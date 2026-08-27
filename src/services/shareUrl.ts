@@ -37,3 +37,42 @@ export const encodeStateToUrl = (state: AppState): string => {
   url.search = params.toString();
   return url.toString();
 };
+
+export const decodeUrlToState = (): AppState | null => {
+  const params = new URLSearchParams(window.location.search);
+  
+  if (!params.has('vc_t') && !params.has('o_lat')) return null;
+
+  const state: AppState = {};
+
+  if (params.has('o_lat') && params.has('o_lon')) {
+    state.origin = {
+      lat: parseFloat(params.get('o_lat')!),
+      lon: parseFloat(params.get('o_lon')!),
+      label: params.get('o_lbl') || ''
+    };
+  }
+
+  if (params.has('d_lat') && params.has('d_lon')) {
+    state.destination = {
+      lat: parseFloat(params.get('d_lat')!),
+      lon: parseFloat(params.get('d_lon')!),
+      label: params.get('d_lbl') || ''
+    };
+  }
+
+  if (params.has('vc_t')) {
+    state.vehicleConfig = {
+      tripMode: params.get('vc_t') as any,
+      fuelType: params.get('vc_f') || 'Precio Gasolina 95 E5',
+      consumption: parseFloat(params.get('vc_c') || '6.5'),
+      includeWear: params.get('vc_w') === '1',
+      daysPerWeek: parseInt(params.get('vc_d') || '5', 10),
+      activeMonths: parseInt(params.get('vc_m') || '11', 10),
+      priceSource: (params.get('vc_s') as any) || 'auto',
+      manualPrice: parseFloat(params.get('vc_p') || '1.55')
+    };
+  }
+
+  return state;
+};

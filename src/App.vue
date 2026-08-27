@@ -11,7 +11,7 @@ import SettingsView from './components/SettingsView.vue';
 import { getRouteData, type RouteData } from './services/routing';
 import { getProvinces, getAverageFuelPriceByProvince, type Province } from './services/miteco';
 import { calculateCarCosts, type CostCalculationResult } from './utils/costMath';
-import { encodeStateToUrl } from "./services/shareUrl";
+import { encodeStateToUrl, decodeUrlToState } from "./services/shareUrl";
 
 
 // State
@@ -19,10 +19,16 @@ const { t } = useI18n();
 const isDarkMode = ref(false);
 const showSourcesModal = ref(false);
 
-const originLocation = ref<{ lat: number; lon: number; label: string; provinceSearch: string } | null>(null);
-const destLocation = ref<{ lat: number; lon: number; label: string; provinceSearch: string } | null>(null);
+const initialUrlState = typeof window !== 'undefined' ? decodeUrlToState() : null;
+
+const originLocation = ref<{ lat: number; lon: number; label: string; provinceSearch: string } | null>(
+  initialUrlState?.origin ? { ...initialUrlState.origin, provinceSearch: initialUrlState.origin.label } : null
+);
+const destLocation = ref<{ lat: number; lon: number; label: string; provinceSearch: string } | null>(
+  initialUrlState?.destination ? { ...initialUrlState.destination, provinceSearch: initialUrlState.destination.label } : null
+);
 const routeData = ref<RouteData | null>(null);
-const vehicleConfig = ref<VehicleState | null>(null);
+const vehicleConfig = ref<VehicleState | null>(initialUrlState?.vehicleConfig || null);
 const provincesList = ref<Province[]>([]);
 const currentFuelPrice = ref<number | null>(null);
 const isCalculating = ref(false);
@@ -194,6 +200,9 @@ const showSettings = ref(false);
           </div>
 
           <VehicleConfig 
+            :initial-state="initialUrlState?.vehicleConfig || undefined"
+            :origin-label="originLocation?.label"
+            :destination-label="destLocation?.label"
             @update="onVehicleConfigUpdate" 
             @update:origin="originLocation = $event"
             @update:destination="destLocation = $event"
