@@ -111,9 +111,8 @@ const computedCosts = computed<CostCalculationResult | null>(() => {
 });
 
 const goHome = () => {
-  showSettings.value = false;
   if (typeof window !== 'undefined') {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.location.href = window.location.pathname;
   }
 };
 
@@ -126,8 +125,8 @@ const updateOriginCoords = (pos: { lat: number, lon: number }) => {
 const updateDestCoords = (pos: { lat: number, lon: number }) => {
   if (destLocation.value) {
     destLocation.value = { ...destLocation.value, lat: pos.lat, lon: pos.lon };
+  }
 };
-import { encodeStateToUrl } from './services/shareUrl';
 
 const shareRoute = async () => {
   const url = encodeStateToUrl({
