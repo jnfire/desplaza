@@ -19,7 +19,7 @@ describe('costMath', () => {
   });
 
   it('calculates costs correctly for Ciclo Repetitivo', () => {
-    const result = calculateCarCosts(10, 5, 6, 1.5, 0.08, 11, 'ciclo');
+    const result = calculateCarCosts(10, 5, 6, 1.5, 0.08, 12, 'ciclo');
     
     // perTrip = 3.4
     expect(result.perTrip).toBeCloseTo(3.4, 2);
@@ -28,7 +28,7 @@ describe('costMath', () => {
     // 3.4 * 21.65 = 73.61
     expect(result.monthly).toBeCloseTo(73.61, 2);
     
-    // annual: 73.61 * 11 months = 809.71
-    expect(result.annual).toBeCloseTo(809.71, 2);
+    // annual: 73.61 * 12 months = 883.32
+    expect(result.annual).toBeCloseTo(883.32, 2);
   });
 });

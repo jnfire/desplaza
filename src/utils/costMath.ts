@@ -26,7 +26,7 @@ export function calculateCarCosts(
   consumptionPer100Km: number,
   fuelPrice: number,
   extraCostPerKm: number = 0,
-  activeMonths: number = 11,
+  activeMonths: number = 12,
   tripMode: 'ida' | 'idavuelta' | 'ciclo' = 'ciclo'
 ): CostCalculationResult {
   const averageWeeksPerMonth = 4.33;

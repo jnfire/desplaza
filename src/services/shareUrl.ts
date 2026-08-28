@@ -62,13 +62,18 @@ export const decodeUrlToState = (): AppState | null => {
   }
 
   if (params.has('vc_t')) {
+    const rawMonths = parseInt(params.get('vc_m') || '12', 10);
+    const validMonths = isNaN(rawMonths) ? 12 : Math.min(12, Math.max(1, rawMonths));
+    const rawDays = parseInt(params.get('vc_d') || '5', 10);
+    const validDays = isNaN(rawDays) ? 5 : Math.min(7, Math.max(1, rawDays));
+
     state.vehicleConfig = {
       tripMode: params.get('vc_t') as any,
       fuelType: params.get('vc_f') || 'Precio Gasolina 95 E5',
       consumption: parseFloat(params.get('vc_c') || '6.5'),
       includeWear: params.get('vc_w') === '1',
-      daysPerWeek: parseInt(params.get('vc_d') || '5', 10),
-      activeMonths: parseInt(params.get('vc_m') || '11', 10),
+      daysPerWeek: validDays,
+      activeMonths: validMonths,
       priceSource: (params.get('vc_s') as any) || 'auto',
       manualPrice: parseFloat(params.get('vc_p') || '1.55')
     };

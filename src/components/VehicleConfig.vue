@@ -33,7 +33,7 @@ const fuelType = ref(props.initialState?.fuelType || 'Precio Gasolina 95 E5');
 const consumption = ref(props.initialState?.consumption || 6.5);
 const tripMode = ref<'ida' | 'idavuelta' | 'ciclo'>(props.initialState?.tripMode || 'ciclo');
 const daysPerWeek = ref(props.initialState?.daysPerWeek || 5);
-const activeMonths = ref(props.initialState?.activeMonths || 11);
+const activeMonths = ref(props.initialState?.activeMonths || 12);
 const includeWear = ref(props.initialState?.includeWear ?? true);
 
 const { t } = useI18n();
@@ -52,17 +52,36 @@ const fuelOptions = computed(() => [
 ]);
 
 const emitUpdate = () => {
+  const sanitizedMonths = Math.min(12, Math.max(1, activeMonths.value || 12));
+  const sanitizedDays = Math.min(7, Math.max(1, daysPerWeek.value || 5));
+
   emit('update', {
     fuelType: fuelType.value,
     consumption: consumption.value,
     tripMode: tripMode.value,
-    daysPerWeek: daysPerWeek.value,
-    activeMonths: activeMonths.value,
+    daysPerWeek: sanitizedDays,
+    activeMonths: sanitizedMonths,
     includeWear: includeWear.value,
     priceSource: priceSource.value,
     manualPrice: manualPrice.value
   });
 };
+
+watch(activeMonths, (newMonthsValue) => {
+  if (typeof newMonthsValue === 'number' && newMonthsValue > 12) {
+    activeMonths.value = 12;
+  } else if (typeof newMonthsValue === 'number' && newMonthsValue < 1 && newMonthsValue !== 0) {
+    activeMonths.value = 1;
+  }
+});
+
+watch(daysPerWeek, (newDaysValue) => {
+  if (typeof newDaysValue === 'number' && newDaysValue > 7) {
+    daysPerWeek.value = 7;
+  } else if (typeof newDaysValue === 'number' && newDaysValue < 1 && newDaysValue !== 0) {
+    daysPerWeek.value = 1;
+  }
+});
 
 watch([fuelType, consumption, tripMode, daysPerWeek, activeMonths, includeWear, priceSource, manualPrice], emitUpdate, { deep: true });
 

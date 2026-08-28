@@ -271,7 +271,12 @@ const handleCookieAccept = () => {
                 <span class="cost-value">{{ formatEuro(computedCosts.monthly) }} <small>€</small></span>
               </div>
               <div class="cost-item">
-                <span class="cost-label">{{ $t("core.annual") }} ({{ vehicleConfig?.activeMonths }})</span>
+                <span class="cost-label">
+                  {{ $t("core.annual") }}
+                  <template v-if="vehicleConfig?.activeMonths && vehicleConfig.activeMonths !== 12">
+                    ({{ vehicleConfig.activeMonths }}m)
+                  </template>
+                </span>
                 <span class="cost-value">{{ formatEuro(computedCosts.annual) }} <small>€</small></span>
               </div>
             </div>
