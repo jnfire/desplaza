@@ -1,49 +1,74 @@
+<!-- src/components/SourcesModal.vue -->
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 const emit = defineEmits<{
   (e: 'close'): void;
 }>();
+
+const { t } = useI18n();
+const closeButtonRef = ref<HTMLButtonElement | null>(null);
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    emit('close');
+  }
+};
+
+onMounted(async () => {
+  window.addEventListener('keydown', handleKeydown);
+  await nextTick();
+  closeButtonRef.value?.focus();
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown);
+});
 </script>
 
 <template>
   <div class="modal-overlay" @click.self="emit('close')">
-    <div class="modal-content">
+    <div 
+      class="modal-content" 
+      role="dialog" 
+      aria-modal="true" 
+      aria-labelledby="sources-modal-title"
+    >
       <header class="modal-header">
-        <h2>Fuentes y Metodología</h2>
-        <button class="close-btn" @click="emit('close')">×</button>
+        <h2 id="sources-modal-title">{{ t('sources.title') }}</h2>
+        <button 
+          ref="closeButtonRef"
+          type="button" 
+          class="close-btn" 
+          @click="emit('close')"
+          :aria-label="t('sources.close')"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
       </header>
       
       <div class="modal-body">
         <section>
-          <h3>Precios de Carburante</h3>
-          <p>
-            Los precios del combustible se obtienen en tiempo real a través de la API pública REST de Carburantes del 
-            <strong>Ministerio para la Transición Ecológica y el Reto Demográfico (MITECO)</strong> del Gobierno de España.
-          </p>
-          <p>
-            Para el cálculo, se cruza la provincia del origen seleccionado con el precio medio aritmético del día de todas las 
-            estaciones de servicio de esa provincia.
-          </p>
+          <h3>{{ t('sources.fuel_title') }}</h3>
+          <p>{{ t('sources.fuel_desc1') }}</p>
+          <p>{{ t('sources.fuel_desc2') }}</p>
         </section>
 
         <section>
-          <h3>Distancias y Enrutamiento</h3>
-          <p>
-            El cálculo de distancias por carretera se realiza mediante el motor <strong>OSRM (Open Source Routing Machine)</strong> 
-            y las direcciones se geocodifican utilizando <strong>Photon (OpenStreetMap)</strong>.
-          </p>
+          <h3>{{ t('sources.routing_title') }}</h3>
+          <p>{{ t('sources.routing_desc') }}</p>
         </section>
 
         <section>
-          <h3>Coste de Desgaste y Mantenimiento</h3>
-          <p>
-            Al coste puro del combustible se le puede sumar opcionalmente un coste de <strong>0,08 € por kilómetro</strong>. 
-            Esta cifra es una estimación conservadora basada en estudios de asociaciones automovilísticas que prorratea:
-          </p>
+          <h3>{{ t('sources.wear_title') }}</h3>
+          <p>{{ t('sources.wear_desc') }}</p>
           <ul>
-            <li>Desgaste de neumáticos (~0,01 €/km)</li>
-            <li>Mantenimiento preventivo y revisiones (~0,03 €/km)</li>
-            <li>Parte proporcional del seguro e impuestos (~0,02 €/km)</li>
-            <li>Amortización y depreciación mínima (~0,02 €/km)</li>
+            <li>{{ t('sources.wear_tires') }}</li>
+            <li>{{ t('sources.wear_maintenance') }}</li>
+            <li>{{ t('sources.wear_insurance') }}</li>
+            <li>{{ t('sources.wear_depreciation') }}</li>
           </ul>
         </section>
       </div>
@@ -62,15 +87,16 @@ const emit = defineEmits<{
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 3000;
   backdrop-filter: blur(2px);
+  padding: 1rem;
 }
 
 .modal-content {
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  width: 90%;
+  width: 100%;
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
@@ -88,6 +114,7 @@ const emit = defineEmits<{
 .modal-header h2 {
   font-size: 1.25rem;
   margin: 0;
+  color: var(--color-text);
 }
 
 .close-btn {
@@ -96,10 +123,21 @@ const emit = defineEmits<{
   font-size: 1.5rem;
   cursor: pointer;
   color: var(--color-text-muted);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
 }
 
 .close-btn:hover {
   color: var(--color-text);
+}
+
+.close-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .modal-body {
@@ -129,6 +167,6 @@ const emit = defineEmits<{
 }
 
 .modal-body li {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
 }
 </style>

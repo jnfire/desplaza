@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = withDefaults(defineProps<{
   modelValue: string;
@@ -18,6 +19,8 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
 }>();
 
+const { t } = useI18n();
+
 const isOpen = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
 const triggerRef = ref<HTMLButtonElement | null>(null);
@@ -25,7 +28,7 @@ const optionRefs = ref<HTMLButtonElement[]>([]);
 
 const currentLabel = computed(() => {
   const found = props.options.find(opt => opt.value === props.modelValue);
-  return found ? found.label : (props.placeholder || 'Selecciona una opción');
+  return found ? found.label : (props.placeholder || t('core.select_option'));
 });
 
 const setOptionRef = (el: any, index: number) => {
