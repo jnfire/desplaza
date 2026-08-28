@@ -1,3 +1,4 @@
+<!-- src/components/SettingsView.vue -->
 <script setup lang="ts">
 import PersonalizationCard from './PersonalizationCard.vue';
 
