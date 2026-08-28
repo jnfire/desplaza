@@ -183,35 +183,6 @@ const handleCookieAccept = () => {
       <div class="layout-grid" v-else>
         <!-- Columna Izquierda: Formularios -->
         <div class="forms-column">
-          <!-- Mobile Map Section -->
-          <div v-if="!isDesktop" class="mobile-map-section">
-            <button 
-              class="map-toggle-btn" 
-              @click="isMapVisibleMobile = !isMapVisibleMobile"
-              :aria-expanded="isMapVisibleMobile"
-            >
-              <span>{{ isMapVisibleMobile ? 'Ocultar mapa' : 'Ver y ajustar en el mapa' }}</span>
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                :style="{ transform: isMapVisibleMobile ? 'rotate(180deg)' : 'rotate(0)' }"
-                style="transition: transform 0.2s;"
-              >
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-
-            <div class="map-wrapper" v-if="isMapVisibleMobile">
-              <NativeMap 
-                :origin="originLocation ? { lat: originLocation.lat, lon: originLocation.lon } : undefined" 
-                :destination="destLocation ? { lat: destLocation.lat, lon: destLocation.lon } : undefined" 
-                :route-coordinates="routeData?.coordinates"
-                :dark-mode="isDarkMode" 
-                @update:origin="updateOriginCoords"
-                @update:destination="updateDestCoords"
-              />
-            </div>
-          </div>
-
           <VehicleConfig 
             :initial-state="initialUrlState?.vehicleConfig || undefined"
             :origin-label="originLocation?.label"
@@ -219,7 +190,38 @@ const handleCookieAccept = () => {
             @update="onVehicleConfigUpdate" 
             @update:origin="originLocation = $event"
             @update:destination="destLocation = $event"
-          />
+          >
+            <template #after-trip>
+              <!-- Mobile Map Section -->
+              <div v-if="!isDesktop" class="mobile-map-section">
+                <button 
+                  class="map-toggle-btn" 
+                  @click="isMapVisibleMobile = !isMapVisibleMobile"
+                  :aria-expanded="isMapVisibleMobile"
+                >
+                  <span>{{ isMapVisibleMobile ? 'Ocultar mapa' : 'Ver y ajustar en el mapa' }}</span>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    :style="{ transform: isMapVisibleMobile ? 'rotate(180deg)' : 'rotate(0)' }"
+                    style="transition: transform 0.2s;"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </button>
+
+                <div class="map-wrapper" v-if="isMapVisibleMobile">
+                  <NativeMap 
+                    :origin="originLocation ? { lat: originLocation.lat, lon: originLocation.lon } : undefined" 
+                    :destination="destLocation ? { lat: destLocation.lat, lon: destLocation.lon } : undefined" 
+                    :route-coordinates="routeData?.coordinates"
+                    :dark-mode="isDarkMode" 
+                    @update:origin="updateOriginCoords"
+                    @update:destination="updateDestCoords"
+                  />
+                </div>
+              </div>
+            </template>
+          </VehicleConfig>
         </div>
         
         <!-- Columna Derecha: Mapa y Resultados -->

@@ -147,5 +147,8 @@ const emit = defineEmits<{
   .title {
     font-size: 1.05rem;
   }
+  .subtitle {
+    display: none;
+  }
 }
 </style>

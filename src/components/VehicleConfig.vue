@@ -128,6 +128,8 @@ emitUpdate();
       </div>
     </div>
 
+    <slot name="after-trip"></slot>
+
     <!-- CARD 2: CONFIGURACIÓN DEL VEHÍCULO -->
     <div class="config-card">
       <div class="config-header">
