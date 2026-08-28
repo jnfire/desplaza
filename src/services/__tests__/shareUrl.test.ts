@@ -1,11 +1,18 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { encodeStateToUrl, decodeUrlToState } from '../shareUrl';
 
 describe('shareUrl', () => {
+  let originalWindow: unknown;
+
   beforeEach(() => {
-    (globalThis as any).window = {
+    originalWindow = (globalThis as unknown as { window?: unknown }).window;
+    (globalThis as unknown as { window: unknown }).window = {
       location: new URL('https://desplaza.local/')
     };
+  });
+
+  afterEach(() => {
+    (globalThis as unknown as { window: unknown }).window = originalWindow;
   });
 
   it('encodes and decodes complete state accurately', () => {
@@ -28,7 +35,7 @@ describe('shareUrl', () => {
     expect(encodedUrl).toContain('https://desplaza.local/?');
 
     // Simulate navigating to the encoded URL
-    (globalThis as any).window.location = new URL(encodedUrl);
+    (globalThis as unknown as { window: { location: URL } }).window.location = new URL(encodedUrl);
 
     const decodedState = decodeUrlToState();
     expect(decodedState).not.toBeNull();
@@ -49,7 +56,7 @@ describe('shareUrl', () => {
   });
 
   it('returns null when no data parameter is present', () => {
-    (globalThis as any).window.location = new URL('https://desplaza.local/');
+    (globalThis as unknown as { window: { location: URL } }).window.location = new URL('https://desplaza.local/');
     const result = decodeUrlToState();
     expect(result).toBeNull();
   });

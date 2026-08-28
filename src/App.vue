@@ -219,7 +219,7 @@ const handleCookieAccept = () => {
                   class="map-toggle-btn" 
                   @click="toggleMobileMap"
                   :aria-expanded="isMapVisibleMobile"
-                  aria-controls="mobile-map-drawer"
+                  :aria-controls="isMapVisibleMobile ? 'mobile-map-drawer' : undefined"
                 >
                   <span>{{ isMapVisibleMobile ? t('core.hide_map') : t('core.show_map') }}</span>
                   <svg 

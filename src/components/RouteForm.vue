@@ -147,7 +147,7 @@ const handleDestKeydown = (event: KeyboardEvent) => {
           role="combobox"
           aria-autocomplete="list"
           :aria-expanded="originSuggestions.length > 0"
-          aria-controls="origin-suggestions-list"
+          :aria-controls="originSuggestions.length > 0 ? 'origin-suggestions-list' : undefined"
           :aria-activedescendant="highlightedOriginIndex >= 0 ? `origin-option-${highlightedOriginIndex}` : undefined"
         />
         <button 
@@ -202,7 +202,7 @@ const handleDestKeydown = (event: KeyboardEvent) => {
           role="combobox"
           aria-autocomplete="list"
           :aria-expanded="destinationSuggestions.length > 0"
-          aria-controls="destination-suggestions-list"
+          :aria-controls="destinationSuggestions.length > 0 ? 'destination-suggestions-list' : undefined"
           :aria-activedescendant="highlightedDestIndex >= 0 ? `dest-option-${highlightedDestIndex}` : undefined"
         />
         <button 
@@ -348,7 +348,7 @@ input:focus-visible {
 
 .suggestion-item:hover,
 .suggestion-item--active {
-  background-color: var(--color-bg-hover, rgba(0, 0, 0, 0.05));
+  background-color: var(--color-bg-hover);
 }
 
 .loading-text {

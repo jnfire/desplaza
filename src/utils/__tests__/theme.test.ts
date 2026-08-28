@@ -1,28 +1,39 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { getTheme, setTheme, initTheme } from '../theme';
 
 describe('theme utility', () => {
-  const storageMap: Record<string, string> = {};
-  const attributesMap: Record<string, string> = {};
+  let mockStorage: Record<string, string> = {};
+  let mockAttributes: Record<string, string> = {};
+  let originalLocalStorage: unknown;
+  let originalDocument: unknown;
 
   beforeEach(() => {
-    Object.keys(storageMap).forEach(k => delete storageMap[k]);
-    Object.keys(attributesMap).forEach(k => delete attributesMap[k]);
+    mockStorage = {};
+    mockAttributes = {};
 
-    (globalThis as any).localStorage = {
-      getItem: (key: string) => storageMap[key] || null,
-      setItem: (key: string, val: string) => { storageMap[key] = val; },
-      removeItem: (key: string) => { delete storageMap[key]; },
-      clear: () => { Object.keys(storageMap).forEach(k => delete storageMap[k]); }
+    originalLocalStorage = (globalThis as unknown as { localStorage?: unknown }).localStorage;
+    originalDocument = (globalThis as unknown as { document?: unknown }).document;
+
+    (globalThis as unknown as { localStorage: unknown }).localStorage = {
+      getItem: (key: string) => mockStorage[key] || null,
+      setItem: (key: string, val: string) => { mockStorage[key] = val; },
+      removeItem: (key: string) => { delete mockStorage[key]; },
+      clear: () => { mockStorage = {}; }
     };
 
-    (globalThis as any).document = {
+    (globalThis as unknown as { document: unknown }).document = {
       documentElement: {
-        getAttribute: (attr: string) => attributesMap[attr] || null,
-        setAttribute: (attr: string, val: string) => { attributesMap[attr] = val; },
-        removeAttribute: (attr: string) => { delete attributesMap[attr]; }
+        getAttribute: (attr: string) => mockAttributes[attr] || null,
+        setAttribute: (attr: string, val: string) => { mockAttributes[attr] = val; },
+        removeAttribute: (attr: string) => { delete mockAttributes[attr]; }
       }
     };
+  });
+
+  afterEach(() => {
+    (globalThis as unknown as { localStorage: unknown }).localStorage = originalLocalStorage;
+    (globalThis as unknown as { document: unknown }).document = originalDocument;
+    vi.restoreAllMocks();
   });
 
   it('defaults to system when no theme is saved', () => {
