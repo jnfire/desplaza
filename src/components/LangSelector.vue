@@ -163,12 +163,12 @@ onUnmounted(() => {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   color: var(--color-text);
-  padding: 0.85rem 1rem;
+  padding: 0.6rem 1rem;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-family: inherit;
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -190,7 +190,7 @@ onUnmounted(() => {
 }
 
 .dropdown-arrow {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   color: var(--color-text-muted);
   transition: transform 0.2s ease;
   margin-left: auto;
@@ -220,9 +220,9 @@ onUnmounted(() => {
   align-items: center;
   gap: 0.5rem;
   width: 100%;
-  padding: 0.6rem 1rem;
-  font-size: 0.95rem;
-  font-weight: 500;
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
   font-family: inherit;
   color: var(--color-text);
   background: transparent;
@@ -240,6 +240,7 @@ onUnmounted(() => {
 .option-selected {
   background-color: var(--color-primary);
   color: var(--color-bg);
+  font-weight: 600;
 }
 
 .option-selected:hover,

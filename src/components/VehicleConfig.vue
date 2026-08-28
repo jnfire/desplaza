@@ -248,7 +248,7 @@ emitUpdate();
   text-align: center;
   padding: 0.5rem 0.25rem;
   font-size: 0.8rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-text-muted);
   border-radius: var(--radius-sm);
   transition: all 0.2s;
@@ -265,6 +265,7 @@ emitUpdate();
   background-color: var(--color-primary);
   color: var(--color-bg);
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  font-weight: 600;
 }
 
 .grid-layout {
