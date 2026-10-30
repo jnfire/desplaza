@@ -31,4 +31,29 @@ describe('costMath', () => {
     // annual: 73.61 * 12 months = 883.32
     expect(result.annual).toBeCloseTo(883.32, 2);
   });
+  it('defaults to a round-trip commute, 12 months and no wear surcharge', () => {
+    const withDefaults = calculateCarCosts(25, 5, 6, 1.5);
+    const explicit = calculateCarCosts(25, 5, 6, 1.5, 0, 12, 'ciclo');
+
+    expect(withDefaults).toEqual(explicit);
+    // 50 km per day * 6 L/100 km * 1.5 €/L = 4.5 € with no wear surcharge
+    expect(withDefaults.perTrip).toBeCloseTo(4.5, 5);
+  });
+
+  it('costs nothing when the distance is zero', () => {
+    expect(calculateCarCosts(0, 5, 6, 1.5, 0.08)).toEqual({ perTrip: 0, monthly: 0, annual: 0 });
+  });
+
+  it('scales the monthly cost with the days driven per week', () => {
+    const threeDays = calculateCarCosts(10, 3, 6, 1.5);
+    const fiveDays = calculateCarCosts(10, 5, 6, 1.5);
+
+    expect(fiveDays.monthly / threeDays.monthly).toBeCloseTo(5 / 3, 10);
+  });
+
+  it('scales the annual cost with the active months', () => {
+    const elevenMonths = calculateCarCosts(10, 5, 6, 1.5, 0, 11);
+
+    expect(elevenMonths.annual).toBeCloseTo(elevenMonths.monthly * 11, 10);
+  });
 });
