@@ -11,33 +11,37 @@ const emit = defineEmits<{
         <h2>Fuentes y Metodología</h2>
         <button class="close-btn" @click="emit('close')">×</button>
       </header>
-      
+
       <div class="modal-body">
         <section>
           <h3>Precios de Carburante</h3>
           <p>
-            Los precios del combustible se obtienen en tiempo real a través de la API pública REST de Carburantes del 
-            <strong>Ministerio para la Transición Ecológica y el Reto Demográfico (MITECO)</strong> del Gobierno de España.
+            Los precios del combustible se obtienen en tiempo real a través de la API pública REST
+            de Carburantes del
+            <strong>Ministerio para la Transición Ecológica y el Reto Demográfico (MITECO)</strong>
+            del Gobierno de España.
           </p>
           <p>
-            Para el cálculo, se cruza la provincia del origen seleccionado con el precio medio aritmético del día de todas las 
-            estaciones de servicio de esa provincia.
+            Para el cálculo, se cruza la provincia del origen seleccionado con el precio medio
+            aritmético del día de todas las estaciones de servicio de esa provincia.
           </p>
         </section>
 
         <section>
           <h3>Distancias y Enrutamiento</h3>
           <p>
-            El cálculo de distancias por carretera se realiza mediante el motor <strong>OSRM (Open Source Routing Machine)</strong> 
-            y las direcciones se geocodifican utilizando <strong>Photon (OpenStreetMap)</strong>.
+            El cálculo de distancias por carretera se realiza mediante el motor
+            <strong>OSRM (Open Source Routing Machine)</strong> y las direcciones se geocodifican
+            utilizando <strong>Photon (OpenStreetMap)</strong>.
           </p>
         </section>
 
         <section>
           <h3>Coste de Desgaste y Mantenimiento</h3>
           <p>
-            Al coste puro del combustible se le puede sumar opcionalmente un coste de <strong>0,08 € por kilómetro</strong>. 
-            Esta cifra es una estimación conservadora basada en estudios de asociaciones automovilísticas que prorratea:
+            Al coste puro del combustible se le puede sumar opcionalmente un coste de
+            <strong>0,08 € por kilómetro</strong>. Esta cifra es una estimación conservadora basada
+            en estudios de asociaciones automovilísticas que prorratea:
           </p>
           <ul>
             <li>Desgaste de neumáticos (~0,01 €/km)</li>
@@ -74,7 +78,9 @@ const emit = defineEmits<{
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .modal-header {

@@ -23,8 +23,14 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update', state: VehicleState): void;
-  (e: 'update:origin', location: { lat: number; lon: number; label: string; provinceSearch: string } | null): void;
-  (e: 'update:destination', location: { lat: number; lon: number; label: string; provinceSearch: string } | null): void;
+  (
+    e: 'update:origin',
+    location: { lat: number; lon: number; label: string; provinceSearch: string } | null,
+  ): void;
+  (
+    e: 'update:destination',
+    location: { lat: number; lon: number; label: string; provinceSearch: string } | null,
+  ): void;
 }>();
 
 const priceSource = ref<'auto' | 'manual'>(props.initialState?.priceSource || 'auto');
@@ -40,7 +46,7 @@ const { t } = useI18n();
 
 const priceSourceOptions = computed(() => [
   { value: 'auto', label: t('core.source_auto') || 'Automático (España)' },
-  { value: 'manual', label: t('core.source_manual') || 'Personalizado' }
+  { value: 'manual', label: t('core.source_manual') || 'Personalizado' },
 ]);
 
 const fuelOptions = computed(() => [
@@ -48,7 +54,7 @@ const fuelOptions = computed(() => [
   { value: 'Precio Gasolina 98 E5', label: t('core.fuel_gas98') || 'Gasolina 98' },
   { value: 'Precio Gasoleo A', label: t('core.fuel_diesel') || 'Diésel' },
   { value: 'Precio Gasoleo Premium', label: t('core.fuel_diesel_prem') || 'Diésel Premium' },
-  { value: 'Precio Gases licuados del petróleo', label: t('core.fuel_glp') || 'GLP' }
+  { value: 'Precio Gases licuados del petróleo', label: t('core.fuel_glp') || 'GLP' },
 ]);
 
 const emitUpdate = () => {
@@ -63,7 +69,7 @@ const emitUpdate = () => {
     activeMonths: sanitizedMonths,
     includeWear: includeWear.value,
     priceSource: priceSource.value,
-    manualPrice: manualPrice.value
+    manualPrice: manualPrice.value,
   });
 };
 
@@ -83,64 +89,70 @@ watch(daysPerWeek, (newDaysValue) => {
   }
 });
 
-watch([fuelType, consumption, tripMode, daysPerWeek, activeMonths, includeWear, priceSource, manualPrice], emitUpdate, { deep: true });
+watch(
+  [
+    fuelType,
+    consumption,
+    tripMode,
+    daysPerWeek,
+    activeMonths,
+    includeWear,
+    priceSource,
+    manualPrice,
+  ],
+  emitUpdate,
+  { deep: true },
+);
 
 emitUpdate();
 </script>
 
 <template>
   <div class="configs-wrapper">
-    
     <!-- CARD 1: CONFIGURACIÓN DEL VIAJE -->
     <div class="config-card">
       <div class="config-header">
-        <h3>{{ $t("core.trip_details") }}</h3>
+        <h3>{{ $t('core.trip_details') }}</h3>
       </div>
-      
-      <RouteForm 
+
+      <RouteForm
         :origin-label="originLabel"
         :destination-label="destinationLabel"
         @update:origin="emit('update:origin', $event)"
         @update:destination="emit('update:destination', $event)"
       />
-      
+
       <!-- Modo de Viaje -->
       <div class="mode-selector">
         <label class="radio-label">
           <input v-model="tripMode" type="radio" value="ida" />
-          <div class="radio-btn">{{ $t("core.one_way") }}</div>
+          <div class="radio-btn">{{ $t('core.one_way') }}</div>
         </label>
         <label class="radio-label">
           <input v-model="tripMode" type="radio" value="idavuelta" />
-          <div class="radio-btn">{{ $t("core.round_trip") }}</div>
+          <div class="radio-btn">{{ $t('core.round_trip') }}</div>
         </label>
         <label class="radio-label">
           <input v-model="tripMode" type="radio" value="ciclo" />
-          <div class="radio-btn">{{ $t("core.routine") }}</div>
+          <div class="radio-btn">{{ $t('core.routine') }}</div>
         </label>
       </div>
 
       <!-- Controles de Ciclo Repetitivo -->
       <div v-if="tripMode === 'ciclo'" class="grid-layout cycle-controls">
         <div class="input-group">
-          <label for="daysPerWeek">{{ $t("core.days_week") }}</label>
-          <input 
-            id="daysPerWeek" 
-            v-model="daysPerWeek" 
-            type="number" 
-            min="1" 
-            max="7" 
-          />
+          <label for="daysPerWeek">{{ $t('core.days_week') }}</label>
+          <input id="daysPerWeek" v-model="daysPerWeek" type="number" min="1" max="7" />
         </div>
 
         <div class="input-group">
-          <label for="activeMonths">{{ $t("core.months_year") }}</label>
-          <input 
-            id="activeMonths" 
-            v-model="activeMonths" 
-            type="number" 
-            min="1" 
-            max="12" 
+          <label for="activeMonths">{{ $t('core.months_year') }}</label>
+          <input
+            id="activeMonths"
+            v-model="activeMonths"
+            type="number"
+            min="1"
+            max="12"
             :title="$t('core.active_months_desc')"
           />
         </div>
@@ -152,40 +164,28 @@ emitUpdate();
     <!-- CARD 2: CONFIGURACIÓN DEL VEHÍCULO -->
     <div class="config-card">
       <div class="config-header">
-        <h3>{{ $t("core.your_vehicle") }}</h3>
+        <h3>{{ $t('core.your_vehicle') }}</h3>
       </div>
 
       <div class="grid-layout">
         <div class="input-group">
-          <label for="priceSource">{{ $t("core.price_origin") }}</label>
+          <label for="priceSource">{{ $t('core.price_origin') }}</label>
           <CustomSelect id="priceSource" v-model="priceSource" :options="priceSourceOptions" />
         </div>
 
         <div v-if="priceSource === 'auto'" class="input-group">
-          <label for="fuelType">{{ $t("core.fuel_type") }}</label>
+          <label for="fuelType">{{ $t('core.fuel_type') }}</label>
           <CustomSelect id="fuelType" v-model="fuelType" :options="fuelOptions" />
         </div>
 
         <div v-else class="input-group">
-          <label for="manualPrice">{{ $t("core.manual_price") }}</label>
-          <input 
-            id="manualPrice" 
-            v-model="manualPrice" 
-            type="number" 
-            step="0.01" 
-            min="0" 
-          />
+          <label for="manualPrice">{{ $t('core.manual_price') }}</label>
+          <input id="manualPrice" v-model="manualPrice" type="number" step="0.01" min="0" />
         </div>
 
         <div class="input-group">
-          <label for="consumption">{{ $t("core.consumption_short") }}</label>
-          <input 
-            id="consumption" 
-            v-model="consumption" 
-            type="number" 
-            step="0.1" 
-            min="0" 
-          />
+          <label for="consumption">{{ $t('core.consumption_short') }}</label>
+          <input id="consumption" v-model="consumption" type="number" step="0.1" min="0" />
         </div>
       </div>
 
@@ -193,11 +193,10 @@ emitUpdate();
         <label class="checkbox-label">
           <input v-model="includeWear" type="checkbox" />
           <span class="checkbox-custom"></span>
-          {{ $t("core.include_wear") }}
+          {{ $t('core.include_wear') }}
         </label>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -264,7 +263,7 @@ emitUpdate();
 .radio-label input:checked + .radio-btn {
   background-color: var(--color-primary);
   color: var(--color-bg);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   font-weight: 600;
 }
 
@@ -290,7 +289,8 @@ label {
   color: var(--color-text);
 }
 
-input[type="number"], select {
+input[type='number'],
+select {
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 1rem;
@@ -303,7 +303,8 @@ input[type="number"], select {
   font-family: inherit;
 }
 
-input[type="number"]:focus, select:focus {
+input[type='number']:focus,
+select:focus {
   border-color: var(--color-primary);
 }
 

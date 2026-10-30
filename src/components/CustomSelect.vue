@@ -2,21 +2,24 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import type { ComponentPublicInstance } from 'vue';
 
-const props = withDefaults(defineProps<{
-  modelValue: string;
-  options: { value: string; label: string }[];
-  placeholder?: string;
-  id?: string;
-  name?: string;
-  size?: 'md' | 'sm';
-  disabled?: boolean;
-}>(), {
-  placeholder: undefined,
-  id: undefined,
-  name: undefined,
-  size: 'md',
-  disabled: false
-});
+const props = withDefaults(
+  defineProps<{
+    modelValue: string;
+    options: { value: string; label: string }[];
+    placeholder?: string;
+    id?: string;
+    name?: string;
+    size?: 'md' | 'sm';
+    disabled?: boolean;
+  }>(),
+  {
+    placeholder: undefined,
+    id: undefined,
+    name: undefined,
+    size: 'md',
+    disabled: false,
+  },
+);
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
@@ -28,8 +31,8 @@ const triggerRef = ref<HTMLButtonElement | null>(null);
 const optionRefs = ref<HTMLButtonElement[]>([]);
 
 const currentLabel = computed(() => {
-  const found = props.options.find(opt => opt.value === props.modelValue);
-  return found ? found.label : (props.placeholder || 'Selecciona una opción');
+  const found = props.options.find((opt) => opt.value === props.modelValue);
+  return found ? found.label : props.placeholder || 'Selecciona una opción';
 });
 
 const setOptionRef = (el: Element | ComponentPublicInstance | null, index: number) => {
@@ -39,7 +42,7 @@ const setOptionRef = (el: Element | ComponentPublicInstance | null, index: numbe
 const openDropdown = async () => {
   isOpen.value = true;
   await nextTick();
-  const selectedIndex = props.options.findIndex(opt => opt.value === props.modelValue);
+  const selectedIndex = props.options.findIndex((opt) => opt.value === props.modelValue);
   optionRefs.value[selectedIndex >= 0 ? selectedIndex : 0]?.focus();
 };
 
@@ -136,17 +139,15 @@ onUnmounted(() => {
       @click="toggleDropdown"
       @keydown="handleTriggerKeydown"
     >
-      <span class="select-label" :class="{ 'placeholder': !modelValue && placeholder }">{{ currentLabel }}</span>
+      <span class="select-label" :class="{ placeholder: !modelValue && placeholder }">{{
+        currentLabel
+      }}</span>
       <span class="dropdown-arrow" :class="{ 'arrow-open': isOpen }" aria-hidden="true">▾</span>
     </button>
 
     <transition name="fade-slide">
       <ul v-if="isOpen" class="custom-select-dropdown" role="listbox">
-        <li
-          v-for="(opt, index) in options"
-          :key="opt.value"
-          role="presentation"
-        >
+        <li v-for="(opt, index) in options" :key="opt.value" role="presentation">
           <button
             :ref="(el) => setOptionRef(el, index)"
             type="button"
@@ -201,7 +202,7 @@ onUnmounted(() => {
 .custom-select-trigger:focus-visible {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
 .custom-select-trigger:hover {
@@ -247,7 +248,9 @@ onUnmounted(() => {
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 4px 12px -2px rgba(0, 0, 0, 0.08),
+    0 2px 6px -1px rgba(0, 0, 0, 0.04);
   padding: 0.35rem 0;
   max-height: 250px;
   overflow-y: auto;
@@ -274,7 +277,7 @@ onUnmounted(() => {
 
 .select-option:hover,
 .select-option:focus-visible {
-  background-color: var(--color-bg-hover, rgba(0,0,0,0.05));
+  background-color: var(--color-bg-hover, rgba(0, 0, 0, 0.05));
   outline: none;
 }
 

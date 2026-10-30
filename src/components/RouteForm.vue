@@ -8,8 +8,14 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:origin', location: { lat: number; lon: number; label: string; provinceSearch: string } | null): void;
-  (e: 'update:destination', location: { lat: number; lon: number; label: string; provinceSearch: string } | null): void;
+  (
+    e: 'update:origin',
+    location: { lat: number; lon: number; label: string; provinceSearch: string } | null,
+  ): void;
+  (
+    e: 'update:destination',
+    location: { lat: number; lon: number; label: string; provinceSearch: string } | null,
+  ): void;
 }>();
 
 const originInput = ref(props.originLabel || '');
@@ -78,25 +84,21 @@ const clearDestination = () => {
 <template>
   <div class="route-form">
     <div class="input-group">
-      <label for="origin">{{ $t("core.origin") }}</label>
+      <label for="origin">{{ $t('core.origin') }}</label>
       <div class="input-wrapper">
-        <input 
-          id="origin" 
-          v-model="originInput" 
-          type="text" 
+        <input
+          id="origin"
+          v-model="originInput"
+          type="text"
           :placeholder="$t('core.origin_ph')"
           autocomplete="off"
           @input="onInputOrigin"
         />
         <button v-if="originInput" class="clear-btn" @click="clearOrigin">×</button>
       </div>
-      
+
       <ul v-if="originSuggestions.length > 0" class="suggestions-list">
-        <li 
-          v-for="(s, idx) in originSuggestions" 
-          :key="idx" 
-          @click="selectOrigin(s)"
-        >
+        <li v-for="(s, idx) in originSuggestions" :key="idx" @click="selectOrigin(s)">
           {{ s.label }}
         </li>
       </ul>
@@ -104,25 +106,21 @@ const clearDestination = () => {
     </div>
 
     <div class="input-group">
-      <label for="destination">{{ $t("core.dest") }}</label>
+      <label for="destination">{{ $t('core.dest') }}</label>
       <div class="input-wrapper">
-        <input 
-          id="destination" 
-          v-model="destinationInput" 
-          type="text" 
+        <input
+          id="destination"
+          v-model="destinationInput"
+          type="text"
           :placeholder="$t('core.dest_ph')"
           autocomplete="off"
           @input="onInputDest"
         />
         <button v-if="destinationInput" class="clear-btn" @click="clearDestination">×</button>
       </div>
-      
+
       <ul v-if="destinationSuggestions.length > 0" class="suggestions-list">
-        <li 
-          v-for="(s, idx) in destinationSuggestions" 
-          :key="idx" 
-          @click="selectDestination(s)"
-        >
+        <li v-for="(s, idx) in destinationSuggestions" :key="idx" @click="selectDestination(s)">
           {{ s.label }}
         </li>
       </ul>

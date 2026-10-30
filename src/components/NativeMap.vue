@@ -35,8 +35,10 @@ let originMarker: L.Marker | null = null;
 let destMarker: L.Marker | null = null;
 let routePolyline: L.Polyline | null = null;
 
-const LIGHT_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
-const DARK_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+const LIGHT_TILES =
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+const DARK_TILES =
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
 
 onMounted(() => {
   if (!mapContainer.value) return;
@@ -48,7 +50,7 @@ onMounted(() => {
   const tileUrl = props.darkMode ? DARK_TILES : LIGHT_TILES;
   tileLayer = L.tileLayer(tileUrl, {
     attribution: '&copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-    maxZoom: 16
+    maxZoom: 16,
   }).addTo(map);
 
   updateMap();
@@ -62,16 +64,23 @@ onUnmounted(() => {
 });
 
 // Watch for theme changes
-watch(() => props.darkMode, (isDark) => {
-  if (tileLayer) {
-    tileLayer.setUrl(isDark ? DARK_TILES : LIGHT_TILES);
-  }
-});
+watch(
+  () => props.darkMode,
+  (isDark) => {
+    if (tileLayer) {
+      tileLayer.setUrl(isDark ? DARK_TILES : LIGHT_TILES);
+    }
+  },
+);
 
 // Watch for coordinate or route changes
-watch([() => props.origin, () => props.destination, () => props.routeCoordinates], () => {
-  updateMap();
-}, { deep: true });
+watch(
+  [() => props.origin, () => props.destination, () => props.routeCoordinates],
+  () => {
+    updateMap();
+  },
+  { deep: true },
+);
 
 function updateMap() {
   if (!map) return;
@@ -87,7 +96,11 @@ function updateMap() {
         const pos = originMarker!.getLatLng();
         emit('update:origin', { lat: pos.lat, lon: pos.lng });
       });
-      originMarker.bindTooltip('Origen', { permanent: true, direction: 'top', className: 'marker-tooltip' });
+      originMarker.bindTooltip('Origen', {
+        permanent: true,
+        direction: 'top',
+        className: 'marker-tooltip',
+      });
     } else {
       originMarker.setLatLng(latLng);
     }
@@ -106,7 +119,11 @@ function updateMap() {
         const pos = destMarker!.getLatLng();
         emit('update:destination', { lat: pos.lat, lon: pos.lng });
       });
-      destMarker.bindTooltip('Destino', { permanent: true, direction: 'top', className: 'marker-tooltip' });
+      destMarker.bindTooltip('Destino', {
+        permanent: true,
+        direction: 'top',
+        className: 'marker-tooltip',
+      });
     } else {
       destMarker.setLatLng(latLng);
     }
@@ -121,17 +138,17 @@ function updateMap() {
     map.removeLayer(routePolyline);
     routePolyline = null;
   }
-  
+
   if (props.routeCoordinates && props.routeCoordinates.length > 0) {
     // GeoJSON uses [lon, lat], Leaflet uses [lat, lon]
-    const latLngs = props.routeCoordinates.map(coord => L.latLng(coord[1], coord[0]));
+    const latLngs = props.routeCoordinates.map((coord) => L.latLng(coord[1], coord[0]));
     routePolyline = L.polyline(latLngs, {
       color: 'var(--color-primary, #3b82f6)',
       weight: 5,
       opacity: 0.8,
-      lineCap: 'round'
+      lineCap: 'round',
     }).addTo(map);
-    
+
     // Fit bounds to route
     map.fitBounds(routePolyline.getBounds(), { padding: [40, 40] });
   } else if (bounds.isValid()) {
@@ -168,7 +185,7 @@ function updateMap() {
   border: 1px solid var(--color-border) !important;
   color: var(--color-text) !important;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
   border-radius: 4px !important;
 }
 
