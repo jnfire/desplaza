@@ -1,50 +1,7 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calculez et comparez le coût réel de votre mobilité.",
-    "badges": {
-      "auditable": "Auditable",
-      "privacy": "Local-First",
-      "serverless": "Sans Inscription"
-    }
-  },
-  "input": {
-    "mode": {
-      "auto": "Détection Auto",
-      "manual": "Manuel"
-    },
-    "format": "Format :",
-    "placeholder": "Collez votre chaîne Base64 ou Data URI ici...",
-    "btn_decode": "Décoder",
-    "btn_clear": "Effacer",
-    "error_empty": "Veuillez coller un code Base64.",
-    "error_invalid": "Erreur lors du décodage Base64. Assurez-vous que le format est correct."
-  },
-  "result": {
-    "title": "Fichier Récupéré",
-    "mime": "MIME :",
-    "extension": "Extension :",
-    "size": "Taille :",
-    "btn_download": "Télécharger",
-    "no_preview": "Aperçu indisponible pour ce format. Veuillez télécharger le fichier."
-  },
-  "tabs": {
-    "decode": "Décoder (Base64 → Fichier)",
-    "encode": "Encoder (Fichier → Base64)"
-  },
-  "encoder": {
-    "drop_zone": "Glissez et déposez un fichier ici",
-    "or": "ou",
-    "btn_browse": "Parcourir le Fichier",
-    "file_selected": "Fichier sélectionné :",
-    "btn_encode": "Encoder en Base64",
-    "btn_clear": "Effacer",
-    "include_data_uri": "Inclure le préfixe Data URI",
-    "result_title": "Résultat Base64",
-    "btn_copy": "Copier dans le Presse-papiers",
-    "copied": "Copié !",
-    "error_too_large": "Le fichier dépasse la limite de sécurité de {mb} Mo.",
-    "error_read": "Erreur lors de la lecture du fichier."
+    "subtitle": "Calculez et comparez le coût réel de votre mobilité."
   },
   "footer": {
     "text": "Développement local-first. Vos données, votre contrôle.",
@@ -53,40 +10,26 @@
     "methodology": "Méthodologie"
   },
   "settings": {
-    "title": "Paramètres",
-    "general": "Personnalisation",
     "personalization": "Personnalisation",
     "language": "Langue",
     "theme": "Thème",
     "themeLight": "Clair",
     "themeDark": "Sombre",
-    "themeSystem": "Système",
-    "encoder": "Paramètres de l'Encodeur",
-    "autoCopy": "Copier automatiquement base64",
-    "mimeFormat": "Format MIME (sauts de ligne)"
+    "themeSystem": "Système"
   },
   "core": {
-    "route_details": "Détails du Trajet",
     "origin": "Origine",
     "dest": "Destination",
     "origin_ph": "Ex: Tour Eiffel, Paris",
     "dest_ph": "Ex: Le Louvre, Paris",
-    "vehicle_cfg": "Votre Véhicule",
-    "trip_type": "Type de trajet",
     "one_way": "Aller simple",
     "round_trip": "Aller-retour",
-    "work_cycle": "Routine",
     "days_week": "Jours par semaine",
-    "active_months": "Mois par an",
     "fuel_type": "Carburant",
-    "price_source": "Origine du Prix",
-    "source_miteco": "Automatique",
     "source_manual": "Personnalisé",
     "manual_price": "Prix (€/L)",
-    "consumption": "Consommation (L/100km)",
     "include_wear": "Inclure l'usure et l'entretien (0,08 €/km)",
     "calc_cost": "Coût de Mobilité",
-    "share_route": "Partager le Trajet",
     "share_title": "Mon trajet sur Desplaza",
     "share_text": "Découvrez mon coût de mobilité.",
     "share_copied": "Lien copié dans le presse-papiers!",
@@ -97,8 +40,6 @@
     "wear_note": "* Comprend un supplément estimé de 0,08 €/km pour l'usure, l'assurance et l'entretien.",
     "calc_loading": "Calcul du meilleur itinéraire et des prix en temps réel...",
     "define_route": "Définissez l'origine et la destination pour voir votre coût de mobilité réel.",
-    "hide_map": "Masquer la Carte",
-    "show_map": "Afficher la Carte",
     "source_auto": "Automatique",
     "fuel_gas95": "Essence 95",
     "fuel_gas98": "Essence 98",

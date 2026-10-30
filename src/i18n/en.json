@@ -1,50 +1,7 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calculate and compare the real cost of your mobility.",
-    "badges": {
-      "auditable": "Auditable",
-      "privacy": "Local-First",
-      "serverless": "No Registration"
-    }
-  },
-  "input": {
-    "mode": {
-      "auto": "Auto-Detection",
-      "manual": "Manual"
-    },
-    "format": "Format:",
-    "placeholder": "Paste your Base64 string or Data URI here...",
-    "btn_decode": "Decode",
-    "btn_clear": "Clear",
-    "error_empty": "Please paste a Base64 string.",
-    "error_invalid": "Error decoding Base64. Make sure the format is correct."
-  },
-  "result": {
-    "title": "Recovered File",
-    "mime": "MIME:",
-    "extension": "Extension:",
-    "size": "Size:",
-    "btn_download": "Download",
-    "no_preview": "Preview not available for this format. Please download the file."
-  },
-  "tabs": {
-    "decode": "Decode (Base64 → File)",
-    "encode": "Encode (File → Base64)"
-  },
-  "encoder": {
-    "drop_zone": "Drag and drop a file here",
-    "or": "or",
-    "btn_browse": "Browse File",
-    "file_selected": "Selected file:",
-    "btn_encode": "Encode to Base64",
-    "btn_clear": "Clear",
-    "include_data_uri": "Include Data URI prefix",
-    "result_title": "Base64 Result",
-    "btn_copy": "Copy to Clipboard",
-    "copied": "Copied!",
-    "error_too_large": "The file exceeds the safety limit of {mb}MB.",
-    "error_read": "Error reading file."
+    "subtitle": "Calculate and compare the real cost of your mobility."
   },
   "footer": {
     "text": "Local-first development. Your data, your control.",
@@ -53,40 +10,26 @@
     "methodology": "Methodology"
   },
   "settings": {
-    "title": "Settings",
-    "general": "Personalization",
     "personalization": "Personalization",
     "language": "Language",
     "theme": "Theme",
     "themeLight": "Light",
     "themeDark": "Dark",
-    "themeSystem": "System",
-    "encoder": "Encoder Settings",
-    "autoCopy": "Auto-copy base64 to clipboard",
-    "mimeFormat": "MIME format (line breaks every 76 chars)"
+    "themeSystem": "System"
   },
   "core": {
-    "route_details": "Route Details",
     "origin": "Origin",
     "dest": "Destination",
     "origin_ph": "Ex: Times Square, New York",
     "dest_ph": "Ex: Central Park, New York",
-    "vehicle_cfg": "Your Vehicle",
-    "trip_type": "Trip Type",
     "one_way": "One Way",
     "round_trip": "Round Trip",
-    "work_cycle": "Routine",
     "days_week": "Days a week",
-    "active_months": "Months a year",
     "fuel_type": "Fuel Type",
-    "price_source": "Price Origin",
-    "source_miteco": "Automatic",
     "source_manual": "Custom",
     "manual_price": "Manual Price (€/L)",
-    "consumption": "Consumption (L/100km)",
     "include_wear": "Include wear & maintenance (0.08 €/km)",
     "calc_cost": "Mobility Cost",
-    "share_route": "Share Route",
     "share_title": "My route in Desplaza",
     "share_text": "Check out my mobility cost.",
     "share_copied": "Link copied to clipboard!",
@@ -97,8 +40,6 @@
     "wear_note": "* Includes estimated surcharge of 0.08 €/km for wear, insurance and maintenance.",
     "calc_loading": "Calculating best route and real-time prices...",
     "define_route": "Define origin and destination to see your real mobility cost.",
-    "hide_map": "Hide Map",
-    "show_map": "Show Map",
     "source_auto": "Automatic",
     "fuel_gas95": "Gasoline 95",
     "fuel_gas98": "Gasoline 98",

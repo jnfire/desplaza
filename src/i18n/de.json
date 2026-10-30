@@ -1,50 +1,7 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Berechnen und vergleichen Sie die wahren Kosten Ihrer Mobilität.",
-    "badges": {
-      "auditable": "Überprüfbar",
-      "privacy": "Local-First",
-      "serverless": "Keine Registrierung"
-    }
-  },
-  "input": {
-    "mode": {
-      "auto": "Auto-Erkennung",
-      "manual": "Manuell"
-    },
-    "format": "Format:",
-    "placeholder": "Fügen Sie hier Ihre Base64-Zeichenfolge oder Ihr Data-URI ein...",
-    "btn_decode": "Decodieren",
-    "btn_clear": "Leeren",
-    "error_empty": "Bitte fügen Sie einen Base64-Code ein.",
-    "error_invalid": "Fehler beim Decodieren von Base64. Stellen Sie sicher, dass das Format korrekt ist."
-  },
-  "result": {
-    "title": "Wiederhergestellte Datei",
-    "mime": "MIME:",
-    "extension": "Erweiterung:",
-    "size": "Größe:",
-    "btn_download": "Herunterladen",
-    "no_preview": "Vorschau für dieses Format nicht verfügbar. Bitte laden Sie die Datei herunter."
-  },
-  "tabs": {
-    "decode": "Decodieren (Base64 → Datei)",
-    "encode": "Codieren (Datei → Base64)"
-  },
-  "encoder": {
-    "drop_zone": "Ziehen Sie eine Datei hierher",
-    "or": "oder",
-    "btn_browse": "Datei Durchsuchen",
-    "file_selected": "Ausgewählte Datei:",
-    "btn_encode": "In Base64 Codieren",
-    "btn_clear": "Leeren",
-    "include_data_uri": "Data-URI-Präfix einschließen",
-    "result_title": "Base64-Ergebnis",
-    "btn_copy": "In die Zwischenablage kopieren",
-    "copied": "Kopiert!",
-    "error_too_large": "Die Datei überschreitet das Sicherheitslimit von {mb}MB.",
-    "error_read": "Fehler beim Lesen der Datei."
+    "subtitle": "Berechnen und vergleichen Sie die wahren Kosten Ihrer Mobilität."
   },
   "footer": {
     "text": "Local-First-Entwicklung. Ihre Daten, Ihre Kontrolle.",
@@ -53,40 +10,26 @@
     "methodology": "Methodik"
   },
   "settings": {
-    "title": "Einstellungen",
-    "general": "Personalisierung",
     "personalization": "Personalisierung",
     "language": "Sprache",
     "theme": "Thema",
     "themeLight": "Hell",
     "themeDark": "Dunkel",
-    "themeSystem": "System",
-    "encoder": "Encoder-Einstellungen",
-    "autoCopy": "Base64 automatisch kopieren",
-    "mimeFormat": "MIME-Format (Zeilenumbrüche)"
+    "themeSystem": "System"
   },
   "core": {
-    "route_details": "Reisedetails",
     "origin": "Start",
     "dest": "Ziel",
     "origin_ph": "Bsp: Alexanderplatz, Berlin",
     "dest_ph": "Bsp: Brandenburger Tor, Berlin",
-    "vehicle_cfg": "Ihr Fahrzeug",
-    "trip_type": "Reiseart",
     "one_way": "Einfache Fahrt",
     "round_trip": "Hin- und Rückfahrt",
-    "work_cycle": "Routine",
     "days_week": "Tage pro Woche",
-    "active_months": "Monate pro Jahr",
     "fuel_type": "Kraftstoff",
-    "price_source": "Preisquelle",
-    "source_miteco": "Automatisch",
     "source_manual": "Benutzerdefiniert",
     "manual_price": "Preis (€/L)",
-    "consumption": "Verbrauch (L/100km)",
     "include_wear": "Verschleiß & Wartung einbeziehen (0,08 €/km)",
     "calc_cost": "Mobilitätskosten",
-    "share_route": "Route teilen",
     "share_title": "Meine Route in Desplaza",
     "share_text": "Sehen Sie sich meine Mobilitätskosten an.",
     "share_copied": "Link in die Zwischenablage kopiert!",
@@ -97,8 +40,6 @@
     "wear_note": "* Enthält einen geschätzten Aufschlag von 0,08 €/km für Verschleiß, Versicherung und Wartung.",
     "calc_loading": "Berechnung der besten Route und der Echtzeitpreise...",
     "define_route": "Legen Sie Start und Ziel fest, um Ihre tatsächlichen Mobilitätskosten zu sehen.",
-    "hide_map": "Karte ausblenden",
-    "show_map": "Karte anzeigen",
     "source_auto": "Automatisch",
     "fuel_gas95": "Benzin 95",
     "fuel_gas98": "Benzin 98",
