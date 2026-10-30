@@ -81,9 +81,9 @@ const updateFuelPrice = async () => {
   });
   
   if (matchedProv) {
-    currentFuelPrice.value = await getAverageFuelPriceByProvince(matchedProv.IDPovincia, vehicleConfig.value.fuelType as any);
+    currentFuelPrice.value = await getAverageFuelPriceByProvince(matchedProv.IDPovincia, vehicleConfig.value.fuelType);
   } else {
-    currentFuelPrice.value = await getAverageFuelPriceByProvince("28", vehicleConfig.value.fuelType as any);
+    currentFuelPrice.value = await getAverageFuelPriceByProvince("28", vehicleConfig.value.fuelType);
   }
 };
 
@@ -173,7 +173,7 @@ const showSettings = ref(false);
     <main class="app-container">
       <SettingsView v-if="showSettings" :show="showSettings" />
 
-      <div class="layout-grid" v-else>
+      <div v-else class="layout-grid">
         <!-- Columna Izquierda: Formularios -->
         <div class="forms-column">
           <VehicleConfig 
@@ -189,8 +189,8 @@ const showSettings = ref(false);
               <div v-if="!isDesktop" class="mobile-map-section">
                 <button 
                   class="map-toggle-btn" 
-                  @click="isMapVisibleMobile = !isMapVisibleMobile"
                   :aria-expanded="isMapVisibleMobile"
+                  @click="isMapVisibleMobile = !isMapVisibleMobile"
                 >
                   <span>{{ isMapVisibleMobile ? 'Ocultar mapa' : 'Ver y ajustar en el mapa' }}</span>
                   <svg 
@@ -202,7 +202,7 @@ const showSettings = ref(false);
                   </svg>
                 </button>
 
-                <div class="map-wrapper" v-if="isMapVisibleMobile">
+                <div v-if="isMapVisibleMobile" class="map-wrapper">
                   <NativeMap 
                     :origin="originLocation ? { lat: originLocation.lat, lon: originLocation.lon } : undefined" 
                     :destination="destLocation ? { lat: destLocation.lat, lon: destLocation.lon } : undefined" 
@@ -220,7 +220,7 @@ const showSettings = ref(false);
         <!-- Columna Derecha: Mapa y Resultados -->
         <div class="results-column">
           <!-- Desktop Map Section -->
-          <section class="map-section" v-if="isDesktop">
+          <section v-if="isDesktop" class="map-section">
             <div class="map-wrapper">
               <NativeMap 
                 :origin="originLocation ? { lat: originLocation.lat, lon: originLocation.lon } : undefined" 
@@ -234,11 +234,11 @@ const showSettings = ref(false);
           </section>
 
           <!-- Tarjeta de Resultados -->
-          <section class="cost-summary" v-if="routeData && currentFuelPrice && computedCosts">
+          <section v-if="routeData && currentFuelPrice && computedCosts" class="cost-summary">
             <div class="summary-header">
               <h2>{{ $t("core.calc_cost") }}</h2>
               <div class="header-actions">
-                <button class="miteco-badge" @click="showSourcesModal = true" :title="$t('footer.methodology')">
+                <button class="miteco-badge" :title="$t('footer.methodology')" @click="showSourcesModal = true">
                   {{ $t("core.source_btn") }} {{ vehicleConfig?.priceSource === 'manual' ? 'Manual' : 'MITECO' }} ({{ formatEuroPrice3(currentFuelPrice) }} €/L)
                 </button>
               </div>

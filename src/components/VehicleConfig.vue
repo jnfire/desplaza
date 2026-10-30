@@ -107,15 +107,15 @@ emitUpdate();
       <!-- Modo de Viaje -->
       <div class="mode-selector">
         <label class="radio-label">
-          <input type="radio" value="ida" v-model="tripMode" />
+          <input v-model="tripMode" type="radio" value="ida" />
           <div class="radio-btn">{{ $t("core.one_way") }}</div>
         </label>
         <label class="radio-label">
-          <input type="radio" value="idavuelta" v-model="tripMode" />
+          <input v-model="tripMode" type="radio" value="idavuelta" />
           <div class="radio-btn">{{ $t("core.round_trip") }}</div>
         </label>
         <label class="radio-label">
-          <input type="radio" value="ciclo" v-model="tripMode" />
+          <input v-model="tripMode" type="radio" value="ciclo" />
           <div class="radio-btn">{{ $t("core.routine") }}</div>
         </label>
       </div>
@@ -126,10 +126,10 @@ emitUpdate();
           <label for="daysPerWeek">{{ $t("core.days_week") }}</label>
           <input 
             id="daysPerWeek" 
+            v-model="daysPerWeek" 
             type="number" 
             min="1" 
             max="7" 
-            v-model="daysPerWeek" 
           />
         </div>
 
@@ -137,10 +137,10 @@ emitUpdate();
           <label for="activeMonths">{{ $t("core.months_year") }}</label>
           <input 
             id="activeMonths" 
+            v-model="activeMonths" 
             type="number" 
             min="1" 
             max="12" 
-            v-model="activeMonths" 
             :title="$t('core.active_months_desc')"
           />
         </div>
@@ -170,10 +170,10 @@ emitUpdate();
           <label for="manualPrice">{{ $t("core.manual_price") }}</label>
           <input 
             id="manualPrice" 
+            v-model="manualPrice" 
             type="number" 
             step="0.01" 
             min="0" 
-            v-model="manualPrice" 
           />
         </div>
 
@@ -181,17 +181,17 @@ emitUpdate();
           <label for="consumption">{{ $t("core.consumption_short") }}</label>
           <input 
             id="consumption" 
+            v-model="consumption" 
             type="number" 
             step="0.1" 
             min="0" 
-            v-model="consumption" 
           />
         </div>
       </div>
 
       <div class="toggle-group">
         <label class="checkbox-label">
-          <input type="checkbox" v-model="includeWear" />
+          <input v-model="includeWear" type="checkbox" />
           <span class="checkbox-custom"></span>
           {{ $t("core.include_wear") }}
         </label>

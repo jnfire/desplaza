@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
+import type { ComponentPublicInstance } from 'vue';
 
 const props = withDefaults(defineProps<{
   modelValue: string;
@@ -10,6 +11,9 @@ const props = withDefaults(defineProps<{
   size?: 'md' | 'sm';
   disabled?: boolean;
 }>(), {
+  placeholder: undefined,
+  id: undefined,
+  name: undefined,
   size: 'md',
   disabled: false
 });
@@ -28,8 +32,8 @@ const currentLabel = computed(() => {
   return found ? found.label : (props.placeholder || 'Selecciona una opción');
 });
 
-const setOptionRef = (el: any, index: number) => {
-  if (el) optionRefs.value[index] = el as HTMLButtonElement;
+const setOptionRef = (el: Element | ComponentPublicInstance | null, index: number) => {
+  if (el instanceof HTMLButtonElement) optionRefs.value[index] = el;
 };
 
 const openDropdown = async () => {
@@ -117,7 +121,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="custom-select-container" ref="containerRef" :id="id">
+  <div :id="id" ref="containerRef" class="custom-select-container">
     <!-- input oculto para compatibilidad con forms -->
     <input type="hidden" :name="name" :value="modelValue" />
 
@@ -127,10 +131,10 @@ onUnmounted(() => {
       class="custom-select-trigger"
       :class="{ 'custom-select-trigger--sm': size === 'sm' }"
       :disabled="disabled"
-      @click="toggleDropdown"
-      @keydown="handleTriggerKeydown"
       aria-haspopup="listbox"
       :aria-expanded="isOpen"
+      @click="toggleDropdown"
+      @keydown="handleTriggerKeydown"
     >
       <span class="select-label" :class="{ 'placeholder': !modelValue && placeholder }">{{ currentLabel }}</span>
       <span class="dropdown-arrow" :class="{ 'arrow-open': isOpen }" aria-hidden="true">▾</span>
@@ -144,8 +148,8 @@ onUnmounted(() => {
           role="presentation"
         >
           <button
-            type="button"
             :ref="(el) => setOptionRef(el, index)"
+            type="button"
             class="select-option"
             :class="{ 'option-selected': opt.value === modelValue }"
             role="option"

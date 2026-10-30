@@ -15,7 +15,7 @@ const emit = defineEmits<{
 <template>
   <header class="navbar">
     <div class="navbar-container">
-      <button class="navbar-brand" @click="emit('home')" :aria-label="$t('header.title')">
+      <button class="navbar-brand" :aria-label="$t('header.title')" @click="emit('home')">
         <div>
           <h1 class="title">{{ $t('header.title') }}</h1>
           <p class="subtitle">{{ $t('header.subtitle') }}</p>
@@ -25,18 +25,18 @@ const emit = defineEmits<{
       <div class="navbar-actions">
         <button
           class="btn-secondary config-toggle"
-          @click="emit('share')"
           aria-label="Compartir enlace mágico"
           title="Compartir enlace mágico"
+          @click="emit('share')"
         >
           <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
         </button>
         <button
           class="btn-secondary config-toggle"
           :class="{ 'config-toggle--active': showSettings }"
-          @click="emit('toggle-settings')"
           aria-label="Abrir configuración"
           :aria-expanded="showSettings"
+          @click="emit('toggle-settings')"
         >
           <SettingsIcon class="icon" />
         </button>

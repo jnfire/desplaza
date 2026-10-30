@@ -82,11 +82,11 @@ const clearDestination = () => {
       <div class="input-wrapper">
         <input 
           id="origin" 
-          type="text" 
           v-model="originInput" 
-          @input="onInputOrigin"
+          type="text" 
           :placeholder="$t('core.origin_ph')"
           autocomplete="off"
+          @input="onInputOrigin"
         />
         <button v-if="originInput" class="clear-btn" @click="clearOrigin">×</button>
       </div>
@@ -108,11 +108,11 @@ const clearDestination = () => {
       <div class="input-wrapper">
         <input 
           id="destination" 
-          type="text" 
           v-model="destinationInput" 
-          @input="onInputDest"
+          type="text" 
           :placeholder="$t('core.dest_ph')"
           autocomplete="off"
+          @input="onInputDest"
         />
         <button v-if="destinationInput" class="clear-btn" @click="clearDestination">×</button>
       </div>

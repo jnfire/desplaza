@@ -9,6 +9,17 @@ export interface GeocodeResult {
   label: string;
 }
 
+interface PhotonFeature {
+  geometry: { coordinates: [number, number] };
+  properties: {
+    name?: string;
+    street?: string;
+    housenumber?: string;
+    city?: string;
+    state?: string;
+  };
+}
+
 export interface RouteData {
   distanceKm: number;
   coordinates: [number, number][]; // Array de [longitud, latitud] devuelto por GeoJSON
@@ -28,7 +39,7 @@ export async function geocodeAddress(query: string): Promise<GeocodeResult[]> {
     if (!response.ok) throw new Error('Error en Photon API');
     
     const data = await response.json();
-    return data.features.map((feature: any) => {
+    return (data.features as PhotonFeature[]).map((feature) => {
       const { name, street, housenumber, city, state } = feature.properties;
       const [lon, lat] = feature.geometry.coordinates;
       
@@ -36,7 +47,7 @@ export async function geocodeAddress(query: string): Promise<GeocodeResult[]> {
       const labelParts = [addressPrefix, city, state].filter(Boolean);
       const label = Array.from(new Set(labelParts)).join(', ');
       
-      return { name: state || city || name, lat, lon, label };
+      return { name: state || city || name || label, lat, lon, label };
     });
   } catch (error) {
     console.error('Error de geocodificación:', error);

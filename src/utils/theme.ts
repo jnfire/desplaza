@@ -8,7 +8,7 @@ export const getTheme = (): Theme => {
     if (saved === 'light' || saved === 'dark' || saved === 'system') {
       return saved
     }
-  } catch (e) {
+  } catch {
     // ignore
   }
   return 'system'
@@ -17,7 +17,7 @@ export const getTheme = (): Theme => {
 export const setTheme = (theme: Theme) => {
   try {
     localStorage.setItem(STORAGE_KEY, theme)
-  } catch (e) {
+  } catch {
     // ignore
   }
   applyTheme(theme)

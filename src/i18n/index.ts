@@ -15,7 +15,7 @@ const savedLocale = localStorage.getItem('app-locale') as SupportedLocale;
 const browserLocale = navigator.language.split('-')[0] as SupportedLocale;
 const initialLocale = supportedLocales.includes(savedLocale) ? savedLocale : (supportedLocales.includes(browserLocale) ? browserLocale : 'en');
 
-const i18n = createI18n<[MessageSchema], SupportedLocale>({
+const i18n = createI18n<[MessageSchema], SupportedLocale, false>({
   legacy: false, // Use Composition API
   globalInjection: true, // Inject $t globally
   locale: initialLocale,
@@ -32,12 +32,7 @@ const i18n = createI18n<[MessageSchema], SupportedLocale>({
 
 export const setUiLanguage = (lang: SupportedLocale) => {
   localStorage.setItem('app-locale', lang);
-  const globalI18n = i18n.global as any;
-  if (globalI18n.locale && typeof globalI18n.locale.value !== 'undefined') {
-    globalI18n.locale.value = lang;
-  } else {
-    globalI18n.locale = lang;
-  }
+  i18n.global.locale.value = lang;
 };
 
 export type { SupportedLocale };
