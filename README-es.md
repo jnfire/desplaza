@@ -14,7 +14,7 @@ Todo el procesamiento y los cálculos se realizan localmente en tu navegador web
 - **Coste Real de Desgaste (TCO):** Permite añadir un factor de desgaste y mantenimiento ($0,08€$/km) que prorratea seguro, revisiones, neumáticos y amortización del vehículo.
 - **Comparativa con Transporte Público:** Compara el gasto mensual del vehículo privado frente a las tarifas de abonos de transporte en las principales áreas metropolitanas de España.
 - **Mapa Nativo Ultra-Ligero:** Motor cartográfico propio en SVG (~4KB) basado en proyección matemática *Web Mercator*, sin librerías pesadas de terceros.
-- **Privacidad Local-First:** Sin registro de usuarios, sin bases de datos remotas y sin cookies de rastreo.
+- **Privacidad:** Los costes se calculan en tu navegador. Sin cookies, sin analítica, sin registro y sin base de datos. La búsqueda de direcciones, las rutas y los mapas se piden a servicios de terceros (Photon, OSRM y Esri), y los precios del combustible al MITECO.
 - **Soporte Multi-Idioma:** Interfaz completamente traducida a Español, Inglés, Francés, Alemán, Italiano y Portugués.
 - **Diseño Adaptativo:** Interfaz sobria y responsiva con soporte nativo para temas claro y oscuro.
 

@@ -14,7 +14,7 @@ All processing and calculations are performed locally in your web browser, ensur
 - **Real Commute Cost (TCO):** Includes an optional vehicle wear-and-tear factor ($0.08€$/km) covering maintenance, tires, insurance, and depreciation.
 - **Public Transit Comparison:** Compares monthly private vehicle expenses against public transport passes across major Spanish metropolitan areas.
 - **Ultra-Lightweight Native Map:** Custom lightweight SVG map (~4KB) using *Web Mercator* mathematical projections without heavy third-party mapping dependencies.
-- **Local-First Privacy:** Zero tracking, no user registration, and no external database storage.
+- **Privacy:** Costs are calculated in your browser. No cookies, no analytics, no sign-up and no database. Address search, routing and map tiles are requested from third-party services (Photon, OSRM and Esri), and fuel prices from MITECO.
 - **Multi-language Support:** Full UI internationalization for English, Spanish, French, German, Italian, and Portuguese.
 - **Adaptive Design:** Sober, responsive UI with automatic dark/light theme switching.
 
