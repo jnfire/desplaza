@@ -67,7 +67,8 @@ const emit = defineEmits<{
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  /* Above the sticky header (2000) so the modal title is never covered. */
+  z-index: 3000;
   backdrop-filter: blur(2px);
 }
 
