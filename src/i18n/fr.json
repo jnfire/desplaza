@@ -52,6 +52,32 @@
     "months_year": "Mois par an",
     "your_vehicle": "Votre Véhicule",
     "price_origin": "Origine du Prix",
-    "consumption_short": "Consommation (L/100km)"
+    "consumption_short": "Consommation (L/100km)",
+    "searching": "Recherche..."
+  },
+  "sources": {
+    "title": "Sources et méthodologie",
+    "close": "Fermer",
+    "fuel": {
+      "title": "Prix des carburants",
+      "source": "Les prix des carburants sont obtenus en temps réel via l'API REST publique des carburants du {ministry} du gouvernement espagnol.",
+      "ministry": "ministère de la Transition écologique et du Défi démographique (MITECO)",
+      "method": "Pour le calcul, la province du point de départ sélectionné est croisée avec le prix moyen arithmétique du jour de toutes les stations-service de cette province."
+    },
+    "routing": {
+      "title": "Distances et itinéraires",
+      "text": "Les distances routières sont calculées avec le moteur {osrm} et les adresses sont géocodées avec {photon}."
+    },
+    "wear": {
+      "title": "Coût d'usure et d'entretien",
+      "text": "Au coût du carburant peut s'ajouter, en option, un coût de {amount}. Ce chiffre est une estimation prudente, fondée sur des études d'associations automobiles, qui répartit :",
+      "amount": "0,08 € par kilomètre",
+      "items": {
+        "tyres": "Usure des pneus (~0,01 €/km)",
+        "maintenance": "Entretien préventif et révisions (~0,03 €/km)",
+        "insurance": "Part proportionnelle de l'assurance et des taxes (~0,02 €/km)",
+        "depreciation": "Amortissement et dépréciation minimale (~0,02 €/km)"
+      }
+    }
   }
 }

@@ -102,7 +102,7 @@ const clearDestination = () => {
           {{ s.label }}
         </li>
       </ul>
-      <span v-if="isSearchingOrigin" class="loading-text">Buscando...</span>
+      <span v-if="isSearchingOrigin" class="loading-text">{{ $t('core.searching') }}</span>
     </div>
 
     <div class="input-group">
@@ -124,7 +124,7 @@ const clearDestination = () => {
           {{ s.label }}
         </li>
       </ul>
-      <span v-if="isSearchingDest" class="loading-text">Buscando...</span>
+      <span v-if="isSearchingDest" class="loading-text">{{ $t('core.searching') }}</span>
     </div>
   </div>
 </template>

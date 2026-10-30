@@ -8,46 +8,47 @@ const emit = defineEmits<{
   <div class="modal-overlay" @click.self="emit('close')">
     <div class="modal-content">
       <header class="modal-header">
-        <h2>Fuentes y Metodología</h2>
-        <button class="close-btn" @click="emit('close')">×</button>
+        <h2>{{ $t('sources.title') }}</h2>
+        <button class="close-btn" :aria-label="$t('sources.close')" @click="emit('close')">
+          ×
+        </button>
       </header>
 
       <div class="modal-body">
         <section>
-          <h3>Precios de Carburante</h3>
-          <p>
-            Los precios del combustible se obtienen en tiempo real a través de la API pública REST
-            de Carburantes del
-            <strong>Ministerio para la Transición Ecológica y el Reto Demográfico (MITECO)</strong>
-            del Gobierno de España.
-          </p>
-          <p>
-            Para el cálculo, se cruza la provincia del origen seleccionado con el precio medio
-            aritmético del día de todas las estaciones de servicio de esa provincia.
-          </p>
+          <h3>{{ $t('sources.fuel.title') }}</h3>
+          <i18n-t keypath="sources.fuel.source" tag="p">
+            <template #ministry>
+              <strong>{{ $t('sources.fuel.ministry') }}</strong>
+            </template>
+          </i18n-t>
+          <p>{{ $t('sources.fuel.method') }}</p>
         </section>
 
         <section>
-          <h3>Distancias y Enrutamiento</h3>
-          <p>
-            El cálculo de distancias por carretera se realiza mediante el motor
-            <strong>OSRM (Open Source Routing Machine)</strong> y las direcciones se geocodifican
-            utilizando <strong>Photon (OpenStreetMap)</strong>.
-          </p>
+          <h3>{{ $t('sources.routing.title') }}</h3>
+          <i18n-t keypath="sources.routing.text" tag="p">
+            <template #osrm>
+              <strong>OSRM (Open Source Routing Machine)</strong>
+            </template>
+            <template #photon>
+              <strong>Photon (OpenStreetMap)</strong>
+            </template>
+          </i18n-t>
         </section>
 
         <section>
-          <h3>Coste de Desgaste y Mantenimiento</h3>
-          <p>
-            Al coste puro del combustible se le puede sumar opcionalmente un coste de
-            <strong>0,08 € por kilómetro</strong>. Esta cifra es una estimación conservadora basada
-            en estudios de asociaciones automovilísticas que prorratea:
-          </p>
+          <h3>{{ $t('sources.wear.title') }}</h3>
+          <i18n-t keypath="sources.wear.text" tag="p">
+            <template #amount>
+              <strong>{{ $t('sources.wear.amount') }}</strong>
+            </template>
+          </i18n-t>
           <ul>
-            <li>Desgaste de neumáticos (~0,01 €/km)</li>
-            <li>Mantenimiento preventivo y revisiones (~0,03 €/km)</li>
-            <li>Parte proporcional del seguro e impuestos (~0,02 €/km)</li>
-            <li>Amortización y depreciación mínima (~0,02 €/km)</li>
+            <li>{{ $t('sources.wear.items.tyres') }}</li>
+            <li>{{ $t('sources.wear.items.maintenance') }}</li>
+            <li>{{ $t('sources.wear.items.insurance') }}</li>
+            <li>{{ $t('sources.wear.items.depreciation') }}</li>
           </ul>
         </section>
       </div>

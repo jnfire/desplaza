@@ -52,6 +52,32 @@
     "months_year": "Months a year",
     "your_vehicle": "Your Vehicle",
     "price_origin": "Price Origin",
-    "consumption_short": "Consumption (L/100km)"
+    "consumption_short": "Consumption (L/100km)",
+    "searching": "Searching..."
+  },
+  "sources": {
+    "title": "Sources and methodology",
+    "close": "Close",
+    "fuel": {
+      "title": "Fuel prices",
+      "source": "Fuel prices are fetched in real time from the public fuel-price REST API of the {ministry}, Government of Spain.",
+      "ministry": "Ministry for the Ecological Transition and the Demographic Challenge (MITECO)",
+      "method": "The province of the selected origin is matched with the day's arithmetic mean price across all service stations in that province."
+    },
+    "routing": {
+      "title": "Distances and routing",
+      "text": "Road distances are calculated with the {osrm} engine, and addresses are geocoded with {photon}."
+    },
+    "wear": {
+      "title": "Wear and maintenance cost",
+      "text": "An optional cost of {amount} can be added to the fuel cost. This conservative estimate, based on studies by motoring associations, spreads out:",
+      "amount": "€0.08 per kilometre",
+      "items": {
+        "tyres": "Tyre wear (~€0.01/km)",
+        "maintenance": "Preventive maintenance and servicing (~€0.03/km)",
+        "insurance": "Proportional share of insurance and taxes (~€0.02/km)",
+        "depreciation": "Minimum amortisation and depreciation (~€0.02/km)"
+      }
+    }
   }
 }

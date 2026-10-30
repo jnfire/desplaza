@@ -52,6 +52,32 @@
     "months_year": "Monate pro Jahr",
     "your_vehicle": "Ihr Fahrzeug",
     "price_origin": "Preisquelle",
-    "consumption_short": "Verbrauch (L/100km)"
+    "consumption_short": "Verbrauch (L/100km)",
+    "searching": "Suche..."
+  },
+  "sources": {
+    "title": "Quellen und Methodik",
+    "close": "Schließen",
+    "fuel": {
+      "title": "Kraftstoffpreise",
+      "source": "Die Kraftstoffpreise werden in Echtzeit über die öffentliche REST-API für Kraftstoffpreise des {ministry} der spanischen Regierung abgerufen.",
+      "ministry": "Ministeriums für den ökologischen Wandel und die demografische Herausforderung (MITECO)",
+      "method": "Für die Berechnung wird die Provinz des gewählten Startpunkts mit dem arithmetischen Tagesmittelpreis aller Tankstellen dieser Provinz abgeglichen."
+    },
+    "routing": {
+      "title": "Entfernungen und Routenberechnung",
+      "text": "Straßenentfernungen werden mit der Engine {osrm} berechnet, Adressen werden mit {photon} geokodiert."
+    },
+    "wear": {
+      "title": "Verschleiß- und Wartungskosten",
+      "text": "Zu den reinen Kraftstoffkosten können optional {amount} hinzugerechnet werden. Dieser Wert ist eine vorsichtige Schätzung auf Grundlage von Studien der Automobilclubs und verteilt sich auf:",
+      "amount": "0,08 € pro Kilometer",
+      "items": {
+        "tyres": "Reifenverschleiß (~0,01 €/km)",
+        "maintenance": "Vorbeugende Wartung und Inspektionen (~0,03 €/km)",
+        "insurance": "Anteilige Versicherung und Steuern (~0,02 €/km)",
+        "depreciation": "Abschreibung und minimaler Wertverlust (~0,02 €/km)"
+      }
+    }
   }
 }

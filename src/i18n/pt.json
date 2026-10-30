@@ -52,6 +52,32 @@
     "months_year": "Meses por ano",
     "your_vehicle": "O teu Veículo",
     "price_origin": "Origem do Preço",
-    "consumption_short": "Consumo (L/100km)"
+    "consumption_short": "Consumo (L/100km)",
+    "searching": "A pesquisar..."
+  },
+  "sources": {
+    "title": "Fontes e metodologia",
+    "close": "Fechar",
+    "fuel": {
+      "title": "Preços dos combustíveis",
+      "source": "Os preços dos combustíveis são obtidos em tempo real através da API REST pública de combustíveis do {ministry} do Governo de Espanha.",
+      "ministry": "Ministério para a Transição Ecológica e o Desafio Demográfico (MITECO)",
+      "method": "Para o cálculo, a província da origem selecionada é cruzada com o preço médio aritmético do dia de todos os postos de abastecimento dessa província."
+    },
+    "routing": {
+      "title": "Distâncias e percursos",
+      "text": "As distâncias por estrada são calculadas com o motor {osrm} e as moradas são geocodificadas com {photon}."
+    },
+    "wear": {
+      "title": "Custo de desgaste e manutenção",
+      "text": "Ao custo do combustível pode somar-se, opcionalmente, um custo de {amount}. Este valor é uma estimativa conservadora, baseada em estudos de associações automóveis, que reparte:",
+      "amount": "0,08 € por quilómetro",
+      "items": {
+        "tyres": "Desgaste dos pneus (~0,01 €/km)",
+        "maintenance": "Manutenção preventiva e revisões (~0,03 €/km)",
+        "insurance": "Parte proporcional do seguro e impostos (~0,02 €/km)",
+        "depreciation": "Amortização e depreciação mínima (~0,02 €/km)"
+      }
+    }
   }
 }

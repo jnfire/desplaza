@@ -52,6 +52,32 @@
     "months_year": "Mesi all'anno",
     "your_vehicle": "Il tuo Veicolo",
     "price_origin": "Origine del Prezzo",
-    "consumption_short": "Consumo (L/100km)"
+    "consumption_short": "Consumo (L/100km)",
+    "searching": "Ricerca..."
+  },
+  "sources": {
+    "title": "Fonti e metodologia",
+    "close": "Chiudi",
+    "fuel": {
+      "title": "Prezzi del carburante",
+      "source": "I prezzi del carburante sono ottenuti in tempo reale tramite l'API REST pubblica dei carburanti del {ministry} del Governo spagnolo.",
+      "ministry": "Ministero per la Transizione Ecologica e la Sfida Demografica (MITECO)",
+      "method": "Per il calcolo, la provincia dell'origine selezionata viene incrociata con il prezzo medio aritmetico del giorno di tutte le stazioni di servizio di quella provincia."
+    },
+    "routing": {
+      "title": "Distanze e percorsi",
+      "text": "Le distanze stradali sono calcolate con il motore {osrm} e gli indirizzi vengono geocodificati con {photon}."
+    },
+    "wear": {
+      "title": "Costo di usura e manutenzione",
+      "text": "Al costo del solo carburante si può aggiungere, facoltativamente, un costo di {amount}. Questa cifra è una stima prudente, basata su studi delle associazioni automobilistiche, che ripartisce:",
+      "amount": "0,08 € al chilometro",
+      "items": {
+        "tyres": "Usura degli pneumatici (~0,01 €/km)",
+        "maintenance": "Manutenzione preventiva e revisioni (~0,03 €/km)",
+        "insurance": "Quota proporzionale di assicurazione e tasse (~0,02 €/km)",
+        "depreciation": "Ammortamento e deprezzamento minimo (~0,02 €/km)"
+      }
+    }
   }
 }
