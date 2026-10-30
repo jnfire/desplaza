@@ -57,7 +57,9 @@ El proyecto sigue una arquitectura modular y limpia que separa los clientes de s
    ```
 
 ## 📄 Licencia
-Este proyecto es propietario y tiene todos los derechos reservados por Javier Nicolás Pérez Mesa. Se publica exclusivamente con fines de revisión de portafolio, auditoría de código y uso estrictamente personal. Consulta [`LICENSE.md`](LICENSE.md) para más detalles.
+Copyright (C) 2026 Javier Nicolás Pérez Mesa.
+
+Este proyecto es software libre publicado bajo la [Licencia Pública General Affero de GNU v3.0](LICENSE) (`AGPL-3.0-only`). Puedes usarlo, estudiarlo, modificarlo y compartirlo. Si distribuyes una versión modificada, o la ofreces a usuarios a través de una red, debes publicar su código fuente bajo la misma licencia.
 
 ---
 Hecho con :heart: 2026.

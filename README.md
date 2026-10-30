@@ -57,7 +57,9 @@ The project follows a clean, modular architecture separating external API servic
    ```
 
 ## 📄 License
-This project is proprietary and all rights are reserved by Javier Nicolás Pérez Mesa. It is published exclusively for portfolio review, code audit, and personal use. See [`LICENSE.md`](LICENSE.md) for details.
+Copyright (C) 2026 Javier Nicolás Pérez Mesa.
+
+This project is free software released under the [GNU Affero General Public License v3.0](LICENSE) (`AGPL-3.0-only`). You may use, study, modify and share it. If you distribute a modified version, or offer it to users over a network, you must make its source code available under the same license.
 
 ---
 Made with :heart: 2026.
