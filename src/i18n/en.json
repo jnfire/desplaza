@@ -1,7 +1,12 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calculate and compare the real cost of your mobility."
+    "subtitle": "Calculate and compare the real cost of your mobility.",
+    "badges": {
+      "auditable": "Auditable",
+      "officialData": "Official data",
+      "noSignup": "No Registration"
+    }
   },
   "footer": {
     "text": "Local-first development. Your data, your control.",

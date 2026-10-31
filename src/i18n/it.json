@@ -1,7 +1,12 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calcola e confronta il costo reale dei tuoi spostamenti."
+    "subtitle": "Calcola e confronta il costo reale dei tuoi spostamenti.",
+    "badges": {
+      "auditable": "Verificabile",
+      "officialData": "Dati ufficiali",
+      "noSignup": "Senza registrazione"
+    }
   },
   "footer": {
     "text": "Sviluppo local-first. I tuoi dati, il tuo controllo.",

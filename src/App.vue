@@ -242,7 +242,16 @@ const shareRoute = async () => {
     <main class="app-container">
       <SettingsView v-if="showSettings" :show="showSettings" />
 
-      <div v-else class="layout-grid">
+      <header v-else class="app-hero">
+        <p class="hero-subtitle">{{ t('header.subtitle') }}</p>
+        <div class="badges">
+          <span class="badge">{{ t('header.badges.auditable') }}</span>
+          <span class="badge">{{ t('header.badges.officialData') }}</span>
+          <span class="badge">{{ t('header.badges.noSignup') }}</span>
+        </div>
+      </header>
+
+      <div v-if="!showSettings" class="layout-grid">
         <!-- Columna Izquierda: Formularios -->
         <div class="forms-column">
           <VehicleConfig
@@ -412,13 +421,57 @@ const shareRoute = async () => {
       </div>
     </main>
 
-    <AppFooter @show-sources="showSourcesModal = true" />
+    <div class="footer-container">
+      <AppFooter @show-sources="showSourcesModal = true" />
+    </div>
 
     <SourcesModal v-if="showSourcesModal" @close="showSourcesModal = false" />
   </div>
 </template>
 
 <style scoped>
+/* Hero block shared with the other portfolio tools. */
+.app-hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.hero-subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 1rem;
+}
+
+.badges {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background-color: var(--bg-surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 600px) {
+  .app-hero {
+    margin: 0.5rem 0 1.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+}
+
 .app-wrapper {
   display: flex;
   flex-direction: column;
@@ -430,7 +483,15 @@ const shareRoute = async () => {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 3rem 1.5rem 2rem;
+  box-sizing: border-box;
+}
+
+.footer-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
   box-sizing: border-box;
 }
 

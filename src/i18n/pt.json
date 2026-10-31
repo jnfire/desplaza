@@ -1,7 +1,12 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calcule e compare o custo real da sua mobilidade."
+    "subtitle": "Calcule e compare o custo real da sua mobilidade.",
+    "badges": {
+      "auditable": "Auditável",
+      "officialData": "Dados oficiais",
+      "noSignup": "Sem registo"
+    }
   },
   "footer": {
     "text": "Desenvolvimento local-first. Os seus dados, o seu controlo.",

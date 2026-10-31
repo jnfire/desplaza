@@ -118,6 +118,7 @@ const emit = defineEmits<{
   border: none;
   cursor: pointer;
   font-family: inherit;
+  line-height: inherit;
   padding: 0;
 }
 
