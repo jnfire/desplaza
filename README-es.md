@@ -2,19 +2,21 @@
 
 *Read this in [English](README.md).*
 
-Una aplicación web rápida y ligera que calcula el coste real de tus desplazamientos en coche en España, con los precios oficiales del combustible de cada día.
+Una aplicación web rápida y ligera que compara el coste y el tiempo reales de tus desplazamientos en España: varios coches, una moto, un coche eléctrico o el transporte público, sobre el mismo trayecto y con los precios oficiales del combustible de cada día.
 
 Los costes se calculan en tu navegador, sin cuenta, sin cookies y sin analítica. Construida con **Vue 3 (Composition API)** y **TypeScript**.
 
 ## ✨ Características Principales
+- **Compara opciones:** Añade hasta cinco formas de hacer el mismo trayecto, cada una con su propio nombre (por ejemplo, dos coches entre los que dudas), y ordénalas por coste, tiempo o un equilibrio de ambos con tu hora valorada en €/h. La mejor queda destacada, junto a lo que cuestan de más las demás al año.
+- **Tipos de opción:** Coche o moto de combustión (precio del MITECO o manual), coche eléctrico (precio de la recarga en casa y en puntos públicos, y su reparto) y transporte público (abono mensual o billetes sueltos, tiempo puerta a puerta). A cualquier vehículo se le pueden sumar peajes, aparcamiento y desgaste.
 - **Precios del combustible en tiempo real (MITECO):** Usa el precio medio del día en la provincia de origen, a partir de los datos abiertos oficiales del Ministerio para la Transición Ecológica y el Reto Demográfico. También puedes introducir tu propio precio.
 - **Rutas y distancias:**
   - Búsqueda de direcciones con autocompletado mediante **Photon (OpenStreetMap)**.
-  - Distancia por carretera y trazado de la ruta mediante **OSRM (Open Source Routing Machine)**.
+  - Distancia por carretera, tiempo de conducción y trazado de la ruta mediante **OSRM (Open Source Routing Machine)**.
   - Los marcadores de origen y destino se pueden arrastrar en el mapa para ajustar la ruta.
 - **Coste real del trayecto:** Coste por viaje, al mes y al año para trayectos de solo ida, ida y vuelta o recurrentes, con un recargo opcional por desgaste (0,08 €/km) que prorratea mantenimiento, neumáticos, seguro y depreciación.
 - **Mapa interactivo:** **Leaflet** con mapas base de Esri en gris claro y oscuro que siguen el tema de la app.
-- **Enlaces para compartir:** La ruta y la configuración del vehículo se guardan en la URL y se comparten con la Web Share API o se copian al portapapeles. Ningún servidor los almacena.
+- **Guardada y para compartir:** Tu comparativa se conserva en tu dispositivo entre visitas, y se puede compartir entera como enlace con la Web Share API o el portapapeles. Ningún servidor la almacena.
 - **Privacidad:** Los costes se calculan en tu navegador. Sin cookies, sin analítica, sin registro y sin base de datos. La búsqueda de direcciones, las rutas y los mapas se piden a servicios de terceros (Photon, OSRM y Esri), y los precios del combustible al MITECO.
 - **Soporte multi-idioma:** Interfaz completamente traducida a español, inglés, francés, alemán, italiano y portugués.
 - **Diseño adaptativo:** Interfaz sobria y responsiva con tema claro, oscuro o del sistema.

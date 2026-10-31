@@ -2,19 +2,21 @@
 
 *Leer esto en [Español](README-es.md).*
 
-A fast, lightweight web app that calculates the real cost of commuting by car in Spain, using official daily fuel prices.
+A fast, lightweight web app that compares the real cost and time of your commute in Spain: several cars, a motorbike, an electric car or public transport, on the same trip, using official daily fuel prices.
 
 Costs are calculated in your browser, with no account, no cookies and no analytics. Built with **Vue 3 (Composition API)** and **TypeScript**.
 
 ## ✨ Key Features
+- **Compare Options:** Add up to five ways of making the same trip, each with its own name (for example two cars you are choosing between), and rank them by cost, time or a balance of both with your hour valued in €/h. The best option is highlighted with what the others cost more per year.
+- **Option Types:** Combustion car or motorbike (MITECO or manual fuel price), electric car (home and public charging prices and their share) and public transport (monthly pass or single tickets, door-to-door time). Tolls, parking and wear can be added to any vehicle.
 - **Live Fuel Prices (MITECO):** Uses the daily average price in the origin's province, from the official open data of Spain's Ministry for the Ecological Transition. You can enter your own price instead.
 - **Routing & Distance:**
   - Address search with autocompletion via **Photon (OpenStreetMap)**.
-  - Road distance and route geometry via **OSRM (Open Source Routing Machine)**.
+  - Road distance, driving time and route geometry via **OSRM (Open Source Routing Machine)**.
   - Origin and destination markers can be dragged on the map to fine-tune the route.
 - **Real Commute Cost:** Cost per trip, per month and per year for one-way, round-trip or recurring commutes, with an optional wear-and-tear surcharge (€0.08/km) for maintenance, tyres, insurance and depreciation.
 - **Interactive Map:** **Leaflet** with Esri light and dark grey basemaps that follow the app theme.
-- **Shareable Links:** The route and vehicle settings are encoded in the URL and shared with the Web Share API or copied to the clipboard. No server stores them.
+- **Saved and Shareable:** Your comparison is kept on your device between visits, and the whole comparison can be shared as a link with the Web Share API or the clipboard. No server stores it.
 - **Privacy:** Costs are calculated in your browser. No cookies, no analytics, no sign-up and no database. Address search, routing and map tiles are requested from third-party services (Photon, OSRM and Esri), and fuel prices from MITECO.
 - **Multi-language Support:** Full UI internationalization for English, Spanish, French, German, Italian, and Portuguese.
 - **Adaptive Design:** Sober, responsive UI with light, dark and system themes.

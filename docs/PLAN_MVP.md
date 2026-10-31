@@ -1,10 +1,10 @@
 # Especificación y Propuesta de Arquitectura: Desplaza (MVP - España)
 
-> **Estado a 30 de octubre de 2026.** Este es el documento de planificación original del MVP y se conserva como referencia; no describe la app actual. Para lo que existe hoy, ver [`ARCHITECTURE-es.md`](ARCHITECTURE-es.md).
+> **Estado a 31 de octubre de 2026.** Este es el documento de planificación original del MVP y se conserva como referencia; no describe la app actual. Para lo que existe hoy, ver [`ARCHITECTURE-es.md`](ARCHITECTURE-es.md).
 >
-> - **Implementado:** búsqueda de direcciones y rutas (Photon y OSRM), precios del MITECO por provincia con opción de precio manual, coste por viaje, mensual y anual, recargo por desgaste, mapa con Leaflet y enlaces para compartir por URL.
-> - **Distinto de lo planificado:** el mapa usa teselas de Esri, no CartoDB. Google Analytics se eliminó: la app no usa analítica ni cookies.
-> - **Pendiente:** comparativa con transporte público (el borrador de `public_transit_es.json` se retiró sin llegar a usarse), ahorro neto a 1 y 5 años y estimación de emisiones de CO₂.
+> - **Implementado:** búsqueda de direcciones y rutas (Photon y OSRM), precios del MITECO por provincia con opción de precio manual, coste por viaje, mensual y anual, recargo por desgaste, mapa con Leaflet y enlaces para compartir por URL. Además, comparativa de varias opciones sobre el mismo trayecto (coches, moto, eléctrico y transporte público con datos introducidos por el usuario), ordenada por coste, tiempo o equilibrio, y guardado en el dispositivo.
+> - **Distinto de lo planificado:** el mapa usa teselas de Esri, no CartoDB. Google Analytics se eliminó: la app no usa analítica ni cookies. El transporte público no usa reglas por distancia: el usuario introduce su abono o billete y su tiempo, porque no hay una fuente oficial nacional de tarifas y horarios.
+> - **Pendiente:** precio automático de la electricidad (PVPC de Red Eléctrica), estimación de emisiones de CO₂ con factores oficiales, híbridos enchufables y valores de referencia de abonos por ciudad.
 
 ## 1. Visión General del Producto
 
