@@ -23,7 +23,6 @@ const emit = defineEmits<{
   (e: 'remove', optionId: string): void;
   (e: 'update:sortKey', sortKey: SortKey): void;
   (e: 'update:hourValue', hourValue: number): void;
-  (e: 'show-sources'): void;
 }>();
 
 const { t, locale } = useI18n();
@@ -212,9 +211,7 @@ const single = computed(() => {
             </template>
           </p>
           <p v-if="energyText(single.option, single.result)" class="text-muted">
-            <button type="button" class="link-btn" @click="emit('show-sources')">
-              {{ energyText(single.option, single.result) }}
-            </button>
+            {{ energyText(single.option, single.result) }}
           </p>
         </div>
       </template>
@@ -320,10 +317,7 @@ const single = computed(() => {
         <p>
           {{ t('core.route_dist') }}
           <strong>{{ formatNumber(distanceKm ?? 0, locale) }} km</strong>
-          {{ t('core.one_way_only') }} ·
-          <button type="button" class="link-btn" @click="emit('show-sources')">
-            {{ t('footer.methodology') }}
-          </button>
+          {{ t('core.one_way_only') }}
         </p>
       </div>
     </template>
@@ -377,8 +371,7 @@ const single = computed(() => {
 }
 
 .btn-add:focus-visible,
-.icon-btn:focus-visible,
-.link-btn:focus-visible {
+.icon-btn:focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
@@ -493,17 +486,6 @@ const single = computed(() => {
 
 .text-muted {
   color: var(--text-muted);
-}
-
-.link-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  cursor: pointer;
 }
 
 .compare-hint {

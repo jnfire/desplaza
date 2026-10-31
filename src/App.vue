@@ -294,59 +294,59 @@ const shareRoute = async () => {
     <main class="app-container">
       <SettingsView v-if="showSettings" :show="showSettings" />
 
-      <div v-else class="layout-grid">
-        <div class="forms-column">
-          <TripCard
-            :trip="trip"
-            :origin-label="originLocation?.label"
-            :destination-label="destLocation?.label"
-            @update:trip="trip = $event"
-            @update:origin="originLocation = $event"
-            @update:destination="destLocation = $event"
-          />
+      <div v-else class="layout">
+        <div class="route-section">
+          <div class="forms-column">
+            <TripCard
+              :trip="trip"
+              :origin-label="originLocation?.label"
+              :destination-label="destLocation?.label"
+              @update:trip="trip = $event"
+              @update:origin="originLocation = $event"
+              @update:destination="destLocation = $event"
+            />
 
-          <div v-if="!isDesktop" class="mobile-map-section">
-            <button
-              type="button"
-              class="map-toggle-btn"
-              :aria-expanded="isMapVisibleMobile"
-              :aria-controls="isMapVisibleMobile ? 'mobile-map-drawer' : undefined"
-              @click="toggleMobileMap"
-            >
-              <span>{{ isMapVisibleMobile ? t('core.hide_map') : t('core.show_map') }}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                :style="{ transform: isMapVisibleMobile ? 'rotate(180deg)' : 'rotate(0)' }"
-                style="transition: transform 0.2s ease"
-                aria-hidden="true"
+            <div v-if="!isDesktop" class="mobile-map-section">
+              <button
+                type="button"
+                class="map-toggle-btn"
+                :aria-expanded="isMapVisibleMobile"
+                :aria-controls="isMapVisibleMobile ? 'mobile-map-drawer' : undefined"
+                @click="toggleMobileMap"
               >
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
+                <span>{{ isMapVisibleMobile ? t('core.hide_map') : t('core.show_map') }}</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  :style="{ transform: isMapVisibleMobile ? 'rotate(180deg)' : 'rotate(0)' }"
+                  style="transition: transform 0.2s ease"
+                  aria-hidden="true"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
 
-            <div v-if="isMapVisibleMobile" id="mobile-map-drawer" class="map-wrapper">
-              <NativeMap
-                ref="mobileMapRef"
-                :origin="mapPoint(originLocation)"
-                :destination="mapPoint(destLocation)"
-                :route-coordinates="routeData?.coordinates"
-                :dark-mode="isDarkMode"
-                @update:origin="updateOriginCoords"
-                @update:destination="updateDestCoords"
-              />
+              <div v-if="isMapVisibleMobile" id="mobile-map-drawer" class="map-wrapper">
+                <NativeMap
+                  ref="mobileMapRef"
+                  :origin="mapPoint(originLocation)"
+                  :destination="mapPoint(destLocation)"
+                  :route-coordinates="routeData?.coordinates"
+                  :dark-mode="isDarkMode"
+                  @update:origin="updateOriginCoords"
+                  @update:destination="updateDestCoords"
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="results-column">
           <section v-if="isDesktop" class="map-section">
             <div class="map-wrapper">
               <NativeMap
@@ -359,24 +359,23 @@ const shareRoute = async () => {
               />
             </div>
           </section>
-
-          <OptionsPanel
-            :options="options"
-            :results="results"
-            :trip="trip"
-            :distance-km="routeData?.distanceKm ?? null"
-            :is-calculating="isCalculating"
-            :sort-key="sortKey"
-            :hour-value="hourValue"
-            @add="openNewOption"
-            @edit="openEditOption"
-            @duplicate="openDuplicate"
-            @remove="removeOption"
-            @update:sort-key="sortKey = $event"
-            @update:hour-value="hourValue = $event"
-            @show-sources="showSourcesModal = true"
-          />
         </div>
+
+        <OptionsPanel
+          :options="options"
+          :results="results"
+          :trip="trip"
+          :distance-km="routeData?.distanceKm ?? null"
+          :is-calculating="isCalculating"
+          :sort-key="sortKey"
+          :hour-value="hourValue"
+          @add="openNewOption"
+          @edit="openEditOption"
+          @duplicate="openDuplicate"
+          @remove="removeOption"
+          @update:sort-key="sortKey = $event"
+          @update:hour-value="hourValue = $event"
+        />
       </div>
     </main>
 
@@ -433,25 +432,36 @@ const shareRoute = async () => {
   box-sizing: border-box;
 }
 
-.layout-grid {
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Desktop: the trip and the map share a row; the options span the width below. */
+.route-section {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
 }
 
 @media (min-width: 900px) {
-  .layout-grid {
+  .route-section {
     grid-template-columns: 400px 1fr;
-    align-items: start;
+    align-items: stretch;
   }
 }
 
-.forms-column,
-.results-column {
+.forms-column {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   min-width: 0;
+}
+
+.map-section {
+  min-width: 0;
+  min-height: 360px;
 }
 
 .map-toggle-btn {
@@ -487,8 +497,9 @@ const shareRoute = async () => {
 }
 
 @media (min-width: 900px) {
-  .map-wrapper {
-    height: 400px;
+  /* The map takes the height of the trip card next to it. */
+  .map-section .map-wrapper {
+    height: 100%;
   }
 }
 
