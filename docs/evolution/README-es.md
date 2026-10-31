@@ -10,7 +10,7 @@ Cómo Desplaza pasó de su primer commit a hoy, con las capturas para verlo.
 
 Desplaza ha crecido por función, no por aspecto. Empezó con un coche, una ruta y un coste mensual. La idea de comparar todas las formas de hacer el mismo trayecto obligó a crear piezas nuevas: un modal para crear y editar cada opción con campos que dependen de su tipo, una ordenación por coste, tiempo o equilibrio, una tabla en pantallas anchas y tarjetas en el móvil, una comparativa guardada y un formato de enlace para compartir que sigue abriendo los enlaces antiguos. El trabajo de accesibilidad que se había quedado en una rama sin integrar entró por el camino, y la página se simplificó con la cabecera y el pie comunes.
 
-Versiones: la v1.0.0 y la v1.0.1 (agosto de 2026) se quedan como estaban; este trabajo es la versión siguiente, la 1.1.0.
+Versiones: la v1.0.0 y la v1.0.1 (agosto de 2026) se quedan como estaban; este trabajo es la versión mayor siguiente, la 2.0.0.
 
 ## Cronología
 
@@ -18,7 +18,7 @@ Versiones: la v1.0.0 y la v1.0.1 (agosto de 2026) se quedan como estaban; este t
 | --- | --- |
 | Agosto de 2026 | Primer commit y primeras versiones públicas (v1.0.0 y v1.0.1): un coche, los precios del MITECO, una ruta en un mapa y el coste mensual y anual. Una rama con trabajo de accesibilidad y usabilidad se quedó sin integrar. |
 | Octubre de 2026 | Software libre (AGPL-3.0), sin Google Analytics ni banner de cookies, documentación honesta de los servicios de terceros, un sistema de diseño compartido con las otras dos herramientas y CI que condiciona cada despliegue. Se integró la rama de accesibilidad: la búsqueda de direcciones pasó a ser un combobox accesible con teclado y la ventana de fuentes un diálogo de verdad. |
-| Octubre de 2026 | Comparativa de varias opciones sobre el mismo trayecto: coches, una moto, un coche eléctrico y transporte público, ordenadas por coste, tiempo o equilibrio, editadas en un modal y mostradas como tabla en pantallas anchas. Publicada como v1.1.0, sobre la v1.0.0 y la v1.0.1. |
+| Octubre de 2026 | Comparativa de varias opciones sobre el mismo trayecto: coches, una moto, un coche eléctrico y transporte público, ordenadas por coste, tiempo o equilibrio, editadas en un modal y mostradas como tabla en pantallas anchas. Publicada como v2.0.0, sobre la v1.0.0 y la v1.0.1. |
 
 ## En cifras
 

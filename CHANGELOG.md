@@ -7,7 +7,7 @@ and this project uses [Semantic Versioning](https://semver.org/). The version
 number lives in a single place, `package.json`, and is shown live in the app
 footer.
 
-## [1.1.0] - 2026-10-31
+## [2.0.0] - 2026-10-31
 
 Desplaza now compares the real cost and time of several ways of making the
 same trip in Spain, not just one car, and it is brought up to the standard of

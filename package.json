@@ -1,6 +1,6 @@
 {
   "name": "desplaza",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "private": true,
   "description": "Local-first web app to calculate the real cost of commuting by car in Spain, with live MITECO fuel prices.",
   "license": "AGPL-3.0-only",
