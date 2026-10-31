@@ -93,29 +93,18 @@ const periodText = computed(() =>
   isRecurring.value ? t('compare.per_month') : t('compare.per_journey'),
 );
 
-/** Extra cost of a result over the best one, over a year for commutes. */
-const extraText = (result: OptionResult): string | null => {
+/** How much more a result costs than the best one: per year for commutes, else per journey. */
+const extraAmount = (result: OptionResult): number | null => {
   const best = bestResult.value;
   if (!best || result.optionId === best.optionId || !result.complete) return null;
   const difference = isRecurring.value
     ? result.annual - best.annual
     : comparableCost(result, props.trip) - comparableCost(best, props.trip);
-  if (difference <= 0.005) return null;
-  return isRecurring.value
-    ? t('compare.extra_year', { amount: euro(difference) })
-    : t('compare.extra_journey', { amount: euro(difference) });
+  return difference > 0.005 ? difference : null;
 };
 
-/** Secondary details of a row: the yearly cost for commutes, then the extra over the best. */
-const detailParts = (result: OptionResult): string[] => {
-  const parts: string[] = [];
-  if (isRecurring.value && result.complete) {
-    parts.push(t('compare.annual_total', { amount: euro(result.annual) }));
-  }
-  const extra = extraText(result);
-  if (extra) parts.push(extra);
-  return parts;
-};
+const yearText = (result: OptionResult) =>
+  result.complete ? `${euro(result.annual)} €` : t('compare.no_price');
 
 const energyText = (option: TravelOption, result: OptionResult): string | null => {
   if (option.kind === 'transit' || result.energyPrice === null) return null;
@@ -252,12 +241,32 @@ const single = computed(() => {
         </label>
       </div>
 
+      <div
+        v-if="hasRoute"
+        class="table-head"
+        :class="{ 'has-year': isRecurring }"
+        aria-hidden="true"
+      >
+        <span class="head-main">{{ t('compare.col_option') }}</span>
+        <span class="head-cost">
+          {{ isRecurring ? t('compare.col_month') : t('compare.col_journey') }}
+        </span>
+        <span v-if="isRecurring" class="head-year">{{ t('compare.col_year') }}</span>
+        <span class="head-time">{{ t('compare.sort_time') }}</span>
+        <span class="head-extra">
+          {{ isRecurring ? t('compare.col_extra_year') : t('compare.col_extra_journey') }}
+        </span>
+      </div>
+
       <ol class="option-list">
         <li
           v-for="option in hasRoute ? ranked.map((r) => optionById.get(r.optionId)!) : options"
           :key="option.id"
           class="option-row"
-          :class="{ 'option-row--best': hasRoute && option.id === bestId }"
+          :class="{
+            'option-row--best': hasRoute && option.id === bestId,
+            'has-year': isRecurring,
+          }"
         >
           <div class="row-main">
             <span v-if="hasRoute && option.id === bestId" class="best-tag">
@@ -265,16 +274,28 @@ const single = computed(() => {
             </span>
             <h3 class="option-name">{{ option.name }}</h3>
             <p class="option-desc">{{ describe(option) }}</p>
-            <p v-if="hasRoute && results[option.id]" class="extra">
-              <span v-for="part in detailParts(results[option.id])" :key="part">{{ part }}</span>
-            </p>
           </div>
 
-          <div v-if="hasRoute && results[option.id]" class="row-figures">
-            <span class="row-cost">{{ costText(results[option.id]) }}</span>
-            <span class="row-period">{{ periodText }}</span>
-            <span class="row-time">{{ timeText(results[option.id]) }}</span>
-          </div>
+          <template v-if="hasRoute && results[option.id]">
+            <div class="cell cell-cost">
+              <span class="row-cost">{{ costText(results[option.id]) }}</span>
+              <span class="cell-unit">{{ periodText }}</span>
+            </div>
+            <div v-if="isRecurring" class="cell cell-year">
+              <span class="cell-value">{{ yearText(results[option.id]) }}</span>
+              <span class="cell-unit">{{ t('compare.unit_year') }}</span>
+            </div>
+            <div class="cell cell-time">
+              <span class="sr-only">{{ t('compare.sort_time') }}: </span>
+              <span class="cell-value">{{ timeText(results[option.id]) }}</span>
+            </div>
+            <div class="cell cell-extra">
+              <template v-if="extraAmount(results[option.id]) !== null">
+                <span class="cell-value">+{{ euro(extraAmount(results[option.id])!) }} €</span>
+                <span class="cell-unit">{{ t('compare.unit_vs_best') }}</span>
+              </template>
+            </div>
+          </template>
 
           <OptionActions
             :name="option.name"
@@ -468,12 +489,21 @@ const single = computed(() => {
   gap: 0.75rem;
 }
 
+.table-head {
+  display: none;
+}
+
 .option-row {
   display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'main cost'
+    'year time'
+    'extra extra'
+    'actions actions';
+  gap: 0.75rem 1rem;
   align-items: center;
-  padding: 1.25rem;
+  padding: 1rem;
   background: var(--bg-body);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -481,7 +511,15 @@ const single = computed(() => {
 
 .option-row--best {
   border: 2px solid var(--accent-color);
-  padding: calc(1.25rem - 1px);
+  padding: calc(1rem - 1px);
+}
+
+.row-main {
+  grid-area: main;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
 }
 
 /* Always above the name, so its position does not depend on the name's length. */
@@ -498,39 +536,45 @@ const single = computed(() => {
   margin-bottom: 0.25rem;
 }
 
-.row-main {
+.cell {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  align-items: baseline;
+  gap: 0.35rem;
   min-width: 0;
 }
 
-.extra {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 0.75rem;
-  row-gap: 0.1rem;
+.cell-cost {
+  grid-area: cost;
+  justify-self: end;
+}
+
+.cell-year {
+  grid-area: year;
   font-size: 0.8rem;
   color: var(--text-muted);
-  margin-top: 0.15rem;
 }
 
-.extra > span {
-  text-wrap: balance;
+.cell-time {
+  grid-area: time;
+  justify-self: end;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
-.extra:empty {
+.cell-extra {
+  grid-area: extra;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.cell-extra:empty {
   display: none;
 }
 
-.row-figures {
-  display: grid;
-  grid-template-columns: auto auto;
-  column-gap: 0.35rem;
-  row-gap: 0.2rem;
-  align-items: baseline;
-  justify-items: end;
-  text-align: right;
+.cell-unit {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 .row-cost {
@@ -540,16 +584,112 @@ const single = computed(() => {
   white-space: nowrap;
 }
 
-.row-period {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  justify-self: start;
+.option-row > :deep(.option-actions) {
+  grid-area: actions;
+  justify-content: flex-end;
+  border-top: 1px solid var(--border-color);
+  padding-top: 0.75rem;
 }
 
-.row-time {
-  grid-column: 1 / -1;
-  font-size: 0.85rem;
-  color: var(--text-muted);
+/* Wide panels: the list becomes a table with aligned columns, so the figures of
+   different options line up and are easy to compare. The labels move to the header. */
+@media (min-width: 760px) {
+  .table-head,
+  .option-row {
+    --columns: minmax(0, 2fr) minmax(6.5rem, 1fr) minmax(5.5rem, 0.8fr) minmax(9rem, 1fr) 8rem;
+    --areas: 'main cost time extra actions';
+    grid-template-columns: var(--columns);
+    grid-template-areas: var(--areas);
+    column-gap: 1.25rem;
+  }
+
+  .table-head.has-year,
+  .option-row.has-year {
+    --columns: minmax(0, 2fr) minmax(6.5rem, 1fr) minmax(6.5rem, 1fr) minmax(5.5rem, 0.8fr)
+      minmax(9rem, 1fr) 8rem;
+    --areas: 'main cost year time extra actions';
+  }
+
+  .table-head {
+    display: grid;
+    /* Same horizontal inset as a row: its border plus its padding. */
+    padding: 0 calc(1.25rem + 1px);
+    /* Sit close to the rows, cancelling most of the panel's gap. */
+    margin-bottom: -0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .head-main {
+    grid-area: main;
+  }
+
+  .head-cost {
+    grid-area: cost;
+  }
+
+  .head-year {
+    grid-area: year;
+  }
+
+  .head-time {
+    grid-area: time;
+  }
+
+  .head-extra {
+    grid-area: extra;
+  }
+
+  .head-cost,
+  .head-year,
+  .head-time,
+  .head-extra {
+    text-align: right;
+  }
+
+  .option-row {
+    padding: 1.25rem;
+    align-items: center;
+  }
+
+  .option-row--best {
+    padding: calc(1.25rem - 1px);
+  }
+
+  .cell {
+    justify-self: stretch;
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .cell-year,
+  .cell-time,
+  .cell-extra {
+    font-size: 0.95rem;
+  }
+
+  .cell-extra {
+    flex-wrap: nowrap;
+  }
+
+  /* The header names each column, so the unit is only kept for screen readers. */
+  .cell-unit {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .option-row > :deep(.option-actions) {
+    border-top: none;
+    padding-top: 0;
+  }
 }
 
 @media (max-width: 600px) {
@@ -559,24 +699,6 @@ const single = computed(() => {
 
   .cost-value {
     font-size: 2rem;
-  }
-
-  .option-row {
-    grid-template-columns: 1fr auto;
-    gap: 0.75rem 1rem;
-    padding: 1rem;
-  }
-
-  .option-row--best {
-    padding: calc(1rem - 1px);
-  }
-
-  /* The action buttons get their own row, right-aligned under a divider. */
-  .option-row > :deep(.option-actions) {
-    grid-column: 1 / -1;
-    justify-content: flex-end;
-    border-top: 1px solid var(--border-color);
-    padding-top: 0.75rem;
   }
 }
 </style>

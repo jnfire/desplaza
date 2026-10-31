@@ -154,10 +154,15 @@
     "no_time": "Senza tempo",
     "no_price": "Senza prezzo",
     "no_price_hint": "Il MITECO non ha un prezzo per questo carburante nella tua provincia. Prova con un prezzo manuale.",
-    "extra_year": "{amount} € in più della migliore",
-    "extra_journey": "{amount} € in più per viaggio",
     "desc_ticket": "Biglietto · {price} €",
     "manual_price_short": "Prezzo manuale",
-    "annual_total": "{amount} € all’anno"
+    "unit_year": "all’anno",
+    "unit_vs_best": "in più della migliore",
+    "col_option": "Opzione",
+    "col_month": "Al mese",
+    "col_journey": "Per viaggio",
+    "col_year": "All’anno",
+    "col_extra_year": "Differenza all’anno",
+    "col_extra_journey": "Differenza per viaggio"
   }
 }
