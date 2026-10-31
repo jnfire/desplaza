@@ -25,8 +25,8 @@ const emit = defineEmits<{
       <div class="navbar-actions">
         <button
           class="btn-secondary config-toggle"
-          aria-label="Compartir enlace mágico"
-          title="Compartir enlace mágico"
+          :aria-label="$t('header.share')"
+          :title="$t('header.share')"
           @click="emit('share')"
         >
           <svg
@@ -49,7 +49,8 @@ const emit = defineEmits<{
         <button
           class="btn-secondary config-toggle"
           :class="{ 'config-toggle--active': showSettings }"
-          aria-label="Abrir configuración"
+          :aria-label="$t('header.settings')"
+          :title="$t('header.settings')"
           :aria-expanded="showSettings"
           @click="emit('toggle-settings')"
         >

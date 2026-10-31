@@ -1,7 +1,9 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Berechnen und vergleichen Sie die wahren Kosten Ihrer Mobilität."
+    "subtitle": "Berechnen und vergleichen Sie die wahren Kosten Ihrer Mobilität.",
+    "share": "Link teilen",
+    "settings": "Einstellungen"
   },
   "footer": {
     "text": "Local-First-Entwicklung. Ihre Daten, Ihre Kontrolle.",

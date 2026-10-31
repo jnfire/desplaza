@@ -1,7 +1,9 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calculate and compare the real cost of your mobility."
+    "subtitle": "Calculate and compare the real cost of your mobility.",
+    "share": "Share link",
+    "settings": "Settings"
   },
   "footer": {
     "text": "Local-first development. Your data, your control.",
