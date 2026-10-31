@@ -19,7 +19,10 @@ const { t } = useI18n();
   <header class="navbar">
     <div class="navbar-container">
       <button class="navbar-brand" :aria-label="t('header.title')" @click="emit('home')">
-        <h1 class="title">{{ t('header.title') }}</h1>
+        <div>
+          <h1 class="title">{{ t('header.title') }}</h1>
+          <p class="subtitle">{{ t('header.subtitle') }}</p>
+        </div>
       </button>
 
       <div class="navbar-actions">
@@ -108,6 +111,14 @@ const { t } = useI18n();
   text-align: left;
 }
 
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0.15rem 0 0 0;
+  font-weight: 400;
+  text-align: left;
+}
+
 .navbar-actions {
   display: flex;
   align-items: center;
@@ -161,6 +172,9 @@ const { t } = useI18n();
   }
   .title {
     font-size: 1.05rem;
+  }
+  .subtitle {
+    display: none;
   }
 }
 </style>

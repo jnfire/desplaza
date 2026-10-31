@@ -1,15 +1,10 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calculez et comparez le coût réel de votre mobilité.",
-    "badges": {
-      "auditable": "Auditable",
-      "officialData": "Données officielles",
-      "noSignup": "Sans inscription"
-    }
+    "subtitle": "Le coût réel de vos trajets en voiture, avec les prix officiels du carburant."
   },
   "footer": {
-    "text": "Développement local-first. Vos données, votre contrôle.",
+    "text": "Sans cookies · Sans compte · Open source",
     "source": "Code Source",
     "license": "Licence AGPL-3.0",
     "methodology": "Méthodologie",

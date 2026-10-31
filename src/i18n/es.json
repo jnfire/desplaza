@@ -1,15 +1,10 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calcula y compara el coste real de tu movilidad.",
-    "badges": {
-      "auditable": "Auditable",
-      "officialData": "Datos oficiales",
-      "noSignup": "Sin registro"
-    }
+    "subtitle": "Coste real de tus desplazamientos en coche, con precios oficiales."
   },
   "footer": {
-    "text": "Desarrollo local-first. Tus datos, tu control.",
+    "text": "Sin cookies · Sin cuentas · Código abierto",
     "source": "Código Fuente",
     "license": "Licencia AGPL-3.0",
     "methodology": "Metodología",
