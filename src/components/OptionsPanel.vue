@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { MAX_OPTIONS, type TravelOption, type TripSettings } from '../core/travelOptions';
 import { comparableCost, rankResults, type OptionResult, type SortKey } from '../core/comparison';
 import { formatMinutes, formatNumber } from '../utils/format';
+import OptionActions from './OptionActions.vue';
 
 const props = defineProps<{
   options: TravelOption[];
@@ -72,12 +73,12 @@ const describe = (option: TravelOption): string => {
   }
   const consumption = formatNumber(option.consumption, locale.value, 1);
   if (option.kind === 'electric')
-    return `${t('options.kinds.electric')} · ${consumption} kWh/100 km`;
+    return `${t('options.kinds.electric')} · ${consumption} kWh/100 km`;
   const fuel =
     option.priceSource === 'manual'
       ? t('compare.manual_price_short')
       : t(fuelLabelKeys[option.fuelType]);
-  return `${fuel} · ${consumption} L/100 km`;
+  return `${fuel} · ${consumption} L/100 km`;
 };
 
 const costText = (result: OptionResult) =>
@@ -92,29 +93,18 @@ const periodText = computed(() =>
   isRecurring.value ? t('compare.per_month') : t('compare.per_journey'),
 );
 
-/** Extra cost of a result over the best one, over a year for commutes. */
-const extraText = (result: OptionResult): string | null => {
+/** How much more a result costs than the best one: per year for commutes, else per journey. */
+const extraAmount = (result: OptionResult): number | null => {
   const best = bestResult.value;
   if (!best || result.optionId === best.optionId || !result.complete) return null;
   const difference = isRecurring.value
     ? result.annual - best.annual
     : comparableCost(result, props.trip) - comparableCost(best, props.trip);
-  if (difference <= 0.005) return null;
-  return isRecurring.value
-    ? t('compare.extra_year', { amount: euro(difference) })
-    : t('compare.extra_journey', { amount: euro(difference) });
+  return difference > 0.005 ? difference : null;
 };
 
-/** Secondary line of a row: the yearly cost for commutes, plus the extra over the best. */
-const detailText = (result: OptionResult): string | null => {
-  const parts: string[] = [];
-  if (isRecurring.value && result.complete) {
-    parts.push(t('compare.annual_total', { amount: euro(result.annual) }));
-  }
-  const extra = extraText(result);
-  if (extra) parts.push(extra);
-  return parts.length ? parts.join(' · ') : null;
-};
+const yearText = (result: OptionResult) =>
+  result.complete ? `${euro(result.annual)} €` : t('compare.no_price');
 
 const energyText = (option: TravelOption, result: OptionResult): string | null => {
   if (option.kind === 'transit' || result.energyPrice === null) return null;
@@ -164,27 +154,13 @@ const single = computed(() => {
           <h3 class="option-name">{{ single.option.name }}</h3>
           <p class="option-desc">{{ describe(single.option) }}</p>
         </div>
-        <div class="row-actions">
-          <button
-            type="button"
-            class="icon-btn"
-            :aria-label="t('options.edit_named', { name: single.option.name })"
-            :title="t('options.edit')"
-            @click="emit('edit', single.option.id)"
-          >
-            ✎
-          </button>
-          <button
-            type="button"
-            class="icon-btn"
-            :disabled="!canAdd"
-            :aria-label="t('options.duplicate_named', { name: single.option.name })"
-            :title="t('options.duplicate')"
-            @click="emit('duplicate', single.option.id)"
-          >
-            ⧉
-          </button>
-        </div>
+        <OptionActions
+          :name="single.option.name"
+          :can-duplicate="canAdd"
+          :can-remove="false"
+          @edit="emit('edit', single.option.id)"
+          @duplicate="emit('duplicate', single.option.id)"
+        />
       </div>
 
       <template v-if="hasRoute && single.result">
@@ -265,65 +241,70 @@ const single = computed(() => {
         </label>
       </div>
 
+      <div
+        v-if="hasRoute"
+        class="table-head"
+        :class="{ 'has-year': isRecurring }"
+        aria-hidden="true"
+      >
+        <span class="head-main">{{ t('compare.col_option') }}</span>
+        <span class="head-cost">
+          {{ isRecurring ? t('compare.col_month') : t('compare.col_journey') }}
+        </span>
+        <span v-if="isRecurring" class="head-year">{{ t('compare.col_year') }}</span>
+        <span class="head-time">{{ t('compare.sort_time') }}</span>
+        <span class="head-extra">
+          {{ isRecurring ? t('compare.col_extra_year') : t('compare.col_extra_journey') }}
+        </span>
+      </div>
+
       <ol class="option-list">
         <li
           v-for="option in hasRoute ? ranked.map((r) => optionById.get(r.optionId)!) : options"
           :key="option.id"
           class="option-row"
-          :class="{ 'option-row--best': hasRoute && option.id === bestId }"
+          :class="{
+            'option-row--best': hasRoute && option.id === bestId,
+            'has-year': isRecurring,
+          }"
         >
           <div class="row-main">
-            <div class="row-title">
-              <h3 class="option-name">{{ option.name }}</h3>
-              <span v-if="hasRoute && option.id === bestId" class="best-tag">
-                {{ t('compare.best') }}
-              </span>
-            </div>
+            <span v-if="hasRoute && option.id === bestId" class="best-tag">
+              {{ t('compare.best') }}
+            </span>
+            <h3 class="option-name">{{ option.name }}</h3>
             <p class="option-desc">{{ describe(option) }}</p>
-            <p
-              v-if="hasRoute && results[option.id] && detailText(results[option.id])"
-              class="extra"
-            >
-              {{ detailText(results[option.id]) }}
-            </p>
           </div>
 
-          <div v-if="hasRoute && results[option.id]" class="row-figures">
-            <span class="row-cost">{{ costText(results[option.id]) }}</span>
-            <span class="row-period">{{ periodText }}</span>
-            <span class="row-time">{{ timeText(results[option.id]) }}</span>
-          </div>
+          <template v-if="hasRoute && results[option.id]">
+            <div class="cell cell-cost">
+              <span class="row-cost">{{ costText(results[option.id]) }}</span>
+              <span class="cell-unit">{{ periodText }}</span>
+            </div>
+            <div v-if="isRecurring" class="cell cell-year">
+              <span class="cell-value">{{ yearText(results[option.id]) }}</span>
+              <span class="cell-unit">{{ t('compare.unit_year') }}</span>
+            </div>
+            <div class="cell cell-time">
+              <span class="sr-only">{{ t('compare.sort_time') }}: </span>
+              <span class="cell-value">{{ timeText(results[option.id]) }}</span>
+            </div>
+            <div class="cell cell-extra">
+              <template v-if="extraAmount(results[option.id]) !== null">
+                <span class="cell-value">+{{ euro(extraAmount(results[option.id])!) }} €</span>
+                <span class="cell-unit">{{ t('compare.unit_vs_best') }}</span>
+              </template>
+            </div>
+          </template>
 
-          <div class="row-actions">
-            <button
-              type="button"
-              class="icon-btn"
-              :aria-label="t('options.edit_named', { name: option.name })"
-              :title="t('options.edit')"
-              @click="emit('edit', option.id)"
-            >
-              ✎
-            </button>
-            <button
-              type="button"
-              class="icon-btn"
-              :disabled="!canAdd"
-              :aria-label="t('options.duplicate_named', { name: option.name })"
-              :title="t('options.duplicate')"
-              @click="emit('duplicate', option.id)"
-            >
-              ⧉
-            </button>
-            <button
-              type="button"
-              class="icon-btn icon-btn--danger"
-              :aria-label="t('options.delete_named', { name: option.name })"
-              :title="t('options.delete')"
-              @click="emit('remove', option.id)"
-            >
-              ✕
-            </button>
-          </div>
+          <OptionActions
+            :name="option.name"
+            :can-duplicate="canAdd"
+            :can-remove="true"
+            @edit="emit('edit', option.id)"
+            @duplicate="emit('duplicate', option.id)"
+            @remove="emit('remove', option.id)"
+          />
         </li>
       </ol>
 
@@ -384,8 +365,7 @@ const single = computed(() => {
   cursor: not-allowed;
 }
 
-.btn-add:focus-visible,
-.icon-btn:focus-visible {
+.btn-add:focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
@@ -414,42 +394,6 @@ const single = computed(() => {
 .option-desc {
   font-size: 0.85rem;
   color: var(--text-muted);
-}
-
-.row-actions {
-  display: flex;
-  gap: 0.25rem;
-  flex-shrink: 0;
-}
-
-.icon-btn {
-  width: 2rem;
-  height: 2rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 1rem;
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.icon-btn:hover:not(:disabled) {
-  color: var(--text-main);
-  border-color: var(--border-color);
-  background: var(--bg-body);
-}
-
-.icon-btn--danger:hover:not(:disabled) {
-  color: var(--error-color);
-}
-
-.icon-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
 }
 
 .cost-numbers {
@@ -545,10 +489,19 @@ const single = computed(() => {
   gap: 0.75rem;
 }
 
+.table-head {
+  display: none;
+}
+
 .option-row {
   display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'main cost'
+    'year time'
+    'extra extra'
+    'actions actions';
+  gap: 0.75rem 1rem;
   align-items: center;
   padding: 1rem;
   background: var(--bg-body);
@@ -561,37 +514,67 @@ const single = computed(() => {
   padding: calc(1rem - 1px);
 }
 
-.row-title {
+.row-main {
+  grid-area: main;
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
 }
 
+/* Always above the name, so its position does not depend on the name's length. */
 .best-tag {
+  align-self: flex-start;
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 0.1rem 0.5rem;
+  padding: 0.15rem 0.6rem;
   border-radius: 9999px;
   background: var(--accent-color);
   color: var(--bg-body);
+  margin-bottom: 0.25rem;
 }
 
-.extra {
+.cell {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.cell-cost {
+  grid-area: cost;
+  justify-self: end;
+}
+
+.cell-year {
+  grid-area: year;
   font-size: 0.8rem;
   color: var(--text-muted);
-  margin-top: 0.15rem;
 }
 
-.row-figures {
-  display: grid;
-  grid-template-columns: auto auto;
-  column-gap: 0.35rem;
-  align-items: baseline;
-  justify-items: end;
-  text-align: right;
+.cell-time {
+  grid-area: time;
+  justify-self: end;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.cell-extra {
+  grid-area: extra;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.cell-extra:empty {
+  display: none;
+}
+
+.cell-unit {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 .row-cost {
@@ -601,16 +584,112 @@ const single = computed(() => {
   white-space: nowrap;
 }
 
-.row-period {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  justify-self: start;
+.option-row > :deep(.option-actions) {
+  grid-area: actions;
+  justify-content: flex-end;
+  border-top: 1px solid var(--border-color);
+  padding-top: 0.75rem;
 }
 
-.row-time {
-  grid-column: 1 / -1;
-  font-size: 0.85rem;
-  color: var(--text-muted);
+/* Wide panels: the list becomes a table with aligned columns, so the figures of
+   different options line up and are easy to compare. The labels move to the header. */
+@media (min-width: 760px) {
+  .table-head,
+  .option-row {
+    --columns: minmax(0, 2fr) minmax(6.5rem, 1fr) minmax(5.5rem, 0.8fr) minmax(9rem, 1fr) 8rem;
+    --areas: 'main cost time extra actions';
+    grid-template-columns: var(--columns);
+    grid-template-areas: var(--areas);
+    column-gap: 1.25rem;
+  }
+
+  .table-head.has-year,
+  .option-row.has-year {
+    --columns: minmax(0, 2fr) minmax(6.5rem, 1fr) minmax(6.5rem, 1fr) minmax(5.5rem, 0.8fr)
+      minmax(9rem, 1fr) 8rem;
+    --areas: 'main cost year time extra actions';
+  }
+
+  .table-head {
+    display: grid;
+    /* Same horizontal inset as a row: its border plus its padding. */
+    padding: 0 calc(1.25rem + 1px);
+    /* Sit close to the rows, cancelling most of the panel's gap. */
+    margin-bottom: -0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .head-main {
+    grid-area: main;
+  }
+
+  .head-cost {
+    grid-area: cost;
+  }
+
+  .head-year {
+    grid-area: year;
+  }
+
+  .head-time {
+    grid-area: time;
+  }
+
+  .head-extra {
+    grid-area: extra;
+  }
+
+  .head-cost,
+  .head-year,
+  .head-time,
+  .head-extra {
+    text-align: right;
+  }
+
+  .option-row {
+    padding: 1.25rem;
+    align-items: center;
+  }
+
+  .option-row--best {
+    padding: calc(1.25rem - 1px);
+  }
+
+  .cell {
+    justify-self: stretch;
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .cell-year,
+  .cell-time,
+  .cell-extra {
+    font-size: 0.95rem;
+  }
+
+  .cell-extra {
+    flex-wrap: nowrap;
+  }
+
+  /* The header names each column, so the unit is only kept for screen readers. */
+  .cell-unit {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .option-row > :deep(.option-actions) {
+    border-top: none;
+    padding-top: 0;
+  }
 }
 
 @media (max-width: 600px) {
@@ -620,18 +699,6 @@ const single = computed(() => {
 
   .cost-value {
     font-size: 2rem;
-  }
-
-  .option-row {
-    grid-template-columns: 1fr auto;
-    gap: 0.5rem 1rem;
-  }
-
-  .row-actions {
-    grid-column: 1 / -1;
-    justify-content: flex-end;
-    border-top: 1px solid var(--border-color);
-    padding-top: 0.5rem;
   }
 }
 </style>

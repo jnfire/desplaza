@@ -154,10 +154,15 @@
     "no_time": "Sem tempo",
     "no_price": "Sem preço",
     "no_price_hint": "O MITECO não tem preço para este combustível na sua província. Experimente um preço manual.",
-    "extra_year": "mais {amount} € do que a melhor",
-    "extra_journey": "mais {amount} € por viagem",
     "desc_ticket": "Bilhete · {price} €",
     "manual_price_short": "Preço manual",
-    "annual_total": "{amount} € por ano"
+    "unit_year": "por ano",
+    "unit_vs_best": "mais do que a melhor",
+    "col_option": "Opção",
+    "col_month": "Por mês",
+    "col_journey": "Por viagem",
+    "col_year": "Por ano",
+    "col_extra_year": "Diferença por ano",
+    "col_extra_journey": "Diferença por viagem"
   }
 }
