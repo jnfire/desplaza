@@ -6,6 +6,10 @@ Una aplicación web rápida y ligera que compara el coste y el tiempo reales de 
 
 Los costes se calculan en tu navegador, sin cuenta, sin cookies y sin analítica. Construida con **Vue 3 (Composition API)** y **TypeScript**.
 
+**▶ [Pruébalo: desplaza.jnfire.dev/](https://desplaza.jnfire.dev/)**
+
+![Desplaza en escritorio y móvil](docs/screenshots/desplaza-hero.png)
+
 ## ✨ Características Principales
 - **Compara opciones:** Añade hasta cinco formas de hacer el mismo trayecto, cada una con su propio nombre (por ejemplo, dos coches entre los que dudas), y ordénalas por coste, tiempo o un equilibrio de ambos con tu hora valorada en €/h. La mejor queda destacada, junto a lo que cuestan de más las demás al año.
 - **Tipos de opción:** Coche o moto de combustión (precio del MITECO o manual), coche eléctrico (precio de la recarga en casa y en puntos públicos, y su reparto) y transporte público (abono mensual o billetes sueltos, tiempo puerta a puerta). A cualquier vehículo se le pueden sumar peajes, aparcamiento y desgaste.
@@ -61,6 +65,17 @@ El proyecto sigue una arquitectura modular y limpia que separa los clientes de s
    ```sh
    npm run build
    ```
+
+## 📚 Documentación
+
+- [Arquitectura](docs/ARCHITECTURE-es.md)
+- [Sistema de diseño](docs/DESIGN-SYSTEM-es.md), compartido con las otras herramientas del portafolio
+- [Roadmap](docs/ROADMAP-es.md)
+- [Evolución](docs/evolution/README-es.md): cómo ha cambiado el proyecto, con capturas
+
+## 🤝 Desarrollo
+
+Diseñado y dirigido por [Javier Nicolás Pérez Mesa](https://github.com/jnfire): el producto, la arquitectura y las decisiones de diseño son suyos. Buena parte de la implementación se ha escrito con ayuda de IA ([Claude Code](https://claude.com/claude-code)), trabajando bajo su dirección y mediante pull requests que él revisa; los commits hechos así llevan un `Co-Authored-By`.
 
 ## 📄 Licencia
 Copyright (C) 2026 Javier Nicolás Pérez Mesa.

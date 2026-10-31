@@ -64,3 +64,7 @@ Los precios de la electricidad y las tarifas y tiempos del transporte público n
 ### 7. Comprobaciones de Calidad
 - Los tests de **Vitest** en `src/**/__tests__/` cubren las opciones de viaje y su comparación, el guardado local, los tres clientes de servicios (con `fetch` simulado, sin llamar a las APIs reales), los enlaces compartidos en sus dos versiones y la paridad de los seis diccionarios.
 - **ESLint**, **Prettier** y **vue-tsc** se ejecutan en el CI junto con los tests y el build de producción; el despliegue a GitHub Pages solo se lanza si todo pasa.
+
+### Componentes compartidos
+
+La cabecera, el pie, los selectores, la tarjeta de configuración, los iconos y la utilidad de tema se comparten byte a byte con las otras herramientas del portafolio. Lo que cambia en cada app (repositorio y autor) está en `src/app.config.ts`. Ver [`DESIGN-SYSTEM-es.md`](DESIGN-SYSTEM-es.md).
