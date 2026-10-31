@@ -80,22 +80,34 @@ describe('routing', () => {
   });
 
   describe('getRouteData', () => {
-    it('requests a driving route and converts metres to kilometres', async () => {
+    it('requests a driving route and converts metres and seconds', async () => {
       const coordinates = [
         [-3.7, 40.4],
         [-3.6, 40.5],
       ];
       fetchMock.mockResolvedValue(
-        jsonResponse({ code: 'Ok', routes: [{ distance: 12345, geometry: { coordinates } }] }),
+        jsonResponse({
+          code: 'Ok',
+          routes: [{ distance: 12345, duration: 1260, geometry: { coordinates } }],
+        }),
       );
 
       await expect(getRouteData(-3.7, 40.4, -3.6, 40.5)).resolves.toEqual({
         distanceKm: 12.345,
+        durationMinutes: 21,
         coordinates,
       });
       expect(fetchMock).toHaveBeenCalledWith(
         'https://router.project-osrm.org/route/v1/driving/-3.7,40.4;-3.6,40.5?overview=simplified&geometries=geojson',
       );
+    });
+
+    it('leaves the duration unknown when OSRM omits it', async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse({ code: 'Ok', routes: [{ distance: 1000, geometry: { coordinates: [] } }] }),
+      );
+
+      await expect(getRouteData(0, 0, 1, 1)).resolves.toMatchObject({ durationMinutes: null });
     });
 
     it('returns null when OSRM finds no route', async () => {

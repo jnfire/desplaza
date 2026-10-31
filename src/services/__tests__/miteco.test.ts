@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { getAverageFuelPriceByProvince, getProvinces } from '../miteco';
+import {
+  getAverageFuelPriceByProvince,
+  getAverageFuelPricesByProvince,
+  getProvinces,
+} from '../miteco';
 
 const jsonResponse = (body: unknown, ok = true) => ({ ok, json: async () => body }) as Response;
 
@@ -78,6 +82,34 @@ describe('miteco', () => {
       fetchMock.mockRejectedValue(new Error('network down'));
 
       await expect(getAverageFuelPriceByProvince('28', 'Precio Gasoleo A')).resolves.toBe(0);
+    });
+  });
+
+  describe('getAverageFuelPricesByProvince', () => {
+    it('averages several fuels from one request and omits fuels with no price', async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse({
+          ListaEESSPrecio: [
+            { 'Precio Gasolina 95 E5': '1,500', 'Precio Gasoleo A': '1,400' },
+            { 'Precio Gasolina 95 E5': '1,600', 'Precio Gasoleo A': '' },
+          ],
+        }),
+      );
+
+      await expect(
+        getAverageFuelPricesByProvince('28', [
+          'Precio Gasolina 95 E5',
+          'Precio Gasoleo A',
+          'Precio Gases licuados del petróleo',
+        ]),
+      ).resolves.toEqual({ 'Precio Gasolina 95 E5': 1.55, 'Precio Gasoleo A': 1.4 });
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('returns no prices when the API fails', async () => {
+      fetchMock.mockRejectedValue(new Error('network down'));
+
+      await expect(getAverageFuelPricesByProvince('28', ['Precio Gasoleo A'])).resolves.toEqual({});
     });
   });
 });
