@@ -22,6 +22,8 @@ interface PhotonFeature {
 
 export interface RouteData {
   distanceKm: number;
+  /** Driving time of the route in minutes, or null when OSRM omits it. */
+  durationMinutes: number | null;
   coordinates: [number, number][]; // Array de [longitud, latitud] devuelto por GeoJSON
 }
 
@@ -88,6 +90,7 @@ export async function getRouteData(
 
     return {
       distanceKm: distanceMeters / 1000,
+      durationMinutes: typeof route.duration === 'number' ? route.duration / 60 : null,
       coordinates: route.geometry.coordinates,
     };
   } catch (error) {

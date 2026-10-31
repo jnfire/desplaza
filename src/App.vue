@@ -1,90 +1,119 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, computed, nextTick } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
 import NativeMap from './components/NativeMap.vue';
-import VehicleConfig, { type VehicleState } from './components/VehicleConfig.vue';
+import TripCard from './components/TripCard.vue';
+import OptionsPanel from './components/OptionsPanel.vue';
+import OptionEditorModal from './components/OptionEditorModal.vue';
 import SourcesModal from './components/SourcesModal.vue';
 import SettingsView from './components/SettingsView.vue';
 
 import { getRouteData, type RouteData } from './services/routing';
-import { getProvinces, getAverageFuelPriceByProvince, type Province } from './services/miteco';
-import { calculateCarCosts, type CostCalculationResult } from './utils/costMath';
+import { getAverageFuelPricesByProvince, getProvinces, type Province } from './services/miteco';
 import { encodeStateToUrl, decodeUrlToState } from './services/shareUrl';
+import {
+  createOption,
+  DEFAULT_TRIP,
+  duplicateOption,
+  FUEL_KEYS,
+  MAX_OPTIONS,
+  uniqueName,
+  type FuelKey,
+  type OptionKind,
+  type TravelOption,
+  type TripSettings,
+} from './core/travelOptions';
+import { calculateOption, type OptionResult, type SortKey } from './core/comparison';
+import { loadComparison, saveComparison } from './core/persistence';
 
-// State
-const { t, locale } = useI18n();
+type Place = { lat: number; lon: number; label: string; provinceSearch: string };
+
+const { t } = useI18n();
 const isDarkMode = ref(false);
 const showSourcesModal = ref(false);
 const showSettings = ref(false);
 
-const initialUrlState = typeof window !== 'undefined' ? decodeUrlToState() : null;
+const browserStorage = typeof window !== 'undefined' ? window.localStorage : undefined;
+const urlState = typeof window !== 'undefined' ? decodeUrlToState() : null;
+const savedState = loadComparison(browserStorage);
 
-const originLocation = ref<{
-  lat: number;
-  lon: number;
-  label: string;
-  provinceSearch: string;
-} | null>(
-  initialUrlState?.origin
-    ? { ...initialUrlState.origin, provinceSearch: initialUrlState.origin.label }
-    : null,
+const toPlace = (place?: { lat: number; lon: number; label: string }): Place | null =>
+  place ? { ...place, provinceSearch: place.label } : null;
+
+const defaultName = (kind: OptionKind) => t(`options.default_names.${kind}`);
+
+/** Options from a shared link or storage may come without a name. */
+const withNames = (options: TravelOption[]): TravelOption[] =>
+  options.reduce<TravelOption[]>((named, option) => {
+    const name = option.name.trim() || uniqueName(defaultName(option.kind), named);
+    return [...named, { ...option, name }];
+  }, []);
+
+// A shared link wins over what this device saved; otherwise start with one car.
+const originLocation = ref<Place | null>(toPlace(urlState?.origin));
+const destLocation = ref<Place | null>(toPlace(urlState?.destination));
+const trip = ref<TripSettings>(urlState?.trip ?? savedState?.trip ?? { ...DEFAULT_TRIP });
+const options = ref<TravelOption[]>(
+  withNames(
+    (urlState?.options ?? savedState?.options ?? [createOption('combustion', '')]).slice(
+      0,
+      MAX_OPTIONS,
+    ),
+  ),
 );
-const destLocation = ref<{
-  lat: number;
-  lon: number;
-  label: string;
-  provinceSearch: string;
-} | null>(
-  initialUrlState?.destination
-    ? { ...initialUrlState.destination, provinceSearch: initialUrlState.destination.label }
-    : null,
-);
+
+const sortKey = ref<SortKey>('cost');
+const hourValue = ref(10);
+
 const routeData = ref<RouteData | null>(null);
-const vehicleConfig = ref<VehicleState | null>(initialUrlState?.vehicleConfig || null);
 const provincesList = ref<Province[]>([]);
-const currentFuelPrice = ref<number | null>(null);
+const fuelPrices = ref<Partial<Record<FuelKey, number>>>({});
 const isCalculating = ref(false);
 
 const isDesktop = ref(typeof window !== 'undefined' ? window.innerWidth >= 900 : true);
 const isMapVisibleMobile = ref(false);
 const mobileMapRef = ref<InstanceType<typeof NativeMap> | null>(null);
 
-// Sync HTML lang attribute with active i18n locale
-watch(
-  locale,
-  (newLocale) => {
-    if (typeof document !== 'undefined') {
-      document.documentElement.lang = newLocale;
-    }
-  },
-  { immediate: true },
-);
+const onResize = () => {
+  isDesktop.value = window.innerWidth >= 900;
+};
 
 onMounted(async () => {
-  if (typeof window !== 'undefined') {
-    window.addEventListener('resize', () => {
-      isDesktop.value = window.innerWidth >= 900;
+  window.addEventListener('resize', onResize);
+  if (window.matchMedia) {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    isDarkMode.value = mediaQuery.matches;
+    mediaQuery.addEventListener('change', (event) => {
+      isDarkMode.value = event.matches;
     });
-
-    if (window.matchMedia) {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      isDarkMode.value = mediaQuery.matches;
-      mediaQuery.addEventListener('change', (event) => {
-        isDarkMode.value = event.matches;
-      });
-    }
   }
   provincesList.value = await getProvinces();
 });
 
+onUnmounted(() => window.removeEventListener('resize', onResize));
+
+// Keep the comparison on this device between visits.
+watch(
+  [trip, options],
+  () => saveComparison(browserStorage, { trip: trip.value, options: options.value }),
+  {
+    deep: true,
+  },
+);
+
 watch(
   [originLocation, destLocation],
-  async ([orig, dest]) => {
-    if (orig && dest) {
+  async ([origin, destination]) => {
+    if (origin && destination) {
       isCalculating.value = true;
-      routeData.value = await getRouteData(orig.lon, orig.lat, dest.lon, dest.lat);
+      routeData.value = await getRouteData(
+        origin.lon,
+        origin.lat,
+        destination.lon,
+        destination.lat,
+      );
       isCalculating.value = false;
     } else {
       routeData.value = null;
@@ -93,80 +122,117 @@ watch(
   { immediate: true },
 );
 
-const updateFuelPrice = async () => {
-  if (!vehicleConfig.value) return;
+const normalize = (text: string) => text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
-  if (vehicleConfig.value.priceSource === 'manual') {
-    currentFuelPrice.value = vehicleConfig.value.manualPrice;
-    return;
-  }
-
-  if (!originLocation.value || provincesList.value.length === 0) return;
-
-  const searchStr = originLocation.value.provinceSearch
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-
-  const matchedProv = provincesList.value.find((p) => {
-    const pName = p.Provincia.toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
-    return searchStr.includes(pName) || pName.includes(searchStr);
+/** MITECO province of the origin; Madrid when the origin cannot be matched. */
+const originProvinceId = computed(() => {
+  if (!originLocation.value || provincesList.value.length === 0) return null;
+  const search = normalize(originLocation.value.provinceSearch);
+  const match = provincesList.value.find((province) => {
+    const name = normalize(province.Provincia);
+    return search.includes(name) || name.includes(search);
   });
+  return match?.IDPovincia ?? '28';
+});
 
-  if (matchedProv) {
-    currentFuelPrice.value = await getAverageFuelPriceByProvince(
-      matchedProv.IDPovincia,
-      vehicleConfig.value.fuelType,
-    );
-  } else {
-    currentFuelPrice.value = await getAverageFuelPriceByProvince(
-      '28',
-      vehicleConfig.value.fuelType,
-    );
-  }
-};
+const needsAutomaticFuelPrices = computed(() =>
+  options.value.some(
+    (option) =>
+      (option.kind === 'combustion' || option.kind === 'motorbike') &&
+      option.priceSource === 'auto',
+  ),
+);
 
+// One MITECO request per province gives the prices of every fuel.
 watch(
-  [
-    originLocation,
-    () => vehicleConfig.value?.fuelType,
-    () => vehicleConfig.value?.priceSource,
-    () => vehicleConfig.value?.manualPrice,
-    provincesList,
-  ],
-  updateFuelPrice,
+  [originProvinceId, needsAutomaticFuelPrices],
+  async ([provinceId, needed], [previousProvinceId]) => {
+    if (!provinceId || !needed) return;
+    if (provinceId === previousProvinceId && Object.keys(fuelPrices.value).length > 0) return;
+    fuelPrices.value = await getAverageFuelPricesByProvince(provinceId, FUEL_KEYS);
+  },
   { immediate: true },
 );
 
-const onVehicleConfigUpdate = (state: VehicleState) => {
-  vehicleConfig.value = state;
-};
+const routeFacts = computed(() =>
+  routeData.value
+    ? { distanceKm: routeData.value.distanceKm, durationMinutes: routeData.value.durationMinutes }
+    : null,
+);
 
-// Formato decimal con coma
-const formatEuro = (val: number) => {
-  return val.toFixed(2).replace('.', ',');
-};
-const formatEuroPrice3 = (val: number) => {
-  return val.toFixed(3).replace('.', ',');
-};
+const calculate = (option: TravelOption): OptionResult | null =>
+  routeFacts.value
+    ? calculateOption(option, trip.value, routeFacts.value, { fuelPrices: fuelPrices.value })
+    : null;
 
-// Computed Costs
-const computedCosts = computed<CostCalculationResult | null>(() => {
-  if (!routeData.value || !vehicleConfig.value || !currentFuelPrice.value) return null;
-  const extraCost = vehicleConfig.value.includeWear ? 0.08 : 0;
-
-  return calculateCarCosts(
-    routeData.value.distanceKm,
-    vehicleConfig.value.daysPerWeek,
-    vehicleConfig.value.consumption,
-    currentFuelPrice.value,
-    extraCost,
-    vehicleConfig.value.activeMonths,
-    vehicleConfig.value.tripMode,
-  );
+const results = computed<Record<string, OptionResult>>(() => {
+  const byId: Record<string, OptionResult> = {};
+  for (const option of options.value) {
+    const result = calculate(option);
+    if (result) byId[option.id] = result;
+  }
+  return byId;
 });
+
+// --- Option editor ---------------------------------------------------------
+
+const editing = ref<{ option: TravelOption; isNew: boolean } | null>(null);
+
+const openNewOption = () => {
+  if (options.value.length >= MAX_OPTIONS) return;
+  editing.value = {
+    option: createOption('combustion', uniqueName(defaultName('combustion'), options.value)),
+    isNew: true,
+  };
+};
+
+const openEditOption = (optionId: string) => {
+  const option = options.value.find((candidate) => candidate.id === optionId);
+  if (option) editing.value = { option, isNew: false };
+};
+
+const openDuplicate = (optionId: string) => {
+  const option = options.value.find((candidate) => candidate.id === optionId);
+  if (!option || options.value.length >= MAX_OPTIONS) return;
+  editing.value = {
+    option: duplicateOption(option, uniqueName(option.name, options.value)),
+    isNew: true,
+  };
+};
+
+const saveOption = (saved: TravelOption) => {
+  const index = options.value.findIndex((option) => option.id === saved.id);
+  if (index === -1) options.value = [...options.value, saved];
+  else options.value = options.value.map((option) => (option.id === saved.id ? saved : option));
+  editing.value = null;
+};
+
+// Deleting is undoable for a few seconds instead of asking for confirmation.
+const lastRemoved = ref<{ option: TravelOption; index: number } | null>(null);
+let undoTimer: ReturnType<typeof setTimeout> | undefined;
+
+const removeOption = (optionId: string) => {
+  if (options.value.length <= 1) return;
+  const index = options.value.findIndex((option) => option.id === optionId);
+  if (index === -1) return;
+  lastRemoved.value = { option: options.value[index], index };
+  options.value = options.value.filter((option) => option.id !== optionId);
+  editing.value = null;
+  clearTimeout(undoTimer);
+  undoTimer = setTimeout(() => (lastRemoved.value = null), 6000);
+};
+
+const undoRemove = () => {
+  if (!lastRemoved.value || options.value.length >= MAX_OPTIONS) return;
+  const { option, index } = lastRemoved.value;
+  const restored = [...options.value];
+  restored.splice(index, 0, option);
+  options.value = restored;
+  lastRemoved.value = null;
+  clearTimeout(undoTimer);
+};
+
+// --- Map and header actions ------------------------------------------------
 
 const goHome = () => {
   originLocation.value = null;
@@ -174,17 +240,15 @@ const goHome = () => {
   showSettings.value = false;
 };
 
-const updateOriginCoords = (pos: { lat: number; lon: number }) => {
-  if (originLocation.value) {
-    originLocation.value = { ...originLocation.value, lat: pos.lat, lon: pos.lon };
-  }
+const updateOriginCoords = (position: { lat: number; lon: number }) => {
+  if (originLocation.value) originLocation.value = { ...originLocation.value, ...position };
 };
 
-const updateDestCoords = (pos: { lat: number; lon: number }) => {
-  if (destLocation.value) {
-    destLocation.value = { ...destLocation.value, lat: pos.lat, lon: pos.lon };
-  }
+const updateDestCoords = (position: { lat: number; lon: number }) => {
+  if (destLocation.value) destLocation.value = { ...destLocation.value, ...position };
 };
+
+const mapPoint = (place: Place | null) => (place ? { lat: place.lat, lon: place.lon } : undefined);
 
 const toggleMobileMap = async () => {
   isMapVisibleMobile.value = !isMapVisibleMobile.value;
@@ -194,38 +258,26 @@ const toggleMobileMap = async () => {
   }
 };
 
+const sharedPlace = (place: Place | null) =>
+  place ? { lat: place.lat, lon: place.lon, label: place.label } : undefined;
+
 const shareRoute = async () => {
   const url = encodeStateToUrl({
-    origin: originLocation.value
-      ? {
-          lat: originLocation.value.lat,
-          lon: originLocation.value.lon,
-          label: originLocation.value.label,
-        }
-      : undefined,
-    destination: destLocation.value
-      ? {
-          lat: destLocation.value.lat,
-          lon: destLocation.value.lon,
-          label: destLocation.value.label,
-        }
-      : undefined,
-    vehicleConfig: vehicleConfig.value || undefined,
+    origin: sharedPlace(originLocation.value),
+    destination: sharedPlace(destLocation.value),
+    trip: trip.value,
+    options: options.value,
   });
 
   try {
     if (navigator.share) {
-      await navigator.share({
-        title: t('core.share_title'),
-        text: t('core.share_text'),
-        url: url,
-      });
+      await navigator.share({ title: t('core.share_title'), text: t('core.share_text'), url });
     } else {
       await navigator.clipboard.writeText(url);
       alert(t('core.share_copied'));
     }
-  } catch (err) {
-    console.error('Error sharing:', err);
+  } catch (error) {
+    console.error('Error sharing:', error);
   }
 };
 </script>
@@ -242,80 +294,64 @@ const shareRoute = async () => {
     <main class="app-container">
       <SettingsView v-if="showSettings" :show="showSettings" />
 
-      <div v-else class="layout-grid">
-        <!-- Columna Izquierda: Formularios -->
-        <div class="forms-column">
-          <VehicleConfig
-            :initial-state="initialUrlState?.vehicleConfig || undefined"
-            :origin-label="originLocation?.label"
-            :destination-label="destLocation?.label"
-            @update="onVehicleConfigUpdate"
-            @update:origin="originLocation = $event"
-            @update:destination="destLocation = $event"
-          >
-            <template #after-trip>
-              <!-- Mobile Map Section -->
-              <div v-if="!isDesktop" class="mobile-map-section">
-                <button
-                  type="button"
-                  class="map-toggle-btn"
-                  :aria-expanded="isMapVisibleMobile"
-                  :aria-controls="isMapVisibleMobile ? 'mobile-map-drawer' : undefined"
-                  @click="toggleMobileMap"
+      <div v-else class="layout">
+        <div class="route-section">
+          <div class="forms-column">
+            <TripCard
+              :trip="trip"
+              :origin-label="originLocation?.label"
+              :destination-label="destLocation?.label"
+              @update:trip="trip = $event"
+              @update:origin="originLocation = $event"
+              @update:destination="destLocation = $event"
+            />
+
+            <div v-if="!isDesktop" class="mobile-map-section">
+              <button
+                type="button"
+                class="map-toggle-btn"
+                :aria-expanded="isMapVisibleMobile"
+                :aria-controls="isMapVisibleMobile ? 'mobile-map-drawer' : undefined"
+                @click="toggleMobileMap"
+              >
+                <span>{{ isMapVisibleMobile ? t('core.hide_map') : t('core.show_map') }}</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  :style="{ transform: isMapVisibleMobile ? 'rotate(180deg)' : 'rotate(0)' }"
+                  style="transition: transform 0.2s ease"
+                  aria-hidden="true"
                 >
-                  <span>{{ isMapVisibleMobile ? t('core.hide_map') : t('core.show_map') }}</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    :style="{ transform: isMapVisibleMobile ? 'rotate(180deg)' : 'rotate(0)' }"
-                    style="transition: transform 0.2s ease"
-                    aria-hidden="true"
-                  >
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
-                </button>
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
 
-                <div v-if="isMapVisibleMobile" id="mobile-map-drawer" class="map-wrapper">
-                  <NativeMap
-                    ref="mobileMapRef"
-                    :origin="
-                      originLocation
-                        ? { lat: originLocation.lat, lon: originLocation.lon }
-                        : undefined
-                    "
-                    :destination="
-                      destLocation ? { lat: destLocation.lat, lon: destLocation.lon } : undefined
-                    "
-                    :route-coordinates="routeData?.coordinates"
-                    :dark-mode="isDarkMode"
-                    @update:origin="updateOriginCoords"
-                    @update:destination="updateDestCoords"
-                  />
-                </div>
+              <div v-if="isMapVisibleMobile" id="mobile-map-drawer" class="map-wrapper">
+                <NativeMap
+                  ref="mobileMapRef"
+                  :origin="mapPoint(originLocation)"
+                  :destination="mapPoint(destLocation)"
+                  :route-coordinates="routeData?.coordinates"
+                  :dark-mode="isDarkMode"
+                  @update:origin="updateOriginCoords"
+                  @update:destination="updateDestCoords"
+                />
               </div>
-            </template>
-          </VehicleConfig>
-        </div>
+            </div>
+          </div>
 
-        <!-- Columna Derecha: Mapa y Resultados -->
-        <div class="results-column">
-          <!-- Desktop Map Section -->
           <section v-if="isDesktop" class="map-section">
             <div class="map-wrapper">
               <NativeMap
-                :origin="
-                  originLocation ? { lat: originLocation.lat, lon: originLocation.lon } : undefined
-                "
-                :destination="
-                  destLocation ? { lat: destLocation.lat, lon: destLocation.lon } : undefined
-                "
+                :origin="mapPoint(originLocation)"
+                :destination="mapPoint(destLocation)"
                 :route-coordinates="routeData?.coordinates"
                 :dark-mode="isDarkMode"
                 @update:origin="updateOriginCoords"
@@ -323,92 +359,23 @@ const shareRoute = async () => {
               />
             </div>
           </section>
-
-          <!-- Tarjeta de Resultados -->
-          <section
-            v-if="routeData && currentFuelPrice && computedCosts"
-            class="cost-summary card"
-            :aria-label="t('core.calc_cost')"
-          >
-            <div class="summary-header">
-              <h2>{{ t('core.calc_cost') }}</h2>
-              <div class="header-actions">
-                <button
-                  type="button"
-                  class="miteco-badge"
-                  :title="t('footer.methodology')"
-                  :aria-label="`${t('core.source_btn')} ${vehicleConfig?.priceSource === 'manual' ? t('core.source_manual_label') : t('core.source_miteco_label')}`"
-                  @click="showSourcesModal = true"
-                >
-                  {{ t('core.source_btn') }}
-                  {{
-                    vehicleConfig?.priceSource === 'manual'
-                      ? t('core.source_manual_label')
-                      : t('core.source_miteco_label')
-                  }}
-                  ({{ formatEuroPrice3(currentFuelPrice) }} €/L)
-                </button>
-              </div>
-            </div>
-
-            <div v-if="vehicleConfig?.tripMode === 'ida'" class="cost-numbers single">
-              <div class="cost-item main-cost">
-                <span class="cost-label">{{ t('core.one_way') }}</span>
-                <span class="cost-value"
-                  >{{ formatEuro(computedCosts.perTrip) }} <small>€</small></span
-                >
-              </div>
-            </div>
-
-            <div v-else-if="vehicleConfig?.tripMode === 'idavuelta'" class="cost-numbers single">
-              <div class="cost-item main-cost">
-                <span class="cost-label">{{ t('core.round_trip') }}</span>
-                <span class="cost-value"
-                  >{{ formatEuro(computedCosts.perTrip) }} <small>€</small></span
-                >
-              </div>
-            </div>
-
-            <div v-else class="cost-numbers">
-              <div class="cost-item">
-                <span class="cost-label">{{ t('core.monthly') }}</span>
-                <span class="cost-value"
-                  >{{ formatEuro(computedCosts.monthly) }} <small>€</small></span
-                >
-              </div>
-              <div class="cost-item">
-                <span class="cost-label">
-                  {{ t('core.annual') }}
-                  <template v-if="vehicleConfig?.activeMonths && vehicleConfig.activeMonths !== 12">
-                    ({{ vehicleConfig.activeMonths }}m)
-                  </template>
-                </span>
-                <span class="cost-value"
-                  >{{ formatEuro(computedCosts.annual) }} <small>€</small></span
-                >
-              </div>
-            </div>
-
-            <div class="cost-details">
-              <p>
-                {{ t('core.route_dist') }}
-                <strong>{{ formatEuro(routeData.distanceKm) }} km</strong>
-                {{ t('core.one_way_only') }}
-              </p>
-              <p v-if="vehicleConfig?.includeWear" class="text-muted">
-                {{ t('core.wear_note') }}
-              </p>
-            </div>
-          </section>
-
-          <div v-else-if="isCalculating" class="placeholder-card" role="status" aria-live="polite">
-            <p>{{ t('core.calc_loading') }}</p>
-          </div>
-
-          <div v-else class="placeholder-card">
-            <p>{{ t('core.define_route') }}</p>
-          </div>
         </div>
+
+        <OptionsPanel
+          :options="options"
+          :results="results"
+          :trip="trip"
+          :distance-km="routeData?.distanceKm ?? null"
+          :is-calculating="isCalculating"
+          :sort-key="sortKey"
+          :hour-value="hourValue"
+          @add="openNewOption"
+          @edit="openEditOption"
+          @duplicate="openDuplicate"
+          @remove="removeOption"
+          @update:sort-key="sortKey = $event"
+          @update:hour-value="hourValue = $event"
+        />
       </div>
     </main>
 
@@ -416,7 +383,28 @@ const shareRoute = async () => {
       <AppFooter @show-sources="showSourcesModal = true" />
     </div>
 
+    <OptionEditorModal
+      v-if="editing"
+      :key="editing.option.id"
+      :option="editing.option"
+      :is-new="editing.isNew"
+      :trip="trip"
+      :preview="calculate"
+      @save="saveOption"
+      @remove="removeOption"
+      @close="editing = null"
+    />
+
     <SourcesModal v-if="showSourcesModal" @close="showSourcesModal = false" />
+
+    <div class="toast-region" role="status" aria-live="polite">
+      <div v-if="lastRemoved" class="toast">
+        <span>{{ t('options.removed', { name: lastRemoved.option.name }) }}</span>
+        <button type="button" class="toast-action" @click="undoRemove">
+          {{ t('options.undo') }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -444,23 +432,36 @@ const shareRoute = async () => {
   box-sizing: border-box;
 }
 
-.layout-grid {
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Desktop: the trip and the map share a row; the options span the width below. */
+.route-section {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
 }
 
 @media (min-width: 900px) {
-  .layout-grid {
+  .route-section {
     grid-template-columns: 400px 1fr;
+    align-items: stretch;
   }
 }
 
-.forms-column,
-.results-column {
+.forms-column {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  min-width: 0;
+}
+
+.map-section {
+  min-width: 0;
+  min-height: 360px;
 }
 
 .map-toggle-btn {
@@ -483,7 +484,7 @@ const shareRoute = async () => {
 }
 
 .map-toggle-btn:hover {
-  background: var(--bg-surface-hover, rgba(0, 0, 0, 0.02));
+  background: var(--bg-surface-hover);
 }
 
 .map-toggle-btn:focus-visible {
@@ -492,133 +493,54 @@ const shareRoute = async () => {
 }
 
 .map-wrapper {
-  height: 400px;
+  height: 360px;
 }
 
 @media (min-width: 900px) {
-  .map-wrapper {
+  /* The map takes the height of the trip card next to it. */
+  .map-section .map-wrapper {
     height: 100%;
-    min-height: 450px;
   }
 }
 
-.cost-summary {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+.toast-region {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  z-index: 2500;
+  width: max-content;
+  max-width: calc(100vw - 2rem);
 }
 
-.summary-header {
+.toast {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
   gap: 1rem;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.summary-header h2 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0;
-  color: var(--text-main);
-}
-
-.miteco-badge {
-  background-color: var(--text-main);
+  padding: 0.75rem 1rem;
+  background: var(--text-main);
   color: var(--bg-body);
-  padding: 0.35rem 0.75rem;
-  border-radius: 9999px;
-  font-family: inherit;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.025em;
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.miteco-badge:hover {
-  opacity: 0.85;
-}
-
-.miteco-badge:focus-visible {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
-}
-
-.cost-numbers {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.cost-numbers.single {
-  grid-template-columns: 1fr;
-}
-
-.cost-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.cost-label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-}
-
-.cost-value {
-  font-size: 2.5rem;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--text-main);
-  white-space: nowrap;
-}
-
-.cost-value small {
-  font-size: 1.25rem;
-  font-weight: 500;
-}
-
-.cost-details {
-  border-top: 1px solid var(--border-color);
-  padding-top: 1rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
   font-size: 0.9rem;
 }
 
-.text-muted {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  margin-top: 0.5rem;
+.toast-action {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
-.placeholder-card {
-  padding: 3rem 1.5rem;
-  text-align: center;
-  border: 1px dashed var(--border-color);
-  border-radius: var(--radius-lg);
-  color: var(--text-muted);
+.toast-action:focus-visible {
+  outline: 2px solid var(--bg-body);
+  outline-offset: 2px;
 }
 
 @media (max-width: 600px) {
-  .cost-value {
-    font-size: 2rem;
-  }
-
   .app-container {
     padding: 1.25rem 1rem 2rem;
   }

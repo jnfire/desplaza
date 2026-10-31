@@ -124,3 +124,201 @@ h6 {
     padding: 1.25rem 1rem;
   }
 }
+
+/* Form building blocks shared by the trip card and the option editor. */
+.config-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: var(--bg-surface);
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.config-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.mode-selector-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mode-selector {
+  display: flex;
+  gap: 0.5rem;
+  background-color: var(--bg-body);
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.radio-label {
+  flex: 1;
+  cursor: pointer;
+  position: relative;
+}
+
+.sr-only-radio {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radio-btn {
+  text-align: center;
+  padding: 0.5rem 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+@media (min-width: 400px) {
+  .radio-btn {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+}
+
+.radio-btn--checked {
+  background-color: var(--accent-color);
+  color: var(--bg-body);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+
+.sr-only-radio:focus-visible + .radio-btn {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.25rem;
+}
+
+.input-group--full {
+  grid-column: 1 / -1;
+}
+
+.cycle-controls {
+  padding-top: 0.25rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-area label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.form-area input[type='number'],
+.form-area input.text-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: var(--text-main);
+  background-color: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  font-family: inherit;
+}
+
+.form-area input[type='number']:focus,
+.form-area input[type='number']:focus-visible,
+.form-area input.text-field:focus,
+.form-area input.text-field:focus-visible {
+  border-color: var(--accent-color);
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.toggle-group {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.sr-only-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-custom {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.sr-only-checkbox:checked + .checkbox-custom {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.sr-only-checkbox:focus-visible + .checkbox-custom {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.sr-only-checkbox:checked + .checkbox-custom::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--bg-body);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.field-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.field-error {
+  font-size: 0.8rem;
+  color: var(--error-color);
+}
+
+.form-area input[aria-invalid='true'] {
+  border-color: var(--error-color);
+}

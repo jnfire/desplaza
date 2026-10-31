@@ -232,12 +232,6 @@ function updateMap() {
   border: 1px solid var(--border-color);
 }
 
-@media (min-width: 900px) {
-  .map-container {
-    min-height: 500px;
-  }
-}
-
 /* Custom Tooltip Styling */
 .marker-tooltip {
   background: var(--bg-body) !important;
