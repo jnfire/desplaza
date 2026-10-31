@@ -2,28 +2,30 @@
 
 *Leer esto en [Español](README-es.md).*
 
-A fast, lightweight, and local-first web application designed to calculate and compare the real cost of commuting by private vehicle versus public transit in Spain.
+A fast, lightweight web app that calculates the real cost of commuting by car in Spain, using official daily fuel prices.
 
-All processing and calculations are performed locally in your web browser, ensuring **complete privacy and control** of your data (Local-First). Built with **Vue 3 (Composition API)** and **TypeScript**.
+Costs are calculated in your browser, with no account, no cookies and no analytics. Built with **Vue 3 (Composition API)** and **TypeScript**.
 
 ## ✨ Key Features
-- **Live Fuel Prices (MITECO API):** Fetches official daily average fuel prices across all Spanish provinces directly from the Ministry for Ecological Transition.
-- **Accurate Routing & Distance:**
-  - Fast geocoding and address auto-completion via **Photon (OpenStreetMap)**.
-  - Distance, duration, and vector polyline calculations via **OSRM (Open Source Routing Machine)**.
-- **Real Commute Cost (TCO):** Includes an optional vehicle wear-and-tear factor ($0.08€$/km) covering maintenance, tires, insurance, and depreciation.
-- **Public Transit Comparison:** Compares monthly private vehicle expenses against public transport passes across major Spanish metropolitan areas.
-- **Ultra-Lightweight Native Map:** Custom lightweight SVG map (~4KB) using *Web Mercator* mathematical projections without heavy third-party mapping dependencies.
+- **Live Fuel Prices (MITECO):** Uses the daily average price in the origin's province, from the official open data of Spain's Ministry for the Ecological Transition. You can enter your own price instead.
+- **Routing & Distance:**
+  - Address search with autocompletion via **Photon (OpenStreetMap)**.
+  - Road distance and route geometry via **OSRM (Open Source Routing Machine)**.
+  - Origin and destination markers can be dragged on the map to fine-tune the route.
+- **Real Commute Cost:** Cost per trip, per month and per year for one-way, round-trip or recurring commutes, with an optional wear-and-tear surcharge (€0.08/km) for maintenance, tyres, insurance and depreciation.
+- **Interactive Map:** **Leaflet** with Esri light and dark grey basemaps that follow the app theme.
+- **Shareable Links:** The route and vehicle settings are encoded in the URL and shared with the Web Share API or copied to the clipboard. No server stores them.
 - **Privacy:** Costs are calculated in your browser. No cookies, no analytics, no sign-up and no database. Address search, routing and map tiles are requested from third-party services (Photon, OSRM and Esri), and fuel prices from MITECO.
 - **Multi-language Support:** Full UI internationalization for English, Spanish, French, German, Italian, and Portuguese.
-- **Adaptive Design:** Sober, responsive UI with automatic dark/light theme switching.
+- **Adaptive Design:** Sober, responsive UI with light, dark and system themes.
 
 ## 🛠️ Built With
 - **Vue.js 3** (Composition API) + **Vite**
-- **TypeScript** for robust, strictly-typed code.
-- **Vue-i18n** for seamless multi-language support.
-- **Vanilla CSS** with custom design tokens for optimal performance without external UI frameworks.
-- **Vitest** for unit test verification.
+- **TypeScript** in strict mode.
+- **Vue-i18n** for multi-language support.
+- **Leaflet** for the map.
+- **Vanilla CSS** with custom design tokens, without UI frameworks.
+- **Vitest**, **ESLint** and **Prettier**, run in CI before every deploy.
 
 ## 📁 Project Architecture
 The project follows a clean, modular architecture separating external API services, pure mathematical domain logic, and presentation components. Detailed documentation is available in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
@@ -46,12 +48,14 @@ The project follows a clean, modular architecture separating external API servic
    npm run dev
    ```
 
-4. Run tests:
+4. Run the checks (the same ones CI runs):
    ```sh
+   npm run lint
+   npm run format:check
    npm test
    ```
 
-5. Build for production:
+5. Type-check and build for production:
    ```sh
    npm run build
    ```

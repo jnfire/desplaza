@@ -2,28 +2,30 @@
 
 *Read this in [English](README.md).*
 
-Una aplicación web rápida, ultra-ligera y local-first diseñada para calcular y comparar el coste real de los desplazamientos diarios en vehículo privado frente al transporte público en España.
+Una aplicación web rápida y ligera que calcula el coste real de tus desplazamientos en coche en España, con los precios oficiales del combustible de cada día.
 
-Todo el procesamiento y los cálculos se realizan localmente en tu navegador web, garantizando un **control total y privacidad** de tus datos (Local-First). Construida con **Vue 3 (Composition API)** y **TypeScript**.
+Los costes se calculan en tu navegador, sin cuenta, sin cookies y sin analítica. Construida con **Vue 3 (Composition API)** y **TypeScript**.
 
 ## ✨ Características Principales
-- **Precios de Combustible en Tiempo Real (API MITECO):** Obtiene los precios medios diarios oficiales por provincia directamente del Ministerio para la Transición Ecológica y el Reto Demográfico de España.
-- **Enrutamiento y Distancias Precisas:**
-  - Geocodificación rápida y autocompletado de direcciones mediante **Photon (OpenStreetMap)**.
-  - Cálculo de distancias, tiempos y polilíneas vectoriales a través del motor **OSRM (Open Source Routing Machine)**.
-- **Coste Real de Desgaste (TCO):** Permite añadir un factor de desgaste y mantenimiento ($0,08€$/km) que prorratea seguro, revisiones, neumáticos y amortización del vehículo.
-- **Comparativa con Transporte Público:** Compara el gasto mensual del vehículo privado frente a las tarifas de abonos de transporte en las principales áreas metropolitanas de España.
-- **Mapa Nativo Ultra-Ligero:** Motor cartográfico propio en SVG (~4KB) basado en proyección matemática *Web Mercator*, sin librerías pesadas de terceros.
+- **Precios del combustible en tiempo real (MITECO):** Usa el precio medio del día en la provincia de origen, a partir de los datos abiertos oficiales del Ministerio para la Transición Ecológica y el Reto Demográfico. También puedes introducir tu propio precio.
+- **Rutas y distancias:**
+  - Búsqueda de direcciones con autocompletado mediante **Photon (OpenStreetMap)**.
+  - Distancia por carretera y trazado de la ruta mediante **OSRM (Open Source Routing Machine)**.
+  - Los marcadores de origen y destino se pueden arrastrar en el mapa para ajustar la ruta.
+- **Coste real del trayecto:** Coste por viaje, al mes y al año para trayectos de solo ida, ida y vuelta o recurrentes, con un recargo opcional por desgaste (0,08 €/km) que prorratea mantenimiento, neumáticos, seguro y depreciación.
+- **Mapa interactivo:** **Leaflet** con mapas base de Esri en gris claro y oscuro que siguen el tema de la app.
+- **Enlaces para compartir:** La ruta y la configuración del vehículo se guardan en la URL y se comparten con la Web Share API o se copian al portapapeles. Ningún servidor los almacena.
 - **Privacidad:** Los costes se calculan en tu navegador. Sin cookies, sin analítica, sin registro y sin base de datos. La búsqueda de direcciones, las rutas y los mapas se piden a servicios de terceros (Photon, OSRM y Esri), y los precios del combustible al MITECO.
-- **Soporte Multi-Idioma:** Interfaz completamente traducida a Español, Inglés, Francés, Alemán, Italiano y Portugués.
-- **Diseño Adaptativo:** Interfaz sobria y responsiva con soporte nativo para temas claro y oscuro.
+- **Soporte multi-idioma:** Interfaz completamente traducida a español, inglés, francés, alemán, italiano y portugués.
+- **Diseño adaptativo:** Interfaz sobria y responsiva con tema claro, oscuro o del sistema.
 
 ## 🛠️ Tecnologías Utilizadas
 - **Vue.js 3** (Composition API) + **Vite**
-- **TypeScript** para un código robusto y estrictamente tipado.
+- **TypeScript** en modo estricto.
 - **Vue-i18n** para el soporte multi-idioma.
-- **Vanilla CSS** con sistema de diseño propio basado en variables CSS, sin frameworks externos.
-- **Vitest** para pruebas unitarias.
+- **Leaflet** para el mapa.
+- **Vanilla CSS** con variables de diseño propias, sin frameworks de interfaz.
+- **Vitest**, **ESLint** y **Prettier**, ejecutados en CI antes de cada despliegue.
 
 ## 📁 Estructura del Proyecto
 El proyecto sigue una arquitectura modular y limpia que separa los clientes de servicios externos, las matemáticas puras de dominio y los componentes visuales. Puedes ver los detalles en [`docs/ARCHITECTURE-es.md`](docs/ARCHITECTURE-es.md).
@@ -46,12 +48,14 @@ El proyecto sigue una arquitectura modular y limpia que separa los clientes de s
    npm run dev
    ```
 
-4. Ejecuta las pruebas:
+4. Ejecuta las comprobaciones (las mismas que el CI):
    ```sh
+   npm run lint
+   npm run format:check
    npm test
    ```
 
-5. Compila para producción:
+5. Comprueba los tipos y compila para producción:
    ```sh
    npm run build
    ```
