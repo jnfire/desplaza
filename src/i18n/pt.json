@@ -6,8 +6,9 @@
   "footer": {
     "text": "Desenvolvimento local-first. Os seus dados, o seu controlo.",
     "source": "Código Fonte",
-    "license": "Todos os direitos reservados",
-    "methodology": "Metodologia"
+    "license": "Licença AGPL-3.0",
+    "methodology": "Metodologia",
+    "madeBy": "Feito por {name}"
   },
   "settings": {
     "personalization": "Personalização",
