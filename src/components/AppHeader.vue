@@ -4,6 +4,8 @@ import SettingsIcon from './SettingsIcon.vue';
 
 defineProps<{
   showSettings: boolean;
+  /** Shows the share button; the app handles the `share` event. */
+  showShare?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -18,7 +20,12 @@ const { t } = useI18n();
 <template>
   <header class="navbar">
     <div class="navbar-container">
-      <button class="navbar-brand" :aria-label="t('header.title')" @click="emit('home')">
+      <button
+        type="button"
+        class="navbar-brand"
+        :aria-label="t('header.title')"
+        @click="emit('home')"
+      >
         <div>
           <h1 class="title">{{ t('header.title') }}</h1>
           <p class="subtitle">{{ t('header.subtitle') }}</p>
@@ -27,10 +34,11 @@ const { t } = useI18n();
 
       <div class="navbar-actions">
         <button
+          v-if="showShare"
           type="button"
           class="btn-secondary config-toggle"
-          :aria-label="t('core.share_btn_label')"
-          :title="t('core.share_btn_label')"
+          :aria-label="t('header.share')"
+          :title="t('header.share')"
           @click="emit('share')"
         >
           <svg
@@ -55,7 +63,8 @@ const { t } = useI18n();
           type="button"
           class="btn-secondary config-toggle"
           :class="{ 'config-toggle--active': showSettings }"
-          :aria-label="t('core.settings_btn_label')"
+          :aria-label="t('header.settings')"
+          :title="t('header.settings')"
           :aria-expanded="showSettings"
           @click="emit('toggle-settings')"
         >

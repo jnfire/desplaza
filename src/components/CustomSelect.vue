@@ -34,7 +34,7 @@ const optionRefs = ref<HTMLButtonElement[]>([]);
 
 const currentLabel = computed(() => {
   const matchingOption = props.options.find((optionItem) => optionItem.value === props.modelValue);
-  return matchingOption ? matchingOption.label : props.placeholder || t('core.select_option');
+  return matchingOption ? matchingOption.label : props.placeholder || t('shared.select_option');
 });
 
 const setOptionRef = (element: unknown, index: number) => {

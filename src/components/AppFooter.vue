@@ -1,20 +1,28 @@
 <script setup lang="ts">
-const appVersion = __APP_VERSION__;
+import { appConfig } from '../app.config';
+
+defineProps<{
+  /** Shows the methodology button; the app opens its sources dialog on `show-sources`. */
+  showMethodology?: boolean;
+}>();
 
 const emit = defineEmits<{
   (e: 'show-sources'): void;
 }>();
+
+const appVersion = __APP_VERSION__;
+const repositoryUrl = `https://github.com/${appConfig.repository}`;
 </script>
 
 <template>
   <footer class="footer">
     <div class="footer__content">
       <p class="footer__text">
-        {{ $t('footer.text') }}
+        {{ $t('footer.facts') }}
         <span class="footer__version">
           •
           <a
-            :href="`https://github.com/jnfire/desplaza/releases/tag/v${appVersion}`"
+            :href="`${repositoryUrl}/releases/tag/v${appVersion}`"
             target="_blank"
             rel="noopener noreferrer"
             class="footer__version-link"
@@ -24,21 +32,18 @@ const emit = defineEmits<{
         </span>
       </p>
       <div class="footer__links">
-        <button class="footer__link btn-link" @click="emit('show-sources')">
-          {{ $t('footer.methodology') }}
-        </button>
-        <span class="footer__divider">|</span>
-        <a
-          href="https://github.com/jnfire/desplaza"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="footer__link"
-        >
+        <template v-if="showMethodology">
+          <button type="button" class="footer__link btn-link" @click="emit('show-sources')">
+            {{ $t('footer.methodology') }}
+          </button>
+          <span class="footer__divider">|</span>
+        </template>
+        <a :href="repositoryUrl" target="_blank" rel="noopener noreferrer" class="footer__link">
           {{ $t('footer.source') }}
         </a>
         <span class="footer__divider">|</span>
         <a
-          href="https://github.com/jnfire/desplaza/blob/main/LICENSE"
+          :href="`${repositoryUrl}/blob/main/LICENSE`"
           target="_blank"
           rel="noopener noreferrer"
           class="footer__link"
@@ -49,12 +54,12 @@ const emit = defineEmits<{
       <i18n-t keypath="footer.madeBy" tag="p" class="footer__text footer__author">
         <template #name>
           <a
-            href="https://github.com/jnfire"
+            :href="appConfig.author.url"
             target="_blank"
             rel="noopener noreferrer"
             class="footer__link"
           >
-            Javier Nicolás Pérez Mesa
+            {{ appConfig.author.name }}
           </a>
         </template>
       </i18n-t>
@@ -80,6 +85,8 @@ const emit = defineEmits<{
 }
 
 .footer__version {
+  /* Keep "• v1.0.0" together when the line wraps on a phone. */
+  white-space: nowrap;
   opacity: 0.8;
 }
 

@@ -1,14 +1,16 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "O custo real das suas deslocações de carro, com preços oficiais dos combustíveis."
+    "subtitle": "O custo real das suas deslocações de carro, com preços oficiais dos combustíveis.",
+    "settings": "Abrir definições",
+    "share": "Partilhar ligação"
   },
   "footer": {
-    "text": "Sem cookies · Sem contas · Código aberto",
     "source": "Código Fonte",
     "license": "Licença AGPL-3.0",
     "methodology": "Metodologia",
-    "madeBy": "Feito por {name}"
+    "madeBy": "Feito por {name}",
+    "facts": "Sem cookies · Sem contas · Código aberto"
   },
   "settings": {
     "personalization": "Personalização",
@@ -51,8 +53,6 @@
     "share_title": "A minha rota no Desplaza",
     "share_text": "Veja quanto me custa esta deslocação.",
     "share_copied": "Ligação copiada para a área de transferência!",
-    "share_btn_label": "Partilhar ligação da rota",
-    "settings_btn_label": "Abrir definições",
     "monthly": "Mensal",
     "annual": "Anual",
     "route_dist": "Distância da rota:",
@@ -61,8 +61,7 @@
     "define_route": "Defina a origem e o destino para saber o custo real da sua viagem.",
     "hide_map": "Ocultar mapa",
     "show_map": "Ver e ajustar no mapa",
-    "map_region": "Mapa interativo da rota",
-    "select_option": "Selecione uma opção"
+    "map_region": "Mapa interativo da rota"
   },
   "sources": {
     "title": "Fontes e Metodologia",
@@ -164,5 +163,8 @@
     "col_year": "Por ano",
     "col_extra_year": "Diferença por ano",
     "col_extra_journey": "Diferença por viagem"
+  },
+  "shared": {
+    "select_option": "Selecione uma opção"
   }
 }

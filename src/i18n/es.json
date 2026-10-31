@@ -1,14 +1,16 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Coste real de tus desplazamientos en coche, con precios oficiales."
+    "subtitle": "Coste real de tus desplazamientos en coche, con precios oficiales.",
+    "settings": "Abrir configuración",
+    "share": "Compartir enlace"
   },
   "footer": {
-    "text": "Sin cookies · Sin cuentas · Código abierto",
     "source": "Código Fuente",
     "license": "Licencia AGPL-3.0",
     "methodology": "Metodología",
-    "madeBy": "Hecho por {name}"
+    "madeBy": "Hecho por {name}",
+    "facts": "Sin cookies · Sin cuentas · Código abierto"
   },
   "settings": {
     "personalization": "Personalización",
@@ -51,8 +53,6 @@
     "share_title": "Mi ruta en Desplaza",
     "share_text": "Mira lo que me cuesta este trayecto.",
     "share_copied": "¡Enlace copiado al portapapeles!",
-    "share_btn_label": "Compartir enlace de ruta",
-    "settings_btn_label": "Abrir configuración",
     "monthly": "Mensual",
     "annual": "Anual",
     "route_dist": "Distancia de ruta:",
@@ -61,8 +61,7 @@
     "define_route": "Define el origen y el destino para ver el coste real de tu desplazamiento.",
     "hide_map": "Ocultar Mapa",
     "show_map": "Ver y ajustar en el mapa",
-    "map_region": "Mapa interactivo de ruta",
-    "select_option": "Selecciona una opción"
+    "map_region": "Mapa interactivo de ruta"
   },
   "sources": {
     "title": "Fuentes y Metodología",
@@ -164,5 +163,8 @@
     "col_year": "Al año",
     "col_extra_year": "Diferencia al año",
     "col_extra_journey": "Diferencia por viaje"
+  },
+  "shared": {
+    "select_option": "Selecciona una opción"
   }
 }
