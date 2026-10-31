@@ -17,10 +17,10 @@ defineProps<{
 
 <style scoped>
 .settings-view {
-  background-color: var(--color-bg);
+  background-color: var(--bg-body);
   padding: 2rem;
   border-radius: 12px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-color);
   margin-bottom: 2rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   animation: fadeIn 0.2s ease-out;

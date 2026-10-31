@@ -162,7 +162,7 @@ function updateMap() {
     // GeoJSON uses [lon, lat], Leaflet uses [lat, lon]
     const latLngs = props.routeCoordinates.map((coord) => L.latLng(coord[1], coord[0]));
     routePolyline = L.polyline(latLngs, {
-      color: 'var(--color-primary, #000000)',
+      color: 'var(--accent-color, #000000)',
       weight: 5,
       opacity: 0.85,
       lineCap: 'round',
@@ -190,11 +190,11 @@ function updateMap() {
 .map-container {
   width: 100%;
   height: 100%;
-  background-color: var(--color-border);
+  background-color: var(--border-color);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-color);
 }
 
 @media (min-width: 900px) {
@@ -205,15 +205,15 @@ function updateMap() {
 
 /* Custom Tooltip Styling */
 .marker-tooltip {
-  background: var(--color-bg) !important;
-  border: 1px solid var(--color-border) !important;
-  color: var(--color-text) !important;
+  background: var(--bg-body) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-main) !important;
   font-weight: 600;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
   border-radius: 4px !important;
 }
 
 .leaflet-tooltip-top:before {
-  border-top-color: var(--color-border) !important;
+  border-top-color: var(--border-color) !important;
 }
 </style>

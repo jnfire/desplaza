@@ -1,13 +1,15 @@
+/* Design tokens shared with the other portfolio tools (base64-to-file, branch-name-formatter). */
 :root {
-  /* Colors */
-  --color-bg: #ffffff;
-  --color-bg-hover: #f3f4f6;
-  --color-text: #1a1a1a;
-  --color-text-muted: #666666;
-  --color-border: #e5e5e5;
-  --color-primary: #000000;
-  --color-primary-hover: #333333;
-  --color-error: #ef4444;
+  --bg-body: #ffffff;
+  --bg-surface: #f9fafb;
+  --bg-surface-hover: #f3f4f6;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+  --accent-color: #000000;
+  --accent-color-hover: #1f2937;
+  --accent-color-alpha: rgba(0, 0, 0, 0.1);
+  --error-color: #ef4444;
 
   /* Typography */
   --font-family:
@@ -19,37 +21,32 @@
   --radius-lg: 12px;
 }
 
-:root[data-theme='light'] {
-  --color-bg: #ffffff;
-  --color-bg-hover: #f3f4f6;
-  --color-text: #1a1a1a;
-  --color-text-muted: #666666;
-  --color-border: #e5e5e5;
-  --color-primary: #000000;
-  --color-primary-hover: #333333;
-  --color-error: #ef4444;
-}
-
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --color-bg: #121212;
-    --color-bg-hover: #262626;
-    --color-text: #f5f5f5;
-    --color-text-muted: #a0a0a0;
-    --color-border: #333333;
-    --color-primary: #ffffff;
-    --color-primary-hover: #cccccc;
+    --bg-body: #111827;
+    --bg-surface: #1f2937;
+    --bg-surface-hover: #374151;
+    --text-main: #f9fafb;
+    --text-muted: #9ca3af;
+    --border-color: #374151;
+    --accent-color: #ffffff;
+    --accent-color-hover: #e5e7eb;
+    --accent-color-alpha: rgba(255, 255, 255, 0.1);
+    --error-color: #f87171;
   }
 }
 
 :root[data-theme='dark'] {
-  --color-bg: #121212;
-  --color-bg-hover: #262626;
-  --color-text: #f5f5f5;
-  --color-text-muted: #a0a0a0;
-  --color-border: #333333;
-  --color-primary: #ffffff;
-  --color-primary-hover: #cccccc;
+  --bg-body: #111827;
+  --bg-surface: #1f2937;
+  --bg-surface-hover: #374151;
+  --text-main: #f9fafb;
+  --text-muted: #9ca3af;
+  --border-color: #374151;
+  --accent-color: #ffffff;
+  --accent-color-hover: #e5e7eb;
+  --accent-color-alpha: rgba(255, 255, 255, 0.1);
+  --error-color: #f87171;
 }
 
 * {
@@ -60,8 +57,8 @@
 
 body {
   font-family: var(--font-family);
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--bg-body);
+  color: var(--text-main);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }

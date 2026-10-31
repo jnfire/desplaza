@@ -459,10 +459,10 @@ const shareRoute = async () => {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  color: var(--color-text);
+  color: var(--text-main);
   font-weight: 600;
   cursor: pointer;
   margin-bottom: 1rem;
@@ -471,11 +471,11 @@ const shareRoute = async () => {
 }
 
 .map-toggle-btn:hover {
-  background: var(--color-bg-hover, rgba(0, 0, 0, 0.02));
+  background: var(--bg-surface-hover, rgba(0, 0, 0, 0.02));
 }
 
 .map-toggle-btn:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
 
@@ -491,11 +491,11 @@ const shareRoute = async () => {
 }
 
 .cost-summary {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .summary-header {
@@ -517,12 +517,12 @@ const shareRoute = async () => {
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0;
-  color: var(--color-text);
+  color: var(--text-main);
 }
 
 .miteco-badge {
-  background-color: var(--color-text);
-  color: var(--color-bg);
+  background-color: var(--text-main);
+  color: var(--bg-body);
   padding: 0.35rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -539,7 +539,7 @@ const shareRoute = async () => {
 }
 
 .miteco-badge:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
 
@@ -562,7 +562,7 @@ const shareRoute = async () => {
 
 .cost-label {
   font-size: 0.85rem;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 600;
@@ -572,7 +572,7 @@ const shareRoute = async () => {
   font-size: 2.5rem;
   font-weight: 700;
   line-height: 1;
-  color: var(--color-text);
+  color: var(--text-main);
 }
 
 .cost-value small {
@@ -581,13 +581,13 @@ const shareRoute = async () => {
 }
 
 .cost-details {
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border-color);
   padding-top: 1rem;
   font-size: 0.9rem;
 }
 
 .text-muted {
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   font-size: 0.8rem;
   margin-top: 0.5rem;
 }
@@ -595,9 +595,9 @@ const shareRoute = async () => {
 .placeholder-card {
   padding: 3rem 1.5rem;
   text-align: center;
-  border: 1px dashed var(--color-border);
+  border: 1px dashed var(--border-color);
   border-radius: var(--radius-lg);
-  color: var(--color-text-muted);
+  color: var(--text-muted);
 }
 
 @media (max-width: 600px) {

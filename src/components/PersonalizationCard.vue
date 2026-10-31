@@ -68,7 +68,7 @@ const handleLanguageChange = (langCode: string) => {
 .settings-section {
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .settings-section:last-child {
@@ -79,7 +79,7 @@ const handleLanguageChange = (langCode: string) => {
 
 .section-title {
   margin: 0 0 1rem 0;
-  color: var(--color-text);
+  color: var(--text-main);
   font-size: 1.2rem;
 }
 
@@ -99,6 +99,6 @@ const handleLanguageChange = (langCode: string) => {
 .setting-label {
   font-weight: 600;
   font-size: 0.9rem;
-  color: var(--color-text);
+  color: var(--text-main);
 }
 </style>
