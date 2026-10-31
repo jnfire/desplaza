@@ -157,9 +157,9 @@ onUnmounted(() => {
 }
 
 .lang-selector-trigger {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
   padding: 0.6rem 1rem;
   border-radius: 8px;
   cursor: pointer;
@@ -176,19 +176,19 @@ onUnmounted(() => {
 }
 
 .lang-selector-trigger:hover {
-  background: var(--color-bg-hover, rgba(0, 0, 0, 0.05));
-  border-color: var(--color-text-muted);
+  background: var(--bg-surface-hover, rgba(0, 0, 0, 0.05));
+  border-color: var(--text-muted);
 }
 
 .lang-selector-trigger:focus-visible {
   outline: none;
-  border-color: var(--color-primary);
+  border-color: var(--accent-color);
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
 .dropdown-arrow {
   font-size: 0.7rem;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   transition: transform 0.2s ease;
   margin-left: auto;
 }
@@ -202,8 +202,8 @@ onUnmounted(() => {
   top: calc(100% + 0.35rem);
   left: 0;
   width: 100%;
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-border);
+  background-color: var(--bg-body);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   box-shadow:
     0 4px 12px -2px rgba(0, 0, 0, 0.08),
@@ -223,7 +223,7 @@ onUnmounted(() => {
   font-size: 0.85rem;
   font-weight: 600;
   font-family: inherit;
-  color: var(--color-text);
+  color: var(--text-main);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -233,19 +233,19 @@ onUnmounted(() => {
 
 .lang-option:hover,
 .lang-option:focus-visible {
-  background-color: var(--color-bg-hover, rgba(0, 0, 0, 0.05));
+  background-color: var(--bg-surface-hover, rgba(0, 0, 0, 0.05));
 }
 
 .option-selected {
-  background-color: var(--color-primary);
-  color: var(--color-bg);
+  background-color: var(--accent-color);
+  color: var(--bg-body);
   font-weight: 600;
 }
 
 .option-selected:hover,
 .option-selected:focus-visible {
-  background-color: var(--color-primary);
-  color: var(--color-bg);
+  background-color: var(--accent-color);
+  color: var(--bg-body);
 }
 
 /* Animations */

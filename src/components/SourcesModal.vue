@@ -93,8 +93,8 @@ onUnmounted(() => {
 }
 
 .modal-content {
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-border);
+  background-color: var(--bg-body);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   width: 100%;
   max-width: 600px;
@@ -110,13 +110,13 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .modal-header h2 {
   font-size: 1.25rem;
   margin: 0;
-  color: var(--color-text);
+  color: var(--text-main);
 }
 
 .close-btn {
@@ -124,7 +124,7 @@ onUnmounted(() => {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   border-radius: 4px;
   padding: 0.25rem 0.5rem;
   display: flex;
@@ -134,11 +134,11 @@ onUnmounted(() => {
 }
 
 .close-btn:hover {
-  color: var(--color-text);
+  color: var(--text-main);
 }
 
 .close-btn:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
 
@@ -152,11 +152,11 @@ onUnmounted(() => {
 .modal-body h3 {
   font-size: 1.05rem;
   margin-bottom: 0.5rem;
-  color: var(--color-text);
+  color: var(--text-main);
 }
 
 .modal-body p {
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   font-size: 0.95rem;
   line-height: 1.5;
   margin-bottom: 0.75rem;
@@ -164,7 +164,7 @@ onUnmounted(() => {
 
 .modal-body ul {
   padding-left: 1.5rem;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   font-size: 0.95rem;
 }
 

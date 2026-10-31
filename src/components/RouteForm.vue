@@ -295,7 +295,7 @@ const handleDestKeydown = (event: KeyboardEvent) => {
 label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-main);
 }
 
 .input-wrapper {
@@ -309,9 +309,9 @@ input {
   padding: 0.75rem 1rem;
   padding-right: 2.5rem;
   font-size: 1rem;
-  color: var(--color-text);
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-border);
+  color: var(--text-main);
+  background-color: var(--bg-body);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   outline: none;
   transition: all 0.2s ease-in-out;
@@ -320,8 +320,8 @@ input {
 
 input:focus,
 input:focus-visible {
-  border-color: var(--color-primary);
-  outline: 2px solid var(--color-primary);
+  border-color: var(--accent-color);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
 
@@ -331,7 +331,7 @@ input:focus-visible {
   background: none;
   border: none;
   font-size: 1.25rem;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   cursor: pointer;
   padding: 0.25rem 0.5rem;
   display: flex;
@@ -342,11 +342,11 @@ input:focus-visible {
 }
 
 .clear-btn:hover {
-  color: var(--color-text);
+  color: var(--text-main);
 }
 
 .clear-btn:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
 
@@ -356,8 +356,8 @@ input:focus-visible {
   left: 0;
   right: 0;
   margin-top: 0.25rem;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   list-style: none;
   max-height: 200px;
@@ -371,9 +371,9 @@ input:focus-visible {
   padding: 0.75rem 1rem;
   cursor: pointer;
   font-size: 0.9rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--border-color);
   transition: background-color 0.15s ease;
-  color: var(--color-text);
+  color: var(--text-main);
 }
 
 .suggestion-item:last-child {
@@ -382,12 +382,12 @@ input:focus-visible {
 
 .suggestion-item:hover,
 .suggestion-item--active {
-  background-color: var(--color-bg-hover);
+  background-color: var(--bg-surface-hover);
 }
 
 .loading-text {
   font-size: 0.75rem;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   position: absolute;
   right: 2.5rem;
   top: 2.3rem;

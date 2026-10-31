@@ -1,10 +1,10 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calculate and compare the real cost of your mobility."
+    "subtitle": "Real cost of your car commute, with official fuel prices."
   },
   "footer": {
-    "text": "Local-first development. Your data, your control.",
+    "text": "No cookies · No accounts · Open source",
     "source": "Source Code",
     "license": "AGPL-3.0 License",
     "methodology": "Methodology",

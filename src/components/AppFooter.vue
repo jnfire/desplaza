@@ -66,7 +66,7 @@ const emit = defineEmits<{
 .footer {
   padding: 3rem 1.5rem;
   margin-top: 4rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border-color);
 }
 
 .footer__content {
@@ -74,7 +74,7 @@ const emit = defineEmits<{
 }
 
 .footer__text {
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   font-size: 0.9rem;
   margin-bottom: 1rem;
 }
@@ -102,7 +102,7 @@ const emit = defineEmits<{
 }
 
 .footer__link {
-  color: var(--color-text);
+  color: var(--text-main);
   font-size: 0.85rem;
   font-weight: 500;
   text-decoration: none;
@@ -118,11 +118,12 @@ const emit = defineEmits<{
   border: none;
   cursor: pointer;
   font-family: inherit;
+  line-height: inherit;
   padding: 0;
 }
 
 .footer__divider {
-  color: var(--color-border);
+  color: var(--border-color);
   font-size: 0.8rem;
 }
 

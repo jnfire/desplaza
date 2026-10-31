@@ -196,7 +196,7 @@ emitUpdate();
       </div>
 
       <div class="grid-layout">
-        <div class="input-group">
+        <div class="input-group input-group--full">
           <label for="priceSource-select">{{ t('core.price_origin') }}</label>
           <CustomSelect
             id="priceSource-select"
@@ -248,9 +248,9 @@ emitUpdate();
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  background: var(--color-bg);
+  background: var(--bg-surface);
   padding: 1.5rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
@@ -258,7 +258,7 @@ emitUpdate();
 .config-header h3 {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-main);
   margin: 0;
 }
 
@@ -271,10 +271,10 @@ emitUpdate();
 .mode-selector {
   display: flex;
   gap: 0.5rem;
-  background-color: var(--color-bg);
+  background-color: var(--bg-body);
   padding: 0.25rem;
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-color);
 }
 
 .radio-label {
@@ -295,7 +295,7 @@ emitUpdate();
   padding: 0.5rem 0.25rem;
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   border-radius: var(--radius-sm);
   transition: all 0.2s ease;
   user-select: none;
@@ -309,14 +309,14 @@ emitUpdate();
 }
 
 .radio-btn--checked {
-  background-color: var(--color-primary);
-  color: var(--color-bg);
+  background-color: var(--accent-color);
+  color: var(--bg-body);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   font-weight: 600;
 }
 
 .sr-only-radio:focus-visible + .radio-btn {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
 
@@ -324,6 +324,10 @@ emitUpdate();
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1.25rem;
+}
+
+.input-group--full {
+  grid-column: 1 / -1;
 }
 
 .cycle-controls {
@@ -339,16 +343,16 @@ emitUpdate();
 label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-main);
 }
 
 input[type='number'] {
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 1rem;
-  color: var(--color-text);
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-border);
+  color: var(--text-main);
+  background-color: var(--bg-body);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   outline: none;
   transition: all 0.2s ease-in-out;
@@ -357,15 +361,15 @@ input[type='number'] {
 
 input[type='number']:focus,
 input[type='number']:focus-visible {
-  border-color: var(--color-primary);
-  outline: 2px solid var(--color-primary);
+  border-color: var(--accent-color);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
 
 .toggle-group {
   margin-top: 0.5rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border-color);
 }
 
 .checkbox-label {
@@ -375,7 +379,7 @@ input[type='number']:focus-visible {
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: normal;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   user-select: none;
 }
 
@@ -389,7 +393,7 @@ input[type='number']:focus-visible {
 .checkbox-custom {
   width: 1.25rem;
   height: 1.25rem;
-  border: 2px solid var(--color-border);
+  border: 2px solid var(--border-color);
   border-radius: 4px;
   display: inline-block;
   position: relative;
@@ -398,12 +402,12 @@ input[type='number']:focus-visible {
 }
 
 .sr-only-checkbox:checked + .checkbox-custom {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
 }
 
 .sr-only-checkbox:focus-visible + .checkbox-custom {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
 
@@ -414,14 +418,14 @@ input[type='number']:focus-visible {
   top: 1px;
   width: 5px;
   height: 10px;
-  border: solid var(--color-bg);
+  border: solid var(--bg-body);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
 
 @media (prefers-color-scheme: dark) {
   .sr-only-checkbox:checked + .checkbox-custom::after {
-    border-color: var(--color-bg);
+    border-color: var(--bg-body);
   }
 }
 </style>

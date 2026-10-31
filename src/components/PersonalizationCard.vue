@@ -38,12 +38,9 @@ const handleLanguageChange = (langCode: string) => {
 </script>
 
 <template>
-  <section
-    class="settings-section"
-    :aria-label="t('settings.personalization') || 'Personalization'"
-  >
+  <section class="settings-card" :aria-label="t('settings.personalization') || 'Personalization'">
     <h3 class="section-title">{{ t('settings.personalization') || 'Personalization' }}</h3>
-    <div class="settings-column">
+    <div class="settings-grid">
       <div class="setting-item">
         <label class="setting-label">{{ t('settings.language') || 'Language' }}</label>
         <LangSelector
@@ -65,40 +62,16 @@ const handleLanguageChange = (langCode: string) => {
 </template>
 
 <style scoped>
-.settings-section {
-  margin-bottom: 2.5rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.settings-section:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.section-title {
-  margin: 0 0 1rem 0;
-  color: var(--color-text);
-  font-size: 1.2rem;
-}
-
-.settings-column {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
 .setting-item {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-width: 300px;
+  width: 100%;
 }
 
 .setting-label {
   font-weight: 600;
   font-size: 0.9rem;
-  color: var(--color-text);
+  color: var(--text-main);
 }
 </style>

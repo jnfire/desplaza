@@ -1,10 +1,10 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calcola e confronta il costo reale dei tuoi spostamenti."
+    "subtitle": "Il costo reale dei tuoi spostamenti in auto, con i prezzi ufficiali del carburante."
   },
   "footer": {
-    "text": "Sviluppo local-first. I tuoi dati, il tuo controllo.",
+    "text": "Senza cookie · Senza account · Open source",
     "source": "Codice Sorgente",
     "license": "Licenza AGPL-3.0",
     "methodology": "Metodologia",

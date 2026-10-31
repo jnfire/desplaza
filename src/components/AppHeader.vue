@@ -68,8 +68,8 @@ const { t } = useI18n();
 
 <style scoped>
 .navbar {
-  background-color: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
   position: sticky;
   top: 0;
   z-index: 2000;
@@ -98,7 +98,7 @@ const { t } = useI18n();
 }
 
 .navbar-brand:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent-color);
   outline-offset: 4px;
 }
 
@@ -106,14 +106,14 @@ const { t } = useI18n();
   font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--color-text);
+  color: var(--text-main);
   margin: 0;
   text-align: left;
 }
 
 .subtitle {
   font-size: 0.85rem;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   margin: 0.15rem 0 0 0;
   font-weight: 400;
   text-align: left;
@@ -133,31 +133,31 @@ const { t } = useI18n();
   font-size: 0.9rem;
   padding: 0.4rem 0.8rem;
   background: transparent;
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .config-toggle:hover {
-  background-color: var(--color-bg-hover, rgba(0, 0, 0, 0.05));
+  background-color: var(--bg-surface-hover, rgba(0, 0, 0, 0.05));
 }
 
 .config-toggle:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
 
 .config-toggle--active {
-  background-color: var(--color-primary);
-  color: var(--color-bg);
-  border-color: var(--color-primary);
+  background-color: var(--accent-color);
+  color: var(--bg-body);
+  border-color: var(--accent-color);
 }
 
 .config-toggle--active:hover {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
   opacity: 0.9;
 }
 

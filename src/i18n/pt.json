@@ -1,10 +1,10 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calcule e compare o custo real da sua mobilidade."
+    "subtitle": "O custo real das suas deslocações de carro, com preços oficiais dos combustíveis."
   },
   "footer": {
-    "text": "Desenvolvimento local-first. Os seus dados, o seu controlo.",
+    "text": "Sem cookies · Sem contas · Código aberto",
     "source": "Código Fonte",
     "license": "Licença AGPL-3.0",
     "methodology": "Metodologia",
