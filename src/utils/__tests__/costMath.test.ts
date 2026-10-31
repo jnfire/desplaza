@@ -5,7 +5,7 @@ describe('costMath', () => {
   it('calculates costs correctly for Solo Ida', () => {
     // 10km distance, 6L/100km, fuel 1.5€/L, 0.08 extra/km
     const result = calculateCarCosts(10, 5, 6, 1.5, 0.08, 11, 'ida');
-    
+
     // perTrip: Fuel = (10/100) * 6 * 1.5 = 0.9. Extra = 10 * 0.08 = 0.8. Total = 1.7
     expect(result.perTrip).toBeCloseTo(1.7, 2);
   });
@@ -13,22 +13,47 @@ describe('costMath', () => {
   it('calculates costs correctly for Ida y Vuelta', () => {
     // 10km distance, 6L/100km, fuel 1.5€/L, 0.08 extra/km
     const result = calculateCarCosts(10, 5, 6, 1.5, 0.08, 11, 'idavuelta');
-    
+
     // perTrip: Distance = 20. Fuel = (20/100) * 6 * 1.5 = 1.8. Extra = 20 * 0.08 = 1.6. Total = 3.4
     expect(result.perTrip).toBeCloseTo(3.4, 2);
   });
 
   it('calculates costs correctly for Ciclo Repetitivo', () => {
     const result = calculateCarCosts(10, 5, 6, 1.5, 0.08, 12, 'ciclo');
-    
+
     // perTrip = 3.4
     expect(result.perTrip).toBeCloseTo(3.4, 2);
-    
+
     // monthly: 5 days/week * 4.33 weeks/month = 21.65 trips/month
     // 3.4 * 21.65 = 73.61
     expect(result.monthly).toBeCloseTo(73.61, 2);
-    
+
     // annual: 73.61 * 12 months = 883.32
     expect(result.annual).toBeCloseTo(883.32, 2);
+  });
+  it('defaults to a round-trip commute, 12 months and no wear surcharge', () => {
+    const withDefaults = calculateCarCosts(25, 5, 6, 1.5);
+    const explicit = calculateCarCosts(25, 5, 6, 1.5, 0, 12, 'ciclo');
+
+    expect(withDefaults).toEqual(explicit);
+    // 50 km per day * 6 L/100 km * 1.5 €/L = 4.5 € with no wear surcharge
+    expect(withDefaults.perTrip).toBeCloseTo(4.5, 5);
+  });
+
+  it('costs nothing when the distance is zero', () => {
+    expect(calculateCarCosts(0, 5, 6, 1.5, 0.08)).toEqual({ perTrip: 0, monthly: 0, annual: 0 });
+  });
+
+  it('scales the monthly cost with the days driven per week', () => {
+    const threeDays = calculateCarCosts(10, 3, 6, 1.5);
+    const fiveDays = calculateCarCosts(10, 5, 6, 1.5);
+
+    expect(fiveDays.monthly / threeDays.monthly).toBeCloseTo(5 / 3, 10);
+  });
+
+  it('scales the annual cost with the active months', () => {
+    const elevenMonths = calculateCarCosts(10, 5, 6, 1.5, 0, 11);
+
+    expect(elevenMonths.annual).toBeCloseTo(elevenMonths.monthly * 11, 10);
   });
 });

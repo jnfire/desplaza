@@ -1,3 +1,4 @@
+<!-- src/components/VehicleConfig.vue -->
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -23,8 +24,14 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update', state: VehicleState): void;
-  (e: 'update:origin', location: { lat: number; lon: number; label: string; provinceSearch: string } | null): void;
-  (e: 'update:destination', location: { lat: number; lon: number; label: string; provinceSearch: string } | null): void;
+  (
+    e: 'update:origin',
+    location: { lat: number; lon: number; label: string; provinceSearch: string } | null,
+  ): void;
+  (
+    e: 'update:destination',
+    location: { lat: number; lon: number; label: string; provinceSearch: string } | null,
+  ): void;
 }>();
 
 const priceSource = ref<'auto' | 'manual'>(props.initialState?.priceSource || 'auto');
@@ -40,7 +47,7 @@ const { t } = useI18n();
 
 const priceSourceOptions = computed(() => [
   { value: 'auto', label: t('core.source_auto') || 'Automático (España)' },
-  { value: 'manual', label: t('core.source_manual') || 'Personalizado' }
+  { value: 'manual', label: t('core.source_manual') || 'Personalizado' },
 ]);
 
 const fuelOptions = computed(() => [
@@ -48,7 +55,7 @@ const fuelOptions = computed(() => [
   { value: 'Precio Gasolina 98 E5', label: t('core.fuel_gas98') || 'Gasolina 98' },
   { value: 'Precio Gasoleo A', label: t('core.fuel_diesel') || 'Diésel' },
   { value: 'Precio Gasoleo Premium', label: t('core.fuel_diesel_prem') || 'Diésel Premium' },
-  { value: 'Precio Gases licuados del petróleo', label: t('core.fuel_glp') || 'GLP' }
+  { value: 'Precio Gases licuados del petróleo', label: t('core.fuel_glp') || 'GLP' },
 ]);
 
 const emitUpdate = () => {
@@ -63,7 +70,7 @@ const emitUpdate = () => {
     activeMonths: sanitizedMonths,
     includeWear: includeWear.value,
     priceSource: priceSource.value,
-    manualPrice: manualPrice.value
+    manualPrice: manualPrice.value,
   });
 };
 
@@ -83,65 +90,98 @@ watch(daysPerWeek, (newDaysValue) => {
   }
 });
 
-watch([fuelType, consumption, tripMode, daysPerWeek, activeMonths, includeWear, priceSource, manualPrice], emitUpdate, { deep: true });
+watch(
+  [
+    fuelType,
+    consumption,
+    tripMode,
+    daysPerWeek,
+    activeMonths,
+    includeWear,
+    priceSource,
+    manualPrice,
+  ],
+  emitUpdate,
+  { deep: true },
+);
 
 emitUpdate();
 </script>
 
 <template>
   <div class="configs-wrapper">
-    
     <!-- CARD 1: CONFIGURACIÓN DEL VIAJE -->
     <div class="config-card">
       <div class="config-header">
-        <h3>{{ $t("core.trip_details") }}</h3>
+        <h3>{{ t('core.trip_details') }}</h3>
       </div>
-      
-      <RouteForm 
+
+      <RouteForm
         :origin-label="originLabel"
         :destination-label="destinationLabel"
         @update:origin="emit('update:origin', $event)"
         @update:destination="emit('update:destination', $event)"
       />
-      
+
       <!-- Modo de Viaje -->
-      <div class="mode-selector">
-        <label class="radio-label">
-          <input type="radio" value="ida" v-model="tripMode" />
-          <div class="radio-btn">{{ $t("core.one_way") }}</div>
-        </label>
-        <label class="radio-label">
-          <input type="radio" value="idavuelta" v-model="tripMode" />
-          <div class="radio-btn">{{ $t("core.round_trip") }}</div>
-        </label>
-        <label class="radio-label">
-          <input type="radio" value="ciclo" v-model="tripMode" />
-          <div class="radio-btn">{{ $t("core.routine") }}</div>
-        </label>
-      </div>
+      <fieldset class="mode-selector-fieldset">
+        <legend class="sr-only">{{ t('core.trip_type') }}</legend>
+        <div class="mode-selector" role="radiogroup" :aria-label="t('core.trip_type')">
+          <label class="radio-label">
+            <input
+              v-model="tripMode"
+              type="radio"
+              name="tripMode"
+              value="ida"
+              class="sr-only-radio"
+            />
+            <div class="radio-btn" :class="{ 'radio-btn--checked': tripMode === 'ida' }">
+              {{ t('core.one_way') }}
+            </div>
+          </label>
+          <label class="radio-label">
+            <input
+              v-model="tripMode"
+              type="radio"
+              name="tripMode"
+              value="idavuelta"
+              class="sr-only-radio"
+            />
+            <div class="radio-btn" :class="{ 'radio-btn--checked': tripMode === 'idavuelta' }">
+              {{ t('core.round_trip') }}
+            </div>
+          </label>
+          <label class="radio-label">
+            <input
+              v-model="tripMode"
+              type="radio"
+              name="tripMode"
+              value="ciclo"
+              class="sr-only-radio"
+            />
+            <div class="radio-btn" :class="{ 'radio-btn--checked': tripMode === 'ciclo' }">
+              {{ t('core.routine') }}
+            </div>
+          </label>
+        </div>
+      </fieldset>
 
       <!-- Controles de Ciclo Repetitivo -->
       <div v-if="tripMode === 'ciclo'" class="grid-layout cycle-controls">
         <div class="input-group">
-          <label for="daysPerWeek">{{ $t("core.days_week") }}</label>
-          <input 
-            id="daysPerWeek" 
-            type="number" 
-            min="1" 
-            max="7" 
-            v-model="daysPerWeek" 
-          />
+          <label for="daysPerWeek">{{ t('core.days_week') }}</label>
+          <input id="daysPerWeek" v-model="daysPerWeek" type="number" min="1" max="7" />
         </div>
 
         <div class="input-group">
-          <label for="activeMonths">{{ $t("core.months_year") }}</label>
-          <input 
-            id="activeMonths" 
-            type="number" 
-            min="1" 
-            max="12" 
-            v-model="activeMonths" 
-            :title="$t('core.active_months_desc')"
+          <label for="activeMonths">{{ t('core.months_year') }}</label>
+          <input
+            id="activeMonths"
+            v-model="activeMonths"
+            type="number"
+            min="1"
+            max="12"
+            :title="t('core.active_months_desc')"
           />
         </div>
       </div>
@@ -152,52 +192,48 @@ emitUpdate();
     <!-- CARD 2: CONFIGURACIÓN DEL VEHÍCULO -->
     <div class="config-card">
       <div class="config-header">
-        <h3>{{ $t("core.your_vehicle") }}</h3>
+        <h3>{{ t('core.your_vehicle') }}</h3>
       </div>
 
       <div class="grid-layout">
         <div class="input-group">
-          <label for="priceSource">{{ $t("core.price_origin") }}</label>
-          <CustomSelect id="priceSource" v-model="priceSource" :options="priceSourceOptions" />
+          <label for="priceSource-select">{{ t('core.price_origin') }}</label>
+          <CustomSelect
+            id="priceSource-select"
+            v-model="priceSource"
+            :options="priceSourceOptions"
+          />
         </div>
 
         <div v-if="priceSource === 'auto'" class="input-group">
-          <label for="fuelType">{{ $t("core.fuel_type") }}</label>
-          <CustomSelect id="fuelType" v-model="fuelType" :options="fuelOptions" />
+          <label for="fuelType-select">{{ t('core.fuel_type') }}</label>
+          <CustomSelect id="fuelType-select" v-model="fuelType" :options="fuelOptions" />
         </div>
 
         <div v-else class="input-group">
-          <label for="manualPrice">{{ $t("core.manual_price") }}</label>
-          <input 
-            id="manualPrice" 
-            type="number" 
-            step="0.01" 
-            min="0" 
-            v-model="manualPrice" 
-          />
+          <label for="manualPrice">{{ t('core.manual_price') }}</label>
+          <input id="manualPrice" v-model="manualPrice" type="number" step="0.01" min="0" />
         </div>
 
         <div class="input-group">
-          <label for="consumption">{{ $t("core.consumption_short") }}</label>
-          <input 
-            id="consumption" 
-            type="number" 
-            step="0.1" 
-            min="0" 
-            v-model="consumption" 
-          />
+          <label for="consumption">{{ t('core.consumption_short') }}</label>
+          <input id="consumption" v-model="consumption" type="number" step="0.1" min="0" />
         </div>
       </div>
 
       <div class="toggle-group">
-        <label class="checkbox-label">
-          <input type="checkbox" v-model="includeWear" />
-          <span class="checkbox-custom"></span>
-          {{ $t("core.include_wear") }}
+        <label class="checkbox-label" for="includeWear-checkbox">
+          <input
+            id="includeWear-checkbox"
+            v-model="includeWear"
+            type="checkbox"
+            class="sr-only-checkbox"
+          />
+          <span class="checkbox-custom" aria-hidden="true"></span>
+          <span>{{ t('core.include_wear') }}</span>
         </label>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -226,6 +262,12 @@ emitUpdate();
   margin: 0;
 }
 
+.mode-selector-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
 .mode-selector {
   display: flex;
   gap: 0.5rem;
@@ -238,10 +280,14 @@ emitUpdate();
 .radio-label {
   flex: 1;
   cursor: pointer;
+  position: relative;
 }
 
-.radio-label input {
-  display: none;
+.sr-only-radio {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .radio-btn {
@@ -251,7 +297,8 @@ emitUpdate();
   font-weight: 600;
   color: var(--color-text-muted);
   border-radius: var(--radius-sm);
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  user-select: none;
 }
 
 @media (min-width: 400px) {
@@ -261,11 +308,16 @@ emitUpdate();
   }
 }
 
-.radio-label input:checked + .radio-btn {
+.radio-btn--checked {
   background-color: var(--color-primary);
   color: var(--color-bg);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   font-weight: 600;
+}
+
+.sr-only-radio:focus-visible + .radio-btn {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .grid-layout {
@@ -290,7 +342,7 @@ label {
   color: var(--color-text);
 }
 
-input[type="number"], select {
+input[type='number'] {
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 1rem;
@@ -299,12 +351,15 @@ input[type="number"], select {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease-in-out;
   font-family: inherit;
 }
 
-input[type="number"]:focus, select:focus {
+input[type='number']:focus,
+input[type='number']:focus-visible {
   border-color: var(--color-primary);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .toggle-group {
@@ -321,10 +376,14 @@ input[type="number"]:focus, select:focus {
   font-size: 0.9rem;
   font-weight: normal;
   color: var(--color-text-muted);
+  user-select: none;
 }
 
-.checkbox-label input {
-  display: none;
+.sr-only-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .checkbox-custom {
@@ -335,14 +394,20 @@ input[type="number"]:focus, select:focus {
   display: inline-block;
   position: relative;
   transition: all 0.2s;
+  flex-shrink: 0;
 }
 
-.checkbox-label input:checked + .checkbox-custom {
+.sr-only-checkbox:checked + .checkbox-custom {
   background-color: var(--color-primary);
   border-color: var(--color-primary);
 }
 
-.checkbox-label input:checked + .checkbox-custom::after {
+.sr-only-checkbox:focus-visible + .checkbox-custom {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.sr-only-checkbox:checked + .checkbox-custom::after {
   content: '';
   position: absolute;
   left: 5px;
@@ -355,7 +420,7 @@ input[type="number"]:focus, select:focus {
 }
 
 @media (prefers-color-scheme: dark) {
-  .checkbox-label input:checked + .checkbox-custom::after {
+  .sr-only-checkbox:checked + .checkbox-custom::after {
     border-color: var(--color-bg);
   }
 }

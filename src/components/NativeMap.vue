@@ -1,5 +1,7 @@
+<!-- src/components/NativeMap.vue -->
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -8,7 +10,8 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+// Leaflet resolves marker icons from a CSS path that bundlers break; use the imported assets instead.
+delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon2x,
@@ -27,6 +30,8 @@ const emit = defineEmits<{
   (e: 'update:destination', pos: { lat: number; lon: number }): void;
 }>();
 
+const { t } = useI18n();
+
 const mapContainer = ref<HTMLElement | null>(null);
 let map: L.Map | null = null;
 let tileLayer: L.TileLayer | null = null;
@@ -34,8 +39,22 @@ let originMarker: L.Marker | null = null;
 let destMarker: L.Marker | null = null;
 let routePolyline: L.Polyline | null = null;
 
-const LIGHT_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
-const DARK_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+const LIGHT_TILES =
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+const DARK_TILES =
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+
+const invalidateSize = () => {
+  if (map) {
+    nextTick(() => {
+      map?.invalidateSize();
+    });
+  }
+};
+
+defineExpose({
+  invalidateSize,
+});
 
 onMounted(() => {
   if (!mapContainer.value) return;
@@ -47,10 +66,11 @@ onMounted(() => {
   const tileUrl = props.darkMode ? DARK_TILES : LIGHT_TILES;
   tileLayer = L.tileLayer(tileUrl, {
     attribution: '&copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-    maxZoom: 16
+    maxZoom: 16,
   }).addTo(map);
 
   updateMap();
+  invalidateSize();
 });
 
 onUnmounted(() => {
@@ -61,16 +81,23 @@ onUnmounted(() => {
 });
 
 // Watch for theme changes
-watch(() => props.darkMode, (isDark) => {
-  if (tileLayer) {
-    tileLayer.setUrl(isDark ? DARK_TILES : LIGHT_TILES);
-  }
-});
+watch(
+  () => props.darkMode,
+  (isDark) => {
+    if (tileLayer) {
+      tileLayer.setUrl(isDark ? DARK_TILES : LIGHT_TILES);
+    }
+  },
+);
 
 // Watch for coordinate or route changes
-watch([() => props.origin, () => props.destination, () => props.routeCoordinates], () => {
-  updateMap();
-}, { deep: true });
+watch(
+  [() => props.origin, () => props.destination, () => props.routeCoordinates],
+  () => {
+    updateMap();
+  },
+  { deep: true },
+);
 
 function updateMap() {
   if (!map) return;
@@ -86,9 +113,14 @@ function updateMap() {
         const pos = originMarker!.getLatLng();
         emit('update:origin', { lat: pos.lat, lon: pos.lng });
       });
-      originMarker.bindTooltip('Origen', { permanent: true, direction: 'top', className: 'marker-tooltip' });
+      originMarker.bindTooltip(t('core.origin'), {
+        permanent: true,
+        direction: 'top',
+        className: 'marker-tooltip',
+      });
     } else {
       originMarker.setLatLng(latLng);
+      originMarker.setTooltipContent(t('core.origin'));
     }
     bounds.extend(latLng);
   } else if (originMarker) {
@@ -105,9 +137,14 @@ function updateMap() {
         const pos = destMarker!.getLatLng();
         emit('update:destination', { lat: pos.lat, lon: pos.lng });
       });
-      destMarker.bindTooltip('Destino', { permanent: true, direction: 'top', className: 'marker-tooltip' });
+      destMarker.bindTooltip(t('core.dest'), {
+        permanent: true,
+        direction: 'top',
+        className: 'marker-tooltip',
+      });
     } else {
       destMarker.setLatLng(latLng);
+      destMarker.setTooltipContent(t('core.dest'));
     }
     bounds.extend(latLng);
   } else if (destMarker) {
@@ -120,17 +157,17 @@ function updateMap() {
     map.removeLayer(routePolyline);
     routePolyline = null;
   }
-  
+
   if (props.routeCoordinates && props.routeCoordinates.length > 0) {
     // GeoJSON uses [lon, lat], Leaflet uses [lat, lon]
-    const latLngs = props.routeCoordinates.map(coord => L.latLng(coord[1], coord[0]));
+    const latLngs = props.routeCoordinates.map((coord) => L.latLng(coord[1], coord[0]));
     routePolyline = L.polyline(latLngs, {
-      color: 'var(--color-primary, #3b82f6)',
+      color: 'var(--color-primary, #000000)',
       weight: 5,
-      opacity: 0.8,
-      lineCap: 'round'
+      opacity: 0.85,
+      lineCap: 'round',
     }).addTo(map);
-    
+
     // Fit bounds to route
     map.fitBounds(routePolyline.getBounds(), { padding: [40, 40] });
   } else if (bounds.isValid()) {
@@ -141,7 +178,12 @@ function updateMap() {
 </script>
 
 <template>
-  <div class="map-container" ref="mapContainer"></div>
+  <div
+    ref="mapContainer"
+    class="map-container"
+    role="region"
+    :aria-label="t('core.map_region')"
+  ></div>
 </template>
 
 <style>
@@ -167,7 +209,7 @@ function updateMap() {
   border: 1px solid var(--color-border) !important;
   color: var(--color-text) !important;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
   border-radius: 4px !important;
 }
 

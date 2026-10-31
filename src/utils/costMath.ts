@@ -10,7 +10,7 @@ export interface CostCalculationResult {
 
 /**
  * Calcula los costes de desplazamiento en vehículo privado en distintas frecuencias.
- * 
+ *
  * @param distanceKm Distancia de ida en kilómetros.
  * @param daysPerWeek Días laborables por semana que se realiza el trayecto.
  * @param consumptionPer100Km Consumo medio del vehículo cada 100km.
@@ -27,26 +27,26 @@ export function calculateCarCosts(
   fuelPrice: number,
   extraCostPerKm: number = 0,
   activeMonths: number = 12,
-  tripMode: 'ida' | 'idavuelta' | 'ciclo' = 'ciclo'
+  tripMode: 'ida' | 'idavuelta' | 'ciclo' = 'ciclo',
 ): CostCalculationResult {
   const averageWeeksPerMonth = 4.33;
-  
+
   // Dependiendo del modo, el "viaje base" es ida (x1) o ida y vuelta (x2).
   // Para el ciclo repetitivo (ej: ir al trabajo), asumimos siempre ida y vuelta.
   const roundTripMultiplier = tripMode === 'ida' ? 1 : 2;
-  
+
   // Coste de 1 Viaje (según modo)
   const singleTripDistanceKm = distanceKm * roundTripMultiplier;
   const singleTripFuelCost = (singleTripDistanceKm / 100) * consumptionPer100Km * fuelPrice;
   const singleTripExtraCost = singleTripDistanceKm * extraCostPerKm;
   const perTrip = singleTripFuelCost + singleTripExtraCost;
-  
+
   // Coste Mensual (Solo aplica para ciclo)
   const monthlyTrips = daysPerWeek * averageWeeksPerMonth;
   const monthly = perTrip * monthlyTrips;
-  
+
   // Coste Anual (Solo aplica para ciclo)
   const annual = monthly * activeMonths;
-  
+
   return { perTrip, monthly, annual };
 }

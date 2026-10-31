@@ -1,37 +1,37 @@
-export type Theme = 'light' | 'dark' | 'system'
+export type Theme = 'light' | 'dark' | 'system';
 
-const STORAGE_KEY = 'app-theme'
+const STORAGE_KEY = 'app-theme';
 
 export const getTheme = (): Theme => {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY)
+    const saved = localStorage.getItem(STORAGE_KEY);
     if (saved === 'light' || saved === 'dark' || saved === 'system') {
-      return saved
+      return saved;
     }
-  } catch (e) {
+  } catch {
     // ignore
   }
-  return 'system'
-}
+  return 'system';
+};
 
 export const setTheme = (theme: Theme) => {
   try {
-    localStorage.setItem(STORAGE_KEY, theme)
-  } catch (e) {
+    localStorage.setItem(STORAGE_KEY, theme);
+  } catch {
     // ignore
   }
-  applyTheme(theme)
-}
+  applyTheme(theme);
+};
 
 export const applyTheme = (theme: Theme) => {
-  const root = document.documentElement
+  const root = document.documentElement;
   if (theme === 'system') {
-    root.removeAttribute('data-theme')
+    root.removeAttribute('data-theme');
   } else {
-    root.setAttribute('data-theme', theme)
+    root.setAttribute('data-theme', theme);
   }
-}
+};
 
 export const initTheme = () => {
-  applyTheme(getTheme())
-}
+  applyTheme(getTheme());
+};

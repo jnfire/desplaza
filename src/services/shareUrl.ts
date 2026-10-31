@@ -16,7 +16,7 @@ export const encodeStateToUrl = (state: AppState): string => {
     params.set('o_lon', state.origin.lon.toFixed(5));
     params.set('o_lbl', state.origin.label);
   }
-  
+
   if (state.destination) {
     params.set('d_lat', state.destination.lat.toFixed(5));
     params.set('d_lon', state.destination.lon.toFixed(5));
@@ -38,9 +38,14 @@ export const encodeStateToUrl = (state: AppState): string => {
   return url.toString();
 };
 
+const TRIP_MODES: VehicleState['tripMode'][] = ['ida', 'idavuelta', 'ciclo'];
+
+const parseTripMode = (value: string | null): VehicleState['tripMode'] =>
+  TRIP_MODES.find((mode) => mode === value) ?? 'ciclo';
+
 export const decodeUrlToState = (): AppState | null => {
   const params = new URLSearchParams(window.location.search);
-  
+
   if (!params.has('vc_t') && !params.has('o_lat')) return null;
 
   const state: AppState = {};
@@ -49,7 +54,7 @@ export const decodeUrlToState = (): AppState | null => {
     state.origin = {
       lat: parseFloat(params.get('o_lat')!),
       lon: parseFloat(params.get('o_lon')!),
-      label: params.get('o_lbl') || ''
+      label: params.get('o_lbl') || '',
     };
   }
 
@@ -57,7 +62,7 @@ export const decodeUrlToState = (): AppState | null => {
     state.destination = {
       lat: parseFloat(params.get('d_lat')!),
       lon: parseFloat(params.get('d_lon')!),
-      label: params.get('d_lbl') || ''
+      label: params.get('d_lbl') || '',
     };
   }
 
@@ -68,14 +73,14 @@ export const decodeUrlToState = (): AppState | null => {
     const validDays = isNaN(rawDays) ? 5 : Math.min(7, Math.max(1, rawDays));
 
     state.vehicleConfig = {
-      tripMode: params.get('vc_t') as any,
+      tripMode: parseTripMode(params.get('vc_t')),
       fuelType: params.get('vc_f') || 'Precio Gasolina 95 E5',
       consumption: parseFloat(params.get('vc_c') || '6.5'),
       includeWear: params.get('vc_w') === '1',
       daysPerWeek: validDays,
       activeMonths: validMonths,
-      priceSource: (params.get('vc_s') as any) || 'auto',
-      manualPrice: parseFloat(params.get('vc_p') || '1.55')
+      priceSource: params.get('vc_s') === 'manual' ? 'manual' : 'auto',
+      manualPrice: parseFloat(params.get('vc_p') || '1.55'),
     };
   }
 

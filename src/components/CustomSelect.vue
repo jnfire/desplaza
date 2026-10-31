@@ -1,22 +1,31 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-const props = withDefaults(defineProps<{
-  modelValue: string;
-  options: { value: string; label: string }[];
-  placeholder?: string;
-  id?: string;
-  name?: string;
-  size?: 'md' | 'sm';
-  disabled?: boolean;
-}>(), {
-  size: 'md',
-  disabled: false
-});
+const props = withDefaults(
+  defineProps<{
+    modelValue: string;
+    options: { value: string; label: string }[];
+    placeholder?: string;
+    id?: string;
+    name?: string;
+    size?: 'md' | 'sm';
+    disabled?: boolean;
+  }>(),
+  {
+    placeholder: undefined,
+    id: undefined,
+    name: undefined,
+    size: 'md',
+    disabled: false,
+  },
+);
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void;
+  (emitEvent: 'update:modelValue', value: string): void;
 }>();
+
+const { t } = useI18n();
 
 const isOpen = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
@@ -24,18 +33,20 @@ const triggerRef = ref<HTMLButtonElement | null>(null);
 const optionRefs = ref<HTMLButtonElement[]>([]);
 
 const currentLabel = computed(() => {
-  const found = props.options.find(opt => opt.value === props.modelValue);
-  return found ? found.label : (props.placeholder || 'Selecciona una opción');
+  const matchingOption = props.options.find((optionItem) => optionItem.value === props.modelValue);
+  return matchingOption ? matchingOption.label : props.placeholder || t('core.select_option');
 });
 
-const setOptionRef = (el: any, index: number) => {
-  if (el) optionRefs.value[index] = el as HTMLButtonElement;
+const setOptionRef = (element: unknown, index: number) => {
+  if (element) optionRefs.value[index] = element as HTMLButtonElement;
 };
 
 const openDropdown = async () => {
   isOpen.value = true;
   await nextTick();
-  const selectedIndex = props.options.findIndex(opt => opt.value === props.modelValue);
+  const selectedIndex = props.options.findIndex(
+    (optionItem) => optionItem.value === props.modelValue,
+  );
   optionRefs.value[selectedIndex >= 0 ? selectedIndex : 0]?.focus();
 };
 
@@ -103,7 +114,7 @@ const handleTriggerKeydown = (event: KeyboardEvent) => {
 
 const handleClickOutside = (event: MouseEvent) => {
   if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
-    isOpen.value = false;
+    closeDropdown(false);
   }
 };
 
@@ -117,44 +128,43 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="custom-select-container" ref="containerRef" :id="id">
+  <div :id="id ? `${id}-container` : undefined" ref="containerRef" class="custom-select-container">
     <!-- input oculto para compatibilidad con forms -->
     <input type="hidden" :name="name" :value="modelValue" />
 
     <button
+      :id="id"
       ref="triggerRef"
       type="button"
       class="custom-select-trigger"
       :class="{ 'custom-select-trigger--sm': size === 'sm' }"
       :disabled="disabled"
-      @click="toggleDropdown"
-      @keydown="handleTriggerKeydown"
       aria-haspopup="listbox"
       :aria-expanded="isOpen"
+      @click="toggleDropdown"
+      @keydown="handleTriggerKeydown"
     >
-      <span class="select-label" :class="{ 'placeholder': !modelValue && placeholder }">{{ currentLabel }}</span>
+      <span class="select-label" :class="{ placeholder: !modelValue && placeholder }">{{
+        currentLabel
+      }}</span>
       <span class="dropdown-arrow" :class="{ 'arrow-open': isOpen }" aria-hidden="true">▾</span>
     </button>
 
     <transition name="fade-slide">
       <ul v-if="isOpen" class="custom-select-dropdown" role="listbox">
-        <li
-          v-for="(opt, index) in options"
-          :key="opt.value"
-          role="presentation"
-        >
+        <li v-for="(optionItem, index) in options" :key="optionItem.value" role="presentation">
           <button
+            :ref="(element) => setOptionRef(element, index)"
             type="button"
-            :ref="(el) => setOptionRef(el, index)"
             class="select-option"
-            :class="{ 'option-selected': opt.value === modelValue }"
+            :class="{ 'option-selected': optionItem.value === modelValue }"
             role="option"
-            :aria-selected="opt.value === modelValue"
-            :tabindex="opt.value === modelValue ? 0 : -1"
-            @click="selectOption(opt.value)"
+            :aria-selected="optionItem.value === modelValue"
+            :tabindex="optionItem.value === modelValue ? 0 : -1"
+            @click="selectOption(optionItem.value)"
             @keydown="handleOptionKeydown($event, index)"
           >
-            <span>{{ opt.label }}</span>
+            <span>{{ optionItem.label }}</span>
           </button>
         </li>
       </ul>
@@ -197,7 +207,7 @@ onUnmounted(() => {
 .custom-select-trigger:focus-visible {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
 .custom-select-trigger:hover {
@@ -243,7 +253,9 @@ onUnmounted(() => {
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 4px 12px -2px rgba(0, 0, 0, 0.08),
+    0 2px 6px -1px rgba(0, 0, 0, 0.04);
   padding: 0.35rem 0;
   max-height: 250px;
   overflow-y: auto;
@@ -270,7 +282,7 @@ onUnmounted(() => {
 
 .select-option:hover,
 .select-option:focus-visible {
-  background-color: var(--color-bg-hover, rgba(0,0,0,0.05));
+  background-color: var(--color-bg-hover, rgba(0, 0, 0, 0.05));
   outline: none;
 }
 
