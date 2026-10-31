@@ -19,6 +19,11 @@ export default defineConfigWithVueTs(
       // Templates bind props and events in camelCase, matching the script side.
       'vue/attribute-hyphenation': 'off',
       'vue/v-on-event-hyphenation': 'off',
+      // A leading underscore marks a binding that is intentionally unused (e.g. omitted by destructuring).
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { varsIgnorePattern: '^_', argsIgnorePattern: '^_', ignoreRestSiblings: true },
+      ],
     },
   },
   skipFormatting,
