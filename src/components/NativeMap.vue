@@ -5,18 +5,14 @@ import { useI18n } from 'vue-i18n';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix icon paths for Vite/Leaflet
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
-// Leaflet resolves marker icons from a CSS path that bundlers break; use the imported assets instead.
-delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon,
-  iconRetinaUrl: markerIcon2x,
-  shadowUrl: markerShadow,
-});
+// Monochrome markers that follow the theme tokens instead of Leaflet's blue PNG pins.
+const createMarkerIcon = (kind: 'origin' | 'destination') =>
+  L.divIcon({
+    className: `route-marker route-marker--${kind}`,
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+    tooltipAnchor: [0, -10],
+  });
 
 const props = defineProps<{
   origin?: { lat: number; lon: number };
@@ -108,7 +104,10 @@ function updateMap() {
   if (props.origin) {
     const latLng = L.latLng(props.origin.lat, props.origin.lon);
     if (!originMarker) {
-      originMarker = L.marker(latLng, { draggable: true }).addTo(map);
+      originMarker = L.marker(latLng, {
+        draggable: true,
+        icon: createMarkerIcon('origin'),
+      }).addTo(map);
       originMarker.on('dragend', () => {
         const pos = originMarker!.getLatLng();
         emit('update:origin', { lat: pos.lat, lon: pos.lng });
@@ -132,7 +131,10 @@ function updateMap() {
   if (props.destination) {
     const latLng = L.latLng(props.destination.lat, props.destination.lon);
     if (!destMarker) {
-      destMarker = L.marker(latLng, { draggable: true }).addTo(map);
+      destMarker = L.marker(latLng, {
+        draggable: true,
+        icon: createMarkerIcon('destination'),
+      }).addTo(map);
       destMarker.on('dragend', () => {
         const pos = destMarker!.getLatLng();
         emit('update:destination', { lat: pos.lat, lon: pos.lng });
@@ -187,6 +189,39 @@ function updateMap() {
 </template>
 
 <style>
+.leaflet-bar {
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border-bottom-color: var(--border-color);
+}
+
+.leaflet-bar a:hover {
+  background-color: var(--bg-surface-hover);
+}
+
+.route-marker {
+  border-radius: 50%;
+  border: 3px solid var(--accent-color);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  cursor: grab;
+}
+
+.route-marker--origin {
+  background: var(--bg-body);
+}
+
+.route-marker--destination {
+  background: var(--accent-color);
+  border-color: var(--bg-body);
+  outline: 2px solid var(--accent-color);
+}
+
 .map-container {
   width: 100%;
   height: 100%;

@@ -524,6 +524,8 @@ const shareRoute = async () => {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   margin-bottom: 1rem;
@@ -586,6 +588,7 @@ const shareRoute = async () => {
   color: var(--bg-body);
   padding: 0.35rem 0.75rem;
   border-radius: 9999px;
+  font-family: inherit;
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.025em;
@@ -634,6 +637,7 @@ const shareRoute = async () => {
   font-weight: 700;
   line-height: 1;
   color: var(--text-main);
+  white-space: nowrap;
 }
 
 .cost-value small {
@@ -662,6 +666,10 @@ const shareRoute = async () => {
 }
 
 @media (max-width: 600px) {
+  .cost-value {
+    font-size: 2rem;
+  }
+
   .app-container {
     padding: 1.25rem 1rem 2rem;
   }

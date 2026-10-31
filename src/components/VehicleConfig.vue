@@ -196,7 +196,7 @@ emitUpdate();
       </div>
 
       <div class="grid-layout">
-        <div class="input-group">
+        <div class="input-group input-group--full">
           <label for="priceSource-select">{{ t('core.price_origin') }}</label>
           <CustomSelect
             id="priceSource-select"
@@ -324,6 +324,10 @@ emitUpdate();
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1.25rem;
+}
+
+.input-group--full {
+  grid-column: 1 / -1;
 }
 
 .cycle-controls {
