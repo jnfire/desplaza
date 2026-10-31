@@ -7,11 +7,11 @@ and this project uses [Semantic Versioning](https://semver.org/). The version
 number lives in a single place, `package.json`, and is shown live in the app
 footer.
 
-## [1.0.0] - 2026-10-31
+## [1.1.0] - 2026-10-31
 
-First stable release. Desplaza compares the real cost and time of ways of
-making the same trip in Spain, with official daily fuel prices, in the
-browser and without accounts.
+Desplaza now compares the real cost and time of several ways of making the
+same trip in Spain, not just one car, and it is brought up to the standard of
+the other portfolio tools.
 
 ### Added
 - Comparison of up to five options on the same trip (combustion car,
@@ -64,7 +64,17 @@ browser and without accounts.
 - A high-severity advisory in vue-i18n (`@intlify/core-base`).
 - The sources dialog was covered by the sticky header.
 
-## Before 1.0
+## [1.0.1] - 2026-08-27
 
-- **August 2026:** first public versions (1.0.0 and 1.0.1): one car, MITECO
-  fuel prices, a route on a map and the monthly and yearly cost.
+### Fixed
+- Fuel prices update immediately and empty prices are handled.
+
+### Added
+- The state of the app can be restored from the URL.
+
+## [1.0.0] - 2026-08-27
+
+First public release: one car, daily MITECO fuel prices by province, address
+search with Photon, route and driving time with OSRM, real cost including
+wear (0.08 €/km), comparison with public transport passes, a lightweight SVG
+map, six languages and light and dark themes.
