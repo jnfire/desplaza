@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { MAX_OPTIONS, type TravelOption, type TripSettings } from '../core/travelOptions';
 import { comparableCost, rankResults, type OptionResult, type SortKey } from '../core/comparison';
 import { formatMinutes, formatNumber } from '../utils/format';
+import OptionActions from './OptionActions.vue';
 
 const props = defineProps<{
   options: TravelOption[];
@@ -72,12 +73,12 @@ const describe = (option: TravelOption): string => {
   }
   const consumption = formatNumber(option.consumption, locale.value, 1);
   if (option.kind === 'electric')
-    return `${t('options.kinds.electric')} · ${consumption} kWh/100 km`;
+    return `${t('options.kinds.electric')} · ${consumption} kWh/100 km`;
   const fuel =
     option.priceSource === 'manual'
       ? t('compare.manual_price_short')
       : t(fuelLabelKeys[option.fuelType]);
-  return `${fuel} · ${consumption} L/100 km`;
+  return `${fuel} · ${consumption} L/100 km`;
 };
 
 const costText = (result: OptionResult) =>
@@ -105,15 +106,15 @@ const extraText = (result: OptionResult): string | null => {
     : t('compare.extra_journey', { amount: euro(difference) });
 };
 
-/** Secondary line of a row: the yearly cost for commutes, plus the extra over the best. */
-const detailText = (result: OptionResult): string | null => {
+/** Secondary details of a row: the yearly cost for commutes, then the extra over the best. */
+const detailParts = (result: OptionResult): string[] => {
   const parts: string[] = [];
   if (isRecurring.value && result.complete) {
     parts.push(t('compare.annual_total', { amount: euro(result.annual) }));
   }
   const extra = extraText(result);
   if (extra) parts.push(extra);
-  return parts.length ? parts.join(' · ') : null;
+  return parts;
 };
 
 const energyText = (option: TravelOption, result: OptionResult): string | null => {
@@ -164,27 +165,13 @@ const single = computed(() => {
           <h3 class="option-name">{{ single.option.name }}</h3>
           <p class="option-desc">{{ describe(single.option) }}</p>
         </div>
-        <div class="row-actions">
-          <button
-            type="button"
-            class="icon-btn"
-            :aria-label="t('options.edit_named', { name: single.option.name })"
-            :title="t('options.edit')"
-            @click="emit('edit', single.option.id)"
-          >
-            ✎
-          </button>
-          <button
-            type="button"
-            class="icon-btn"
-            :disabled="!canAdd"
-            :aria-label="t('options.duplicate_named', { name: single.option.name })"
-            :title="t('options.duplicate')"
-            @click="emit('duplicate', single.option.id)"
-          >
-            ⧉
-          </button>
-        </div>
+        <OptionActions
+          :name="single.option.name"
+          :can-duplicate="canAdd"
+          :can-remove="false"
+          @edit="emit('edit', single.option.id)"
+          @duplicate="emit('duplicate', single.option.id)"
+        />
       </div>
 
       <template v-if="hasRoute && single.result">
@@ -273,18 +260,13 @@ const single = computed(() => {
           :class="{ 'option-row--best': hasRoute && option.id === bestId }"
         >
           <div class="row-main">
-            <div class="row-title">
-              <h3 class="option-name">{{ option.name }}</h3>
-              <span v-if="hasRoute && option.id === bestId" class="best-tag">
-                {{ t('compare.best') }}
-              </span>
-            </div>
+            <span v-if="hasRoute && option.id === bestId" class="best-tag">
+              {{ t('compare.best') }}
+            </span>
+            <h3 class="option-name">{{ option.name }}</h3>
             <p class="option-desc">{{ describe(option) }}</p>
-            <p
-              v-if="hasRoute && results[option.id] && detailText(results[option.id])"
-              class="extra"
-            >
-              {{ detailText(results[option.id]) }}
+            <p v-if="hasRoute && results[option.id]" class="extra">
+              <span v-for="part in detailParts(results[option.id])" :key="part">{{ part }}</span>
             </p>
           </div>
 
@@ -294,36 +276,14 @@ const single = computed(() => {
             <span class="row-time">{{ timeText(results[option.id]) }}</span>
           </div>
 
-          <div class="row-actions">
-            <button
-              type="button"
-              class="icon-btn"
-              :aria-label="t('options.edit_named', { name: option.name })"
-              :title="t('options.edit')"
-              @click="emit('edit', option.id)"
-            >
-              ✎
-            </button>
-            <button
-              type="button"
-              class="icon-btn"
-              :disabled="!canAdd"
-              :aria-label="t('options.duplicate_named', { name: option.name })"
-              :title="t('options.duplicate')"
-              @click="emit('duplicate', option.id)"
-            >
-              ⧉
-            </button>
-            <button
-              type="button"
-              class="icon-btn icon-btn--danger"
-              :aria-label="t('options.delete_named', { name: option.name })"
-              :title="t('options.delete')"
-              @click="emit('remove', option.id)"
-            >
-              ✕
-            </button>
-          </div>
+          <OptionActions
+            :name="option.name"
+            :can-duplicate="canAdd"
+            :can-remove="true"
+            @edit="emit('edit', option.id)"
+            @duplicate="emit('duplicate', option.id)"
+            @remove="emit('remove', option.id)"
+          />
         </li>
       </ol>
 
@@ -384,8 +344,7 @@ const single = computed(() => {
   cursor: not-allowed;
 }
 
-.btn-add:focus-visible,
-.icon-btn:focus-visible {
+.btn-add:focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
@@ -414,42 +373,6 @@ const single = computed(() => {
 .option-desc {
   font-size: 0.85rem;
   color: var(--text-muted);
-}
-
-.row-actions {
-  display: flex;
-  gap: 0.25rem;
-  flex-shrink: 0;
-}
-
-.icon-btn {
-  width: 2rem;
-  height: 2rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 1rem;
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.icon-btn:hover:not(:disabled) {
-  color: var(--text-main);
-  border-color: var(--border-color);
-  background: var(--bg-body);
-}
-
-.icon-btn--danger:hover:not(:disabled) {
-  color: var(--error-color);
-}
-
-.icon-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
 }
 
 .cost-numbers {
@@ -548,9 +471,9 @@ const single = computed(() => {
 .option-row {
   display: grid;
   grid-template-columns: 1fr auto auto;
-  gap: 1rem;
+  gap: 1.25rem;
   align-items: center;
-  padding: 1rem;
+  padding: 1.25rem;
   background: var(--bg-body);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -558,37 +481,53 @@ const single = computed(() => {
 
 .option-row--best {
   border: 2px solid var(--accent-color);
-  padding: calc(1rem - 1px);
+  padding: calc(1.25rem - 1px);
 }
 
-.row-title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
+/* Always above the name, so its position does not depend on the name's length. */
 .best-tag {
+  align-self: flex-start;
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 0.1rem 0.5rem;
+  padding: 0.15rem 0.6rem;
   border-radius: 9999px;
   background: var(--accent-color);
   color: var(--bg-body);
+  margin-bottom: 0.25rem;
+}
+
+.row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
 }
 
 .extra {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.75rem;
+  row-gap: 0.1rem;
   font-size: 0.8rem;
   color: var(--text-muted);
   margin-top: 0.15rem;
+}
+
+.extra > span {
+  text-wrap: balance;
+}
+
+.extra:empty {
+  display: none;
 }
 
 .row-figures {
   display: grid;
   grid-template-columns: auto auto;
   column-gap: 0.35rem;
+  row-gap: 0.2rem;
   align-items: baseline;
   justify-items: end;
   text-align: right;
@@ -624,14 +563,20 @@ const single = computed(() => {
 
   .option-row {
     grid-template-columns: 1fr auto;
-    gap: 0.5rem 1rem;
+    gap: 0.75rem 1rem;
+    padding: 1rem;
   }
 
-  .row-actions {
+  .option-row--best {
+    padding: calc(1rem - 1px);
+  }
+
+  /* The action buttons get their own row, right-aligned under a divider. */
+  .option-row > :deep(.option-actions) {
     grid-column: 1 / -1;
     justify-content: flex-end;
     border-top: 1px solid var(--border-color);
-    padding-top: 0.5rem;
+    padding-top: 0.75rem;
   }
 }
 </style>
