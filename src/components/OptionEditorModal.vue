@@ -129,7 +129,14 @@ const save = () => {
   emit('save', { ...draft.value, name: draft.value.name.trim() });
 };
 
-const kindLabel = (kind: OptionKind) => t(`options.kinds.${kind}`);
+const kindOptions = computed(() =>
+  OPTION_KINDS.map((kind) => ({ value: kind, label: t(`options.kinds.${kind}`) })),
+);
+
+const kindModel = computed({
+  get: () => draft.value.kind,
+  set: (kind: string) => setKind(kind as OptionKind),
+});
 </script>
 
 <template>
@@ -158,24 +165,10 @@ const kindLabel = (kind: OptionKind) => t(`options.kinds.${kind}`);
         </span>
       </div>
 
-      <fieldset class="mode-selector-fieldset">
-        <legend class="field-legend">{{ t('editor.kind') }}</legend>
-        <div class="mode-selector kind-selector" role="radiogroup" :aria-label="t('editor.kind')">
-          <label v-for="kind in OPTION_KINDS" :key="kind" class="radio-label">
-            <input
-              type="radio"
-              :name="fieldId('kind')"
-              :value="kind"
-              :checked="draft.kind === kind"
-              class="sr-only-radio"
-              @change="setKind(kind)"
-            />
-            <div class="radio-btn" :class="{ 'radio-btn--checked': draft.kind === kind }">
-              {{ kindLabel(kind) }}
-            </div>
-          </label>
-        </div>
-      </fieldset>
+      <div class="input-group">
+        <label :for="fieldId('kind')">{{ t('editor.kind') }}</label>
+        <CustomSelect :id="fieldId('kind')" v-model="kindModel" :options="kindOptions" />
+      </div>
 
       <!-- Combustion car and motorbike -->
       <div v-if="draft.kind === 'combustion' || draft.kind === 'motorbike'" class="grid-layout">
@@ -424,27 +417,6 @@ const kindLabel = (kind: OptionKind) => t(`options.kinds.${kind}`);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-}
-
-.field-legend {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-main);
-  margin-bottom: 0.5rem;
-}
-
-.kind-selector {
-  flex-wrap: wrap;
-}
-
-.kind-selector .radio-label {
-  min-width: calc(50% - 0.5rem);
-}
-
-@media (min-width: 560px) {
-  .kind-selector .radio-label {
-    min-width: 0;
-  }
 }
 
 .more-settings {

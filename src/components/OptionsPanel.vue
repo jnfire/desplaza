@@ -67,7 +67,7 @@ const fuelLabelKeys: Record<string, string> = {
 const describe = (option: TravelOption): string => {
   if (option.kind === 'transit') {
     return option.fareType === 'pass'
-      ? t('compare.desc_pass', { price: euro(option.price) })
+      ? t('editor.fare_pass')
       : t('compare.desc_ticket', { price: euro(option.price) });
   }
   const consumption = formatNumber(option.consumption, locale.value, 1);
@@ -103,6 +103,17 @@ const extraText = (result: OptionResult): string | null => {
   return isRecurring.value
     ? t('compare.extra_year', { amount: euro(difference) })
     : t('compare.extra_journey', { amount: euro(difference) });
+};
+
+/** Secondary line of a row: the yearly cost for commutes, plus the extra over the best. */
+const detailText = (result: OptionResult): string | null => {
+  const parts: string[] = [];
+  if (isRecurring.value && result.complete) {
+    parts.push(t('compare.annual_total', { amount: euro(result.annual) }));
+  }
+  const extra = extraText(result);
+  if (extra) parts.push(extra);
+  return parts.length ? parts.join(' · ') : null;
 };
 
 const energyText = (option: TravelOption, result: OptionResult): string | null => {
@@ -269,8 +280,11 @@ const single = computed(() => {
               </span>
             </div>
             <p class="option-desc">{{ describe(option) }}</p>
-            <p v-if="hasRoute && results[option.id] && extraText(results[option.id])" class="extra">
-              {{ extraText(results[option.id]) }}
+            <p
+              v-if="hasRoute && results[option.id] && detailText(results[option.id])"
+              class="extra"
+            >
+              {{ detailText(results[option.id]) }}
             </p>
           </div>
 

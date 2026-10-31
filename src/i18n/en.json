@@ -154,10 +154,10 @@
     "no_time": "No time",
     "no_price": "No price",
     "no_price_hint": "MITECO has no price for this fuel in your province. Try a manual price.",
-    "extra_year": "{amount} € more per year",
+    "extra_year": "{amount} € more than the best",
     "extra_journey": "{amount} € more per trip",
-    "desc_pass": "Pass · {price} €/month",
     "desc_ticket": "Ticket · {price} €",
-    "manual_price_short": "Manual price"
+    "manual_price_short": "Manual price",
+    "annual_total": "{amount} € per year"
   }
 }
