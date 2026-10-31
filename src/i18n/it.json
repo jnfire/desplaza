@@ -1,14 +1,12 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calcola e confronta il costo reale della tua mobilità.",
-    "share": "Condividi il link",
-    "settings": "Impostazioni"
+    "subtitle": "Calcola e confronta il costo reale dei tuoi spostamenti."
   },
   "footer": {
     "text": "Sviluppo local-first. I tuoi dati, il tuo controllo.",
     "source": "Codice Sorgente",
-    "license": "Licenza AGPL-3.0",
+    "license": "Tutti i diritti riservati",
     "methodology": "Metodologia"
   },
   "settings": {
@@ -20,66 +18,68 @@
     "themeSystem": "Sistema"
   },
   "core": {
+    "trip_details": "Dettagli del Viaggio",
     "origin": "Origine",
     "dest": "Destinazione",
-    "origin_ph": "Es: Colosseo, Roma",
-    "dest_ph": "Es: Piazza Navona, Roma",
-    "one_way": "Solo Andata",
-    "round_trip": "Andata e Ritorno",
+    "origin_ph": "Es: Piazza del Duomo, Milano",
+    "dest_ph": "Es: Colosseo, Roma",
+    "clear_origin": "Cancella origine",
+    "clear_dest": "Cancella destinazione",
+    "searching": "Ricerca in corso...",
+    "your_vehicle": "Il Tuo Veicolo",
+    "trip_type": "Tipo di viaggio",
+    "one_way": "Solo andata",
+    "round_trip": "Andata e ritorno",
+    "routine": "Routine",
     "days_week": "Giorni a settimana",
-    "fuel_type": "Carburante",
+    "months_year": "Mesi all'anno",
+    "active_months_desc": "Mesi in cui effettui questo tragitto (escluse ferie)",
+    "price_origin": "Origine del Prezzo",
+    "source_auto": "Automatico (Spagna)",
     "source_manual": "Personalizzato",
+    "source_manual_label": "Manuale",
+    "source_miteco_label": "MITECO",
     "manual_price": "Prezzo (€/L)",
-    "include_wear": "Includi usura e manutenzione (0,08 €/km)",
-    "calc_cost": "Costo di Mobilità",
-    "share_title": "Il mio percorso su Desplaza",
-    "share_text": "Scopri il mio costo di mobilità.",
-    "share_copied": "Link copiato negli appunti!",
-    "source_btn": "Fonte:",
-    "monthly": "Mensile",
-    "annual": "Annuale",
-    "route_dist": "Distanza del percorso:",
-    "wear_note": "* Include un supplemento stimato di 0,08 €/km per usura, assicurazione e manutenzione.",
-    "calc_loading": "Calcolo del percorso migliore e dei prezzi in tempo reale...",
-    "define_route": "Definisci l'origine e la destinazione per vedere il tuo costo di mobilità reale.",
-    "source_auto": "Automatico",
+    "fuel_type": "Carburante",
     "fuel_gas95": "Benzina 95",
     "fuel_gas98": "Benzina 98",
     "fuel_diesel": "Diesel",
     "fuel_diesel_prem": "Diesel Premium",
     "fuel_glp": "GPL",
-    "active_months_desc": "Mesi in cui esegui questa routine (escluse le vacanze)",
-    "trip_details": "Dettagli del Viaggio",
-    "routine": "Routine",
-    "months_year": "Mesi all'anno",
-    "your_vehicle": "Il tuo Veicolo",
-    "price_origin": "Origine del Prezzo",
     "consumption_short": "Consumo (L/100km)",
-    "searching": "Ricerca..."
+    "include_wear": "Includi usura e manutenzione (0,08 €/km)",
+    "calc_cost": "Costo dello Spostamento",
+    "share_title": "Il mio tragitto su Desplaza",
+    "share_text": "Scopri quanto mi costa questo percorso.",
+    "share_copied": "Link copiato negli appunti!",
+    "share_btn_label": "Condividi link percorso",
+    "settings_btn_label": "Apri impostazioni",
+    "source_btn": "Fonte:",
+    "monthly": "Mensile",
+    "annual": "Annuale",
+    "route_dist": "Distanza percorso:",
+    "one_way_only": "(solo andata)",
+    "wear_note": "* Include una stima di 0,08 €/km per usura, assicurazione e manutenzione.",
+    "calc_loading": "Calcolo del percorso migliore e prezzi in tempo reale...",
+    "define_route": "Imposta origine e destinazione per scoprire il costo reale del tuo viaggio.",
+    "hide_map": "Nascondi mappa",
+    "show_map": "Visualizza e regola sulla mappa",
+    "map_region": "Mappa interattiva del percorso",
+    "select_option": "Seleziona un'opzione"
   },
   "sources": {
-    "title": "Fonti e metodologia",
-    "close": "Chiudi",
-    "fuel": {
-      "title": "Prezzi del carburante",
-      "source": "I prezzi del carburante sono ottenuti in tempo reale tramite l'API REST pubblica dei carburanti del {ministry} del Governo spagnolo.",
-      "ministry": "Ministero per la Transizione Ecologica e la Sfida Demografica (MITECO)",
-      "method": "Per il calcolo, la provincia dell'origine selezionata viene incrociata con il prezzo medio aritmetico del giorno di tutte le stazioni di servizio di quella provincia."
-    },
-    "routing": {
-      "title": "Distanze e percorsi",
-      "text": "Le distanze stradali sono calcolate con il motore {osrm} e gli indirizzi vengono geocodificati con {photon}."
-    },
-    "wear": {
-      "title": "Costo di usura e manutenzione",
-      "text": "Al costo del solo carburante si può aggiungere, facoltativamente, un costo di {amount}. Questa cifra è una stima prudente, basata su studi delle associazioni automobilistiche, che ripartisce:",
-      "amount": "0,08 € al chilometro",
-      "items": {
-        "tyres": "Usura degli pneumatici (~0,01 €/km)",
-        "maintenance": "Manutenzione preventiva e revisioni (~0,03 €/km)",
-        "insurance": "Quota proporzionale di assicurazione e tasse (~0,02 €/km)",
-        "depreciation": "Ammortamento e deprezzamento minimo (~0,02 €/km)"
-      }
-    }
+    "title": "Fonti e Metodologia",
+    "close": "Chiudi finestra",
+    "fuel_title": "Prezzi del Carburante",
+    "fuel_desc1": "I prezzi del carburante sono ottenuti in tempo reale tramite l'API REST pubblica del Ministero per la Transizione Ecologica e la Sfida Demografica (MITECO) del Governo spagnolo.",
+    "fuel_desc2": "Per il calcolo, la provincia di partenza viene incrociata con la media aritmetica giornaliera di tutti i distributori di quella provincia.",
+    "routing_title": "Distanze e Calcolo Percorso",
+    "routing_desc": "Il calcolo delle distanze stradali è eseguito tramite OSRM (Open Source Routing Machine) e gli indirizzi sono geocodificati tramite Photon (OpenStreetMap).",
+    "wear_title": "Costo di Usura e Manutenzione",
+    "wear_desc": "Al costo del carburante si possono facoltativamente aggiungere 0,08 € al chilometro. È una stima prudente ricavata da studi di associazioni automobilistiche:",
+    "wear_tires": "Usura pneumatici (~0,01 €/km)",
+    "wear_maintenance": "Manutenzione preventiva e revisioni (~0,03 €/km)",
+    "wear_insurance": "Quota proporzionale assicurazione e bollo (~0,02 €/km)",
+    "wear_depreciation": "Ammortamento minimo del veicolo (~0,02 €/km)"
   }
 }

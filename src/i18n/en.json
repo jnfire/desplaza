@@ -1,14 +1,12 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calculate and compare the real cost of your mobility.",
-    "share": "Share link",
-    "settings": "Settings"
+    "subtitle": "Calculate and compare the real cost of your mobility."
   },
   "footer": {
     "text": "Local-first development. Your data, your control.",
     "source": "Source Code",
-    "license": "AGPL-3.0 License",
+    "license": "All rights reserved",
     "methodology": "Methodology"
   },
   "settings": {
@@ -20,66 +18,68 @@
     "themeSystem": "System"
   },
   "core": {
+    "trip_details": "Trip Details",
     "origin": "Origin",
     "dest": "Destination",
     "origin_ph": "Ex: Times Square, New York",
     "dest_ph": "Ex: Central Park, New York",
+    "clear_origin": "Clear origin",
+    "clear_dest": "Clear destination",
+    "searching": "Searching...",
+    "your_vehicle": "Your Vehicle",
+    "trip_type": "Trip Type",
     "one_way": "One Way",
     "round_trip": "Round Trip",
+    "routine": "Routine",
     "days_week": "Days a week",
-    "fuel_type": "Fuel Type",
+    "months_year": "Months a year",
+    "active_months_desc": "Months you perform this routine (excludes holidays)",
+    "price_origin": "Price Origin",
+    "source_auto": "Automatic (Spain)",
     "source_manual": "Custom",
-    "manual_price": "Manual Price (€/L)",
-    "include_wear": "Include wear & maintenance (0.08 €/km)",
-    "calc_cost": "Mobility Cost",
-    "share_title": "My route in Desplaza",
-    "share_text": "Check out my mobility cost.",
-    "share_copied": "Link copied to clipboard!",
-    "source_btn": "Source:",
-    "monthly": "Monthly",
-    "annual": "Annual",
-    "route_dist": "Route distance:",
-    "wear_note": "* Includes estimated surcharge of 0.08 €/km for wear, insurance and maintenance.",
-    "calc_loading": "Calculating best route and real-time prices...",
-    "define_route": "Define origin and destination to see your real mobility cost.",
-    "source_auto": "Automatic",
+    "source_manual_label": "Manual",
+    "source_miteco_label": "MITECO",
+    "manual_price": "Price (€/L)",
+    "fuel_type": "Fuel Type",
     "fuel_gas95": "Gasoline 95",
     "fuel_gas98": "Gasoline 98",
     "fuel_diesel": "Diesel",
     "fuel_diesel_prem": "Premium Diesel",
     "fuel_glp": "LPG",
-    "active_months_desc": "Months you perform this routine (excludes holidays)",
-    "trip_details": "Trip Details",
-    "routine": "Routine",
-    "months_year": "Months a year",
-    "your_vehicle": "Your Vehicle",
-    "price_origin": "Price Origin",
     "consumption_short": "Consumption (L/100km)",
-    "searching": "Searching..."
+    "include_wear": "Include wear & maintenance (0.08 €/km)",
+    "calc_cost": "Mobility Cost",
+    "share_title": "My route in Desplaza",
+    "share_text": "Check out my mobility cost.",
+    "share_copied": "Link copied to clipboard!",
+    "share_btn_label": "Share route link",
+    "settings_btn_label": "Open settings",
+    "source_btn": "Source:",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "route_dist": "Route distance:",
+    "one_way_only": "(one way)",
+    "wear_note": "* Includes estimated surcharge of 0.08 €/km for wear, insurance and maintenance.",
+    "calc_loading": "Calculating best route and real-time prices...",
+    "define_route": "Define origin and destination to see your real mobility cost.",
+    "hide_map": "Hide Map",
+    "show_map": "View and adjust on map",
+    "map_region": "Interactive route map",
+    "select_option": "Select an option"
   },
   "sources": {
-    "title": "Sources and methodology",
-    "close": "Close",
-    "fuel": {
-      "title": "Fuel prices",
-      "source": "Fuel prices are fetched in real time from the public fuel-price REST API of the {ministry}, Government of Spain.",
-      "ministry": "Ministry for the Ecological Transition and the Demographic Challenge (MITECO)",
-      "method": "The province of the selected origin is matched with the day's arithmetic mean price across all service stations in that province."
-    },
-    "routing": {
-      "title": "Distances and routing",
-      "text": "Road distances are calculated with the {osrm} engine, and addresses are geocoded with {photon}."
-    },
-    "wear": {
-      "title": "Wear and maintenance cost",
-      "text": "An optional cost of {amount} can be added to the fuel cost. This conservative estimate, based on studies by motoring associations, spreads out:",
-      "amount": "€0.08 per kilometre",
-      "items": {
-        "tyres": "Tyre wear (~€0.01/km)",
-        "maintenance": "Preventive maintenance and servicing (~€0.03/km)",
-        "insurance": "Proportional share of insurance and taxes (~€0.02/km)",
-        "depreciation": "Minimum amortisation and depreciation (~€0.02/km)"
-      }
-    }
+    "title": "Sources & Methodology",
+    "close": "Close modal",
+    "fuel_title": "Fuel Prices",
+    "fuel_desc1": "Fuel prices are obtained in real time via the public REST API of the Ministry for the Ecological Transition and the Demographic Challenge (MITECO) of the Government of Spain.",
+    "fuel_desc2": "For the calculation, the origin province is matched with the daily arithmetic average price across all gas stations in that province.",
+    "routing_title": "Distances and Routing",
+    "routing_desc": "Road distance calculation is performed by OSRM (Open Source Routing Machine) and addresses are geocoded using Photon (OpenStreetMap).",
+    "wear_title": "Wear and Maintenance Cost",
+    "wear_desc": "An optional cost of 0.08 € per kilometer can be added to the fuel cost. This is a conservative estimate based on automotive association studies covering:",
+    "wear_tires": "Tire wear (~0.01 €/km)",
+    "wear_maintenance": "Preventive maintenance and inspections (~0.03 €/km)",
+    "wear_insurance": "Proportional insurance and taxes (~0.02 €/km)",
+    "wear_depreciation": "Minimum amortization and depreciation (~0.02 €/km)"
   }
 }

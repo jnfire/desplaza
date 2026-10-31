@@ -1,54 +1,74 @@
+<!-- src/components/SourcesModal.vue -->
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 const emit = defineEmits<{
   (e: 'close'): void;
 }>();
+
+const { t } = useI18n();
+const closeButtonRef = ref<HTMLButtonElement | null>(null);
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    emit('close');
+  }
+};
+
+onMounted(async () => {
+  window.addEventListener('keydown', handleKeydown);
+  await nextTick();
+  closeButtonRef.value?.focus();
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown);
+});
 </script>
 
 <template>
   <div class="modal-overlay" @click.self="emit('close')">
-    <div class="modal-content">
+    <div
+      class="modal-content"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sources-modal-title"
+    >
       <header class="modal-header">
-        <h2>{{ $t('sources.title') }}</h2>
-        <button class="close-btn" :aria-label="$t('sources.close')" @click="emit('close')">
-          ×
+        <h2 id="sources-modal-title">{{ t('sources.title') }}</h2>
+        <button
+          ref="closeButtonRef"
+          type="button"
+          class="close-btn"
+          :aria-label="t('sources.close')"
+          @click="emit('close')"
+        >
+          <span aria-hidden="true">×</span>
         </button>
       </header>
 
       <div class="modal-body">
         <section>
-          <h3>{{ $t('sources.fuel.title') }}</h3>
-          <i18n-t keypath="sources.fuel.source" tag="p">
-            <template #ministry>
-              <strong>{{ $t('sources.fuel.ministry') }}</strong>
-            </template>
-          </i18n-t>
-          <p>{{ $t('sources.fuel.method') }}</p>
+          <h3>{{ t('sources.fuel_title') }}</h3>
+          <p>{{ t('sources.fuel_desc1') }}</p>
+          <p>{{ t('sources.fuel_desc2') }}</p>
         </section>
 
         <section>
-          <h3>{{ $t('sources.routing.title') }}</h3>
-          <i18n-t keypath="sources.routing.text" tag="p">
-            <template #osrm>
-              <strong>OSRM (Open Source Routing Machine)</strong>
-            </template>
-            <template #photon>
-              <strong>Photon (OpenStreetMap)</strong>
-            </template>
-          </i18n-t>
+          <h3>{{ t('sources.routing_title') }}</h3>
+          <p>{{ t('sources.routing_desc') }}</p>
         </section>
 
         <section>
-          <h3>{{ $t('sources.wear.title') }}</h3>
-          <i18n-t keypath="sources.wear.text" tag="p">
-            <template #amount>
-              <strong>{{ $t('sources.wear.amount') }}</strong>
-            </template>
-          </i18n-t>
+          <h3>{{ t('sources.wear_title') }}</h3>
+          <p>{{ t('sources.wear_desc') }}</p>
           <ul>
-            <li>{{ $t('sources.wear.items.tyres') }}</li>
-            <li>{{ $t('sources.wear.items.maintenance') }}</li>
-            <li>{{ $t('sources.wear.items.insurance') }}</li>
-            <li>{{ $t('sources.wear.items.depreciation') }}</li>
+            <li>{{ t('sources.wear_tires') }}</li>
+            <li>{{ t('sources.wear_maintenance') }}</li>
+            <li>{{ t('sources.wear_insurance') }}</li>
+            <li>{{ t('sources.wear_depreciation') }}</li>
           </ul>
         </section>
       </div>
@@ -67,16 +87,16 @@ const emit = defineEmits<{
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Above the sticky header (2000) so the modal title is never covered. */
   z-index: 3000;
   backdrop-filter: blur(2px);
+  padding: 1rem;
 }
 
 .modal-content {
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  width: 90%;
+  width: 100%;
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
@@ -96,6 +116,7 @@ const emit = defineEmits<{
 .modal-header h2 {
   font-size: 1.25rem;
   margin: 0;
+  color: var(--color-text);
 }
 
 .close-btn {
@@ -104,10 +125,21 @@ const emit = defineEmits<{
   font-size: 1.5rem;
   cursor: pointer;
   color: var(--color-text-muted);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
 }
 
 .close-btn:hover {
   color: var(--color-text);
+}
+
+.close-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .modal-body {
@@ -137,6 +169,6 @@ const emit = defineEmits<{
 }
 
 .modal-body li {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
 }
 </style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
-import type { ComponentPublicInstance } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = withDefaults(
   defineProps<{
@@ -22,8 +22,10 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void;
+  (emitEvent: 'update:modelValue', value: string): void;
 }>();
+
+const { t } = useI18n();
 
 const isOpen = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
@@ -31,18 +33,20 @@ const triggerRef = ref<HTMLButtonElement | null>(null);
 const optionRefs = ref<HTMLButtonElement[]>([]);
 
 const currentLabel = computed(() => {
-  const found = props.options.find((opt) => opt.value === props.modelValue);
-  return found ? found.label : props.placeholder || 'Selecciona una opción';
+  const matchingOption = props.options.find((optionItem) => optionItem.value === props.modelValue);
+  return matchingOption ? matchingOption.label : props.placeholder || t('core.select_option');
 });
 
-const setOptionRef = (el: Element | ComponentPublicInstance | null, index: number) => {
-  if (el instanceof HTMLButtonElement) optionRefs.value[index] = el;
+const setOptionRef = (element: unknown, index: number) => {
+  if (element) optionRefs.value[index] = element as HTMLButtonElement;
 };
 
 const openDropdown = async () => {
   isOpen.value = true;
   await nextTick();
-  const selectedIndex = props.options.findIndex((opt) => opt.value === props.modelValue);
+  const selectedIndex = props.options.findIndex(
+    (optionItem) => optionItem.value === props.modelValue,
+  );
   optionRefs.value[selectedIndex >= 0 ? selectedIndex : 0]?.focus();
 };
 
@@ -110,7 +114,7 @@ const handleTriggerKeydown = (event: KeyboardEvent) => {
 
 const handleClickOutside = (event: MouseEvent) => {
   if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
-    isOpen.value = false;
+    closeDropdown(false);
   }
 };
 
@@ -124,11 +128,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div :id="id" ref="containerRef" class="custom-select-container">
+  <div :id="id ? `${id}-container` : undefined" ref="containerRef" class="custom-select-container">
     <!-- input oculto para compatibilidad con forms -->
     <input type="hidden" :name="name" :value="modelValue" />
 
     <button
+      :id="id"
       ref="triggerRef"
       type="button"
       class="custom-select-trigger"
@@ -147,19 +152,19 @@ onUnmounted(() => {
 
     <transition name="fade-slide">
       <ul v-if="isOpen" class="custom-select-dropdown" role="listbox">
-        <li v-for="(opt, index) in options" :key="opt.value" role="presentation">
+        <li v-for="(optionItem, index) in options" :key="optionItem.value" role="presentation">
           <button
-            :ref="(el) => setOptionRef(el, index)"
+            :ref="(element) => setOptionRef(element, index)"
             type="button"
             class="select-option"
-            :class="{ 'option-selected': opt.value === modelValue }"
+            :class="{ 'option-selected': optionItem.value === modelValue }"
             role="option"
-            :aria-selected="opt.value === modelValue"
-            :tabindex="opt.value === modelValue ? 0 : -1"
-            @click="selectOption(opt.value)"
+            :aria-selected="optionItem.value === modelValue"
+            :tabindex="optionItem.value === modelValue ? 0 : -1"
+            @click="selectOption(optionItem.value)"
             @keydown="handleOptionKeydown($event, index)"
           >
-            <span>{{ opt.label }}</span>
+            <span>{{ optionItem.label }}</span>
           </button>
         </li>
       </ul>

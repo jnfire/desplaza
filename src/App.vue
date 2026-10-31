@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue';
+import { ref, watch, onMounted, computed, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
@@ -14,9 +14,10 @@ import { calculateCarCosts, type CostCalculationResult } from './utils/costMath'
 import { encodeStateToUrl, decodeUrlToState } from './services/shareUrl';
 
 // State
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const isDarkMode = ref(false);
 const showSourcesModal = ref(false);
+const showSettings = ref(false);
 
 const initialUrlState = typeof window !== 'undefined' ? decodeUrlToState() : null;
 
@@ -48,6 +49,18 @@ const isCalculating = ref(false);
 
 const isDesktop = ref(typeof window !== 'undefined' ? window.innerWidth >= 900 : true);
 const isMapVisibleMobile = ref(false);
+const mobileMapRef = ref<InstanceType<typeof NativeMap> | null>(null);
+
+// Sync HTML lang attribute with active i18n locale
+watch(
+  locale,
+  (newLocale) => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = newLocale;
+    }
+  },
+  { immediate: true },
+);
 
 onMounted(async () => {
   if (typeof window !== 'undefined') {
@@ -58,8 +71,8 @@ onMounted(async () => {
     if (window.matchMedia) {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       isDarkMode.value = mediaQuery.matches;
-      mediaQuery.addEventListener('change', (e) => {
-        isDarkMode.value = e.matches;
+      mediaQuery.addEventListener('change', (event) => {
+        isDarkMode.value = event.matches;
       });
     }
   }
@@ -131,7 +144,7 @@ const onVehicleConfigUpdate = (state: VehicleState) => {
   vehicleConfig.value = state;
 };
 
-// Formato español: usar coma para decimales
+// Formato decimal con coma
 const formatEuro = (val: number) => {
   return val.toFixed(2).replace('.', ',');
 };
@@ -173,6 +186,14 @@ const updateDestCoords = (pos: { lat: number; lon: number }) => {
   }
 };
 
+const toggleMobileMap = async () => {
+  isMapVisibleMobile.value = !isMapVisibleMobile.value;
+  if (isMapVisibleMobile.value) {
+    await nextTick();
+    mobileMapRef.value?.invalidateSize();
+  }
+};
+
 const shareRoute = async () => {
   const url = encodeStateToUrl({
     origin: originLocation.value
@@ -207,7 +228,6 @@ const shareRoute = async () => {
     console.error('Error sharing:', err);
   }
 };
-const showSettings = ref(false);
 </script>
 
 <template>
@@ -237,13 +257,13 @@ const showSettings = ref(false);
               <!-- Mobile Map Section -->
               <div v-if="!isDesktop" class="mobile-map-section">
                 <button
+                  type="button"
                   class="map-toggle-btn"
                   :aria-expanded="isMapVisibleMobile"
-                  @click="isMapVisibleMobile = !isMapVisibleMobile"
+                  :aria-controls="isMapVisibleMobile ? 'mobile-map-drawer' : undefined"
+                  @click="toggleMobileMap"
                 >
-                  <span>{{
-                    isMapVisibleMobile ? 'Ocultar mapa' : 'Ver y ajustar en el mapa'
-                  }}</span>
+                  <span>{{ isMapVisibleMobile ? t('core.hide_map') : t('core.show_map') }}</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -255,14 +275,16 @@ const showSettings = ref(false);
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     :style="{ transform: isMapVisibleMobile ? 'rotate(180deg)' : 'rotate(0)' }"
-                    style="transition: transform 0.2s"
+                    style="transition: transform 0.2s ease"
+                    aria-hidden="true"
                   >
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </button>
 
-                <div v-if="isMapVisibleMobile" class="map-wrapper">
+                <div v-if="isMapVisibleMobile" id="mobile-map-drawer" class="map-wrapper">
                   <NativeMap
+                    ref="mobileMapRef"
                     :origin="
                       originLocation
                         ? { lat: originLocation.lat, lon: originLocation.lon }
@@ -303,27 +325,35 @@ const showSettings = ref(false);
           </section>
 
           <!-- Tarjeta de Resultados -->
-          <section v-if="routeData && currentFuelPrice && computedCosts" class="cost-summary">
+          <section
+            v-if="routeData && currentFuelPrice && computedCosts"
+            class="cost-summary card"
+            :aria-label="t('core.calc_cost')"
+          >
             <div class="summary-header">
-              <h2>{{ $t('core.calc_cost') }}</h2>
+              <h2>{{ t('core.calc_cost') }}</h2>
               <div class="header-actions">
                 <button
+                  type="button"
                   class="miteco-badge"
-                  :title="$t('footer.methodology')"
+                  :title="t('footer.methodology')"
+                  :aria-label="`${t('core.source_btn')} ${vehicleConfig?.priceSource === 'manual' ? t('core.source_manual_label') : t('core.source_miteco_label')}`"
                   @click="showSourcesModal = true"
                 >
-                  {{ $t('core.source_btn') }}
-                  {{ vehicleConfig?.priceSource === 'manual' ? 'Manual' : 'MITECO' }} ({{
-                    formatEuroPrice3(currentFuelPrice)
+                  {{ t('core.source_btn') }}
+                  {{
+                    vehicleConfig?.priceSource === 'manual'
+                      ? t('core.source_manual_label')
+                      : t('core.source_miteco_label')
                   }}
-                  €/L)
+                  ({{ formatEuroPrice3(currentFuelPrice) }} €/L)
                 </button>
               </div>
             </div>
 
             <div v-if="vehicleConfig?.tripMode === 'ida'" class="cost-numbers single">
               <div class="cost-item main-cost">
-                <span class="cost-label">{{ $t('core.one_way') }}</span>
+                <span class="cost-label">{{ t('core.one_way') }}</span>
                 <span class="cost-value"
                   >{{ formatEuro(computedCosts.perTrip) }} <small>€</small></span
                 >
@@ -332,7 +362,7 @@ const showSettings = ref(false);
 
             <div v-else-if="vehicleConfig?.tripMode === 'idavuelta'" class="cost-numbers single">
               <div class="cost-item main-cost">
-                <span class="cost-label">{{ $t('core.round_trip') }}</span>
+                <span class="cost-label">{{ t('core.round_trip') }}</span>
                 <span class="cost-value"
                   >{{ formatEuro(computedCosts.perTrip) }} <small>€</small></span
                 >
@@ -341,14 +371,14 @@ const showSettings = ref(false);
 
             <div v-else class="cost-numbers">
               <div class="cost-item">
-                <span class="cost-label">{{ $t('core.monthly') }}</span>
+                <span class="cost-label">{{ t('core.monthly') }}</span>
                 <span class="cost-value"
                   >{{ formatEuro(computedCosts.monthly) }} <small>€</small></span
                 >
               </div>
               <div class="cost-item">
                 <span class="cost-label">
-                  {{ $t('core.annual') }}
+                  {{ t('core.annual') }}
                   <template v-if="vehicleConfig?.activeMonths && vehicleConfig.activeMonths !== 12">
                     ({{ vehicleConfig.activeMonths }}m)
                   </template>
@@ -361,21 +391,22 @@ const showSettings = ref(false);
 
             <div class="cost-details">
               <p>
-                {{ $t('core.route_dist') }}
-                <strong>{{ formatEuro(routeData.distanceKm) }} km</strong> (sólo ida)
+                {{ t('core.route_dist') }}
+                <strong>{{ formatEuro(routeData.distanceKm) }} km</strong>
+                {{ t('core.one_way_only') }}
               </p>
               <p v-if="vehicleConfig?.includeWear" class="text-muted">
-                {{ $t('core.wear_note') }}
+                {{ t('core.wear_note') }}
               </p>
             </div>
           </section>
 
-          <div v-else-if="isCalculating" class="placeholder-card">
-            <p>{{ $t('core.calc_loading') }}</p>
+          <div v-else-if="isCalculating" class="placeholder-card" role="status" aria-live="polite">
+            <p>{{ t('core.calc_loading') }}</p>
           </div>
 
           <div v-else class="placeholder-card">
-            <p>{{ $t('core.define_route') }}</p>
+            <p>{{ t('core.define_route') }}</p>
           </div>
         </div>
       </div>
@@ -400,6 +431,7 @@ const showSettings = ref(false);
   width: 100%;
   margin: 0 auto;
   padding: 2rem 1.5rem;
+  box-sizing: border-box;
 }
 
 .layout-grid {
@@ -434,12 +466,17 @@ const showSettings = ref(false);
   font-weight: 600;
   cursor: pointer;
   margin-bottom: 1rem;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .map-toggle-btn:hover {
   background: var(--color-bg-hover, rgba(0, 0, 0, 0.02));
+}
+
+.map-toggle-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .map-wrapper {
@@ -449,6 +486,7 @@ const showSettings = ref(false);
 @media (min-width: 900px) {
   .map-wrapper {
     height: 100%;
+    min-height: 450px;
   }
 }
 
@@ -475,28 +513,11 @@ const showSettings = ref(false);
   gap: 0.75rem;
 }
 
-.icon-button {
-  background: transparent;
-  color: var(--color-text-muted);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 0.35rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.icon-button:hover {
-  background: var(--color-border);
-  color: var(--color-text);
-}
-
 .summary-header h2 {
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0;
+  color: var(--color-text);
 }
 
 .miteco-badge {
@@ -514,7 +535,12 @@ const showSettings = ref(false);
 }
 
 .miteco-badge:hover {
-  opacity: 0.8;
+  opacity: 0.85;
+}
+
+.miteco-badge:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .cost-numbers {
@@ -535,10 +561,11 @@ const showSettings = ref(false);
 }
 
 .cost-label {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-weight: 600;
 }
 
 .cost-value {
@@ -571,5 +598,11 @@ const showSettings = ref(false);
   border: 1px dashed var(--color-border);
   border-radius: var(--radius-lg);
   color: var(--color-text-muted);
+}
+
+@media (max-width: 600px) {
+  .app-container {
+    padding: 1.25rem 1rem 2rem;
+  }
 }
 </style>

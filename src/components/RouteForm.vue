@@ -1,5 +1,7 @@
+<!-- src/components/RouteForm.vue -->
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { geocodeAddress, type GeocodeResult } from '../services/routing';
 
 const props = defineProps<{
@@ -18,11 +20,16 @@ const emit = defineEmits<{
   ): void;
 }>();
 
+const { t } = useI18n();
+
 const originInput = ref(props.originLabel || '');
 const destinationInput = ref(props.destinationLabel || '');
 
 const originSuggestions = ref<GeocodeResult[]>([]);
 const destinationSuggestions = ref<GeocodeResult[]>([]);
+
+const highlightedOriginIndex = ref<number>(-1);
+const highlightedDestIndex = ref<number>(-1);
 
 const isSearchingOrigin = ref(false);
 const isSearchingDest = ref(false);
@@ -32,6 +39,7 @@ let destTimeout: ReturnType<typeof setTimeout>;
 
 const onInputOrigin = () => {
   clearTimeout(originTimeout);
+  highlightedOriginIndex.value = -1;
   if (originInput.value.length < 3) {
     originSuggestions.value = [];
     return;
@@ -45,6 +53,7 @@ const onInputOrigin = () => {
 
 const onInputDest = () => {
   clearTimeout(destTimeout);
+  highlightedDestIndex.value = -1;
   if (destinationInput.value.length < 3) {
     destinationSuggestions.value = [];
     return;
@@ -56,75 +65,215 @@ const onInputDest = () => {
   }, 400);
 };
 
-const selectOrigin = (s: GeocodeResult) => {
-  originInput.value = s.label;
+const selectOrigin = (suggestion: GeocodeResult) => {
+  originInput.value = suggestion.label;
   originSuggestions.value = [];
-  emit('update:origin', { lat: s.lat, lon: s.lon, label: s.label, provinceSearch: s.name });
+  highlightedOriginIndex.value = -1;
+  emit('update:origin', {
+    lat: suggestion.lat,
+    lon: suggestion.lon,
+    label: suggestion.label,
+    provinceSearch: suggestion.name,
+  });
 };
 
-const selectDestination = (s: GeocodeResult) => {
-  destinationInput.value = s.label;
+const selectDestination = (suggestion: GeocodeResult) => {
+  destinationInput.value = suggestion.label;
   destinationSuggestions.value = [];
-  emit('update:destination', { lat: s.lat, lon: s.lon, label: s.label, provinceSearch: s.name });
+  highlightedDestIndex.value = -1;
+  emit('update:destination', {
+    lat: suggestion.lat,
+    lon: suggestion.lon,
+    label: suggestion.label,
+    provinceSearch: suggestion.name,
+  });
 };
 
 const clearOrigin = () => {
   originInput.value = '';
   originSuggestions.value = [];
+  highlightedOriginIndex.value = -1;
   emit('update:origin', null);
 };
 
 const clearDestination = () => {
   destinationInput.value = '';
   destinationSuggestions.value = [];
+  highlightedDestIndex.value = -1;
   emit('update:destination', null);
+};
+
+const handleOriginKeydown = (event: KeyboardEvent) => {
+  if (originSuggestions.value.length === 0) return;
+
+  if (event.key === 'ArrowDown') {
+    event.preventDefault();
+    highlightedOriginIndex.value =
+      (highlightedOriginIndex.value + 1) % originSuggestions.value.length;
+  } else if (event.key === 'ArrowUp') {
+    event.preventDefault();
+    highlightedOriginIndex.value =
+      (highlightedOriginIndex.value - 1 + originSuggestions.value.length) %
+      originSuggestions.value.length;
+  } else if (event.key === 'Enter') {
+    if (
+      highlightedOriginIndex.value >= 0 &&
+      highlightedOriginIndex.value < originSuggestions.value.length
+    ) {
+      event.preventDefault();
+      selectOrigin(originSuggestions.value[highlightedOriginIndex.value]);
+    }
+  } else if (event.key === 'Escape') {
+    event.preventDefault();
+    originSuggestions.value = [];
+    highlightedOriginIndex.value = -1;
+  }
+};
+
+const handleDestKeydown = (event: KeyboardEvent) => {
+  if (destinationSuggestions.value.length === 0) return;
+
+  if (event.key === 'ArrowDown') {
+    event.preventDefault();
+    highlightedDestIndex.value =
+      (highlightedDestIndex.value + 1) % destinationSuggestions.value.length;
+  } else if (event.key === 'ArrowUp') {
+    event.preventDefault();
+    highlightedDestIndex.value =
+      (highlightedDestIndex.value - 1 + destinationSuggestions.value.length) %
+      destinationSuggestions.value.length;
+  } else if (event.key === 'Enter') {
+    if (
+      highlightedDestIndex.value >= 0 &&
+      highlightedDestIndex.value < destinationSuggestions.value.length
+    ) {
+      event.preventDefault();
+      selectDestination(destinationSuggestions.value[highlightedDestIndex.value]);
+    }
+  } else if (event.key === 'Escape') {
+    event.preventDefault();
+    destinationSuggestions.value = [];
+    highlightedDestIndex.value = -1;
+  }
 };
 </script>
 
 <template>
   <div class="route-form">
+    <!-- Origen Input Group -->
     <div class="input-group">
-      <label for="origin">{{ $t('core.origin') }}</label>
+      <label for="origin-input">{{ t('core.origin') }}</label>
       <div class="input-wrapper">
         <input
-          id="origin"
+          id="origin-input"
           v-model="originInput"
           type="text"
-          :placeholder="$t('core.origin_ph')"
+          :placeholder="t('core.origin_ph')"
           autocomplete="off"
+          role="combobox"
+          aria-autocomplete="list"
+          :aria-expanded="originSuggestions.length > 0"
+          :aria-controls="originSuggestions.length > 0 ? 'origin-suggestions-list' : undefined"
+          :aria-activedescendant="
+            highlightedOriginIndex >= 0 ? `origin-option-${highlightedOriginIndex}` : undefined
+          "
           @input="onInputOrigin"
+          @keydown="handleOriginKeydown"
         />
-        <button v-if="originInput" class="clear-btn" @click="clearOrigin">×</button>
+        <button
+          v-if="originInput"
+          type="button"
+          class="clear-btn"
+          :aria-label="t('core.clear_origin')"
+          @click="clearOrigin"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
       </div>
 
-      <ul v-if="originSuggestions.length > 0" class="suggestions-list">
-        <li v-for="(s, idx) in originSuggestions" :key="idx" @click="selectOrigin(s)">
-          {{ s.label }}
+      <ul
+        v-if="originSuggestions.length > 0"
+        id="origin-suggestions-list"
+        class="suggestions-list"
+        role="listbox"
+        :aria-label="t('core.origin')"
+      >
+        <li
+          v-for="(suggestion, index) in originSuggestions"
+          :id="`origin-option-${index}`"
+          :key="index"
+          role="option"
+          :aria-selected="highlightedOriginIndex === index"
+          class="suggestion-item"
+          :class="{ 'suggestion-item--active': highlightedOriginIndex === index }"
+          @click="selectOrigin(suggestion)"
+          @mouseenter="highlightedOriginIndex = index"
+        >
+          {{ suggestion.label }}
         </li>
       </ul>
-      <span v-if="isSearchingOrigin" class="loading-text">{{ $t('core.searching') }}</span>
+      <span v-if="isSearchingOrigin" class="loading-text" role="status" aria-live="polite">
+        {{ t('core.searching') }}
+      </span>
     </div>
 
+    <!-- Destino Input Group -->
     <div class="input-group">
-      <label for="destination">{{ $t('core.dest') }}</label>
+      <label for="destination-input">{{ t('core.dest') }}</label>
       <div class="input-wrapper">
         <input
-          id="destination"
+          id="destination-input"
           v-model="destinationInput"
           type="text"
-          :placeholder="$t('core.dest_ph')"
+          :placeholder="t('core.dest_ph')"
           autocomplete="off"
+          role="combobox"
+          aria-autocomplete="list"
+          :aria-expanded="destinationSuggestions.length > 0"
+          :aria-controls="
+            destinationSuggestions.length > 0 ? 'destination-suggestions-list' : undefined
+          "
+          :aria-activedescendant="
+            highlightedDestIndex >= 0 ? `dest-option-${highlightedDestIndex}` : undefined
+          "
           @input="onInputDest"
+          @keydown="handleDestKeydown"
         />
-        <button v-if="destinationInput" class="clear-btn" @click="clearDestination">×</button>
+        <button
+          v-if="destinationInput"
+          type="button"
+          class="clear-btn"
+          :aria-label="t('core.clear_dest')"
+          @click="clearDestination"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
       </div>
 
-      <ul v-if="destinationSuggestions.length > 0" class="suggestions-list">
-        <li v-for="(s, idx) in destinationSuggestions" :key="idx" @click="selectDestination(s)">
-          {{ s.label }}
+      <ul
+        v-if="destinationSuggestions.length > 0"
+        id="destination-suggestions-list"
+        class="suggestions-list"
+        role="listbox"
+        :aria-label="t('core.dest')"
+      >
+        <li
+          v-for="(suggestion, index) in destinationSuggestions"
+          :id="`dest-option-${index}`"
+          :key="index"
+          role="option"
+          :aria-selected="highlightedDestIndex === index"
+          class="suggestion-item"
+          :class="{ 'suggestion-item--active': highlightedDestIndex === index }"
+          @click="selectDestination(suggestion)"
+          @mouseenter="highlightedDestIndex = index"
+        >
+          {{ suggestion.label }}
         </li>
       </ul>
-      <span v-if="isSearchingDest" class="loading-text">{{ $t('core.searching') }}</span>
+      <span v-if="isSearchingDest" class="loading-text" role="status" aria-live="polite">
+        {{ t('core.searching') }}
+      </span>
     </div>
   </div>
 </template>
@@ -165,12 +314,15 @@ input {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease-in-out;
   font-family: inherit;
 }
 
-input:focus {
+input:focus,
+input:focus-visible {
   border-color: var(--color-primary);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .clear-btn {
@@ -185,10 +337,17 @@ input:focus {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
 }
 
 .clear-btn:hover {
   color: var(--color-text);
+}
+
+.clear-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .suggestions-list {
@@ -205,27 +364,25 @@ input:focus {
   overflow-y: auto;
   z-index: 50;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 0.25rem 0;
 }
 
-.suggestions-list li {
+.suggestion-item {
   padding: 0.75rem 1rem;
   cursor: pointer;
   font-size: 0.9rem;
   border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.15s ease;
+  color: var(--color-text);
 }
 
-.suggestions-list li:last-child {
+.suggestion-item:last-child {
   border-bottom: none;
 }
 
-.suggestions-list li:hover {
-  background-color: rgba(0, 0, 0, 0.03);
-}
-
-@media (prefers-color-scheme: dark) {
-  .suggestions-list li:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
+.suggestion-item:hover,
+.suggestion-item--active {
+  background-color: var(--color-bg-hover);
 }
 
 .loading-text {

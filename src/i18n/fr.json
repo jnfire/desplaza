@@ -1,14 +1,12 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Calculez et comparez le coût réel de votre mobilité.",
-    "share": "Partager le lien",
-    "settings": "Paramètres"
+    "subtitle": "Calculez et comparez le coût réel de votre mobilité."
   },
   "footer": {
     "text": "Développement local-first. Vos données, votre contrôle.",
     "source": "Code Source",
-    "license": "Licence AGPL-3.0",
+    "license": "Tous droits réservés",
     "methodology": "Méthodologie"
   },
   "settings": {
@@ -20,66 +18,68 @@
     "themeSystem": "Système"
   },
   "core": {
-    "origin": "Origine",
+    "trip_details": "Détails du Trajet",
+    "origin": "Départ",
     "dest": "Destination",
-    "origin_ph": "Ex: Tour Eiffel, Paris",
-    "dest_ph": "Ex: Le Louvre, Paris",
+    "origin_ph": "Ex : Champs-Élysées, Paris",
+    "dest_ph": "Ex : Tour Eiffel, Paris",
+    "clear_origin": "Effacer le départ",
+    "clear_dest": "Effacer la destination",
+    "searching": "Recherche...",
+    "your_vehicle": "Votre Véhicule",
+    "trip_type": "Type de trajet",
     "one_way": "Aller simple",
     "round_trip": "Aller-retour",
+    "routine": "Routine",
     "days_week": "Jours par semaine",
-    "fuel_type": "Carburant",
+    "months_year": "Mois par an",
+    "active_months_desc": "Mois où vous effectuez ce trajet (hors congés)",
+    "price_origin": "Origine du Prix",
+    "source_auto": "Automatique (Espagne)",
     "source_manual": "Personnalisé",
+    "source_manual_label": "Manuel",
+    "source_miteco_label": "MITECO",
     "manual_price": "Prix (€/L)",
-    "include_wear": "Inclure l'usure et l'entretien (0,08 €/km)",
-    "calc_cost": "Coût de Mobilité",
-    "share_title": "Mon trajet sur Desplaza",
-    "share_text": "Découvrez mon coût de mobilité.",
-    "share_copied": "Lien copié dans le presse-papiers!",
-    "source_btn": "Source:",
-    "monthly": "Mensuel",
-    "annual": "Annuel",
-    "route_dist": "Distance du trajet:",
-    "wear_note": "* Comprend un supplément estimé de 0,08 €/km pour l'usure, l'assurance et l'entretien.",
-    "calc_loading": "Calcul du meilleur itinéraire et des prix en temps réel...",
-    "define_route": "Définissez l'origine et la destination pour voir votre coût de mobilité réel.",
-    "source_auto": "Automatique",
+    "fuel_type": "Carburant",
     "fuel_gas95": "Essence 95",
     "fuel_gas98": "Essence 98",
     "fuel_diesel": "Diesel",
     "fuel_diesel_prem": "Diesel Premium",
     "fuel_glp": "GPL",
-    "active_months_desc": "Mois où vous effectuez cette routine (hors vacances)",
-    "trip_details": "Détails du Voyage",
-    "routine": "Routine",
-    "months_year": "Mois par an",
-    "your_vehicle": "Votre Véhicule",
-    "price_origin": "Origine du Prix",
     "consumption_short": "Consommation (L/100km)",
-    "searching": "Recherche..."
+    "include_wear": "Inclure l'usure et l'entretien (0,08 €/km)",
+    "calc_cost": "Coût du Déplacement",
+    "share_title": "Mon trajet sur Desplaza",
+    "share_text": "Découvrez le coût de mon déplacement.",
+    "share_copied": "Lien copié dans le presse-papiers !",
+    "share_btn_label": "Partager le lien du trajet",
+    "settings_btn_label": "Ouvrir les paramètres",
+    "source_btn": "Source :",
+    "monthly": "Mensuel",
+    "annual": "Annuel",
+    "route_dist": "Distance du trajet :",
+    "one_way_only": "(aller simple)",
+    "wear_note": "* Comprend une majoration estimée à 0,08 €/km pour l'usure, l'assurance et l'entretien.",
+    "calc_loading": "Calcul du meilleur itinéraire et des prix en direct...",
+    "define_route": "Indiquez un point de départ et une destination pour évaluer votre coût réel.",
+    "hide_map": "Masquer la carte",
+    "show_map": "Voir et ajuster sur la carte",
+    "map_region": "Carte interactive de l'itinéraire",
+    "select_option": "Sélectionner une option"
   },
   "sources": {
-    "title": "Sources et méthodologie",
-    "close": "Fermer",
-    "fuel": {
-      "title": "Prix des carburants",
-      "source": "Les prix des carburants sont obtenus en temps réel via l'API REST publique des carburants du {ministry} du gouvernement espagnol.",
-      "ministry": "ministère de la Transition écologique et du Défi démographique (MITECO)",
-      "method": "Pour le calcul, la province du point de départ sélectionné est croisée avec le prix moyen arithmétique du jour de toutes les stations-service de cette province."
-    },
-    "routing": {
-      "title": "Distances et itinéraires",
-      "text": "Les distances routières sont calculées avec le moteur {osrm} et les adresses sont géocodées avec {photon}."
-    },
-    "wear": {
-      "title": "Coût d'usure et d'entretien",
-      "text": "Au coût du carburant peut s'ajouter, en option, un coût de {amount}. Ce chiffre est une estimation prudente, fondée sur des études d'associations automobiles, qui répartit :",
-      "amount": "0,08 € par kilomètre",
-      "items": {
-        "tyres": "Usure des pneus (~0,01 €/km)",
-        "maintenance": "Entretien préventif et révisions (~0,03 €/km)",
-        "insurance": "Part proportionnelle de l'assurance et des taxes (~0,02 €/km)",
-        "depreciation": "Amortissement et dépréciation minimale (~0,02 €/km)"
-      }
-    }
+    "title": "Sources et Méthodologie",
+    "close": "Fermer la boîte de dialogue",
+    "fuel_title": "Prix des Carburants",
+    "fuel_desc1": "Les prix des carburants proviennent en temps réel de l'API REST publique du Ministère pour la Transition Écologique et le Défi Démographique (MITECO) du gouvernement espagnol.",
+    "fuel_desc2": "Pour le calcul, la province d'origine est croisée avec le prix moyen arithmétique du jour de toutes les stations de cette province.",
+    "routing_title": "Distances et Itinéraires",
+    "routing_desc": "Le calcul des distances routières est effectué par OSRM (Open Source Routing Machine) et le géocodage par Photon (OpenStreetMap).",
+    "wear_title": "Coût d'Usure et d'Entretien",
+    "wear_desc": "Au coût du carburant peut s'ajouter en option 0,08 € par kilomètre. C'est une estimation prudente issue d'études d'associations automobiles :",
+    "wear_tires": "Usure des pneus (~0,01 €/km)",
+    "wear_maintenance": "Entretien préventif et révisions (~0,03 €/km)",
+    "wear_insurance": "Part proportionnelle assurance et taxes (~0,02 €/km)",
+    "wear_depreciation": "Amortissement minimal (~0,02 €/km)"
   }
 }

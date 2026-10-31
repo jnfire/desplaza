@@ -1,5 +1,7 @@
+<!-- src/components/NativeMap.vue -->
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -28,6 +30,8 @@ const emit = defineEmits<{
   (e: 'update:destination', pos: { lat: number; lon: number }): void;
 }>();
 
+const { t } = useI18n();
+
 const mapContainer = ref<HTMLElement | null>(null);
 let map: L.Map | null = null;
 let tileLayer: L.TileLayer | null = null;
@@ -39,6 +43,18 @@ const LIGHT_TILES =
   'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
 const DARK_TILES =
   'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+
+const invalidateSize = () => {
+  if (map) {
+    nextTick(() => {
+      map?.invalidateSize();
+    });
+  }
+};
+
+defineExpose({
+  invalidateSize,
+});
 
 onMounted(() => {
   if (!mapContainer.value) return;
@@ -54,6 +70,7 @@ onMounted(() => {
   }).addTo(map);
 
   updateMap();
+  invalidateSize();
 });
 
 onUnmounted(() => {
@@ -96,13 +113,14 @@ function updateMap() {
         const pos = originMarker!.getLatLng();
         emit('update:origin', { lat: pos.lat, lon: pos.lng });
       });
-      originMarker.bindTooltip('Origen', {
+      originMarker.bindTooltip(t('core.origin'), {
         permanent: true,
         direction: 'top',
         className: 'marker-tooltip',
       });
     } else {
       originMarker.setLatLng(latLng);
+      originMarker.setTooltipContent(t('core.origin'));
     }
     bounds.extend(latLng);
   } else if (originMarker) {
@@ -119,13 +137,14 @@ function updateMap() {
         const pos = destMarker!.getLatLng();
         emit('update:destination', { lat: pos.lat, lon: pos.lng });
       });
-      destMarker.bindTooltip('Destino', {
+      destMarker.bindTooltip(t('core.dest'), {
         permanent: true,
         direction: 'top',
         className: 'marker-tooltip',
       });
     } else {
       destMarker.setLatLng(latLng);
+      destMarker.setTooltipContent(t('core.dest'));
     }
     bounds.extend(latLng);
   } else if (destMarker) {
@@ -143,9 +162,9 @@ function updateMap() {
     // GeoJSON uses [lon, lat], Leaflet uses [lat, lon]
     const latLngs = props.routeCoordinates.map((coord) => L.latLng(coord[1], coord[0]));
     routePolyline = L.polyline(latLngs, {
-      color: 'var(--color-primary, #3b82f6)',
+      color: 'var(--color-primary, #000000)',
       weight: 5,
-      opacity: 0.8,
+      opacity: 0.85,
       lineCap: 'round',
     }).addTo(map);
 
@@ -159,7 +178,12 @@ function updateMap() {
 </script>
 
 <template>
-  <div ref="mapContainer" class="map-container"></div>
+  <div
+    ref="mapContainer"
+    class="map-container"
+    role="region"
+    :aria-label="t('core.map_region')"
+  ></div>
 </template>
 
 <style>

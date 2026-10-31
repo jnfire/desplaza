@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import SettingsIcon from './SettingsIcon.vue';
 
 defineProps<{
@@ -10,23 +11,26 @@ const emit = defineEmits<{
   (e: 'toggle-settings'): void;
   (e: 'share'): void;
 }>();
+
+const { t } = useI18n();
 </script>
 
 <template>
   <header class="navbar">
     <div class="navbar-container">
-      <button class="navbar-brand" :aria-label="$t('header.title')" @click="emit('home')">
+      <button class="navbar-brand" :aria-label="t('header.title')" @click="emit('home')">
         <div>
-          <h1 class="title">{{ $t('header.title') }}</h1>
-          <p class="subtitle">{{ $t('header.subtitle') }}</p>
+          <h1 class="title">{{ t('header.title') }}</h1>
+          <p class="subtitle">{{ t('header.subtitle') }}</p>
         </div>
       </button>
 
       <div class="navbar-actions">
         <button
+          type="button"
           class="btn-secondary config-toggle"
-          :aria-label="$t('header.share')"
-          :title="$t('header.share')"
+          :aria-label="t('core.share_btn_label')"
+          :title="t('core.share_btn_label')"
           @click="emit('share')"
         >
           <svg
@@ -38,6 +42,7 @@ const emit = defineEmits<{
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+            aria-hidden="true"
           >
             <circle cx="18" cy="5" r="3"></circle>
             <circle cx="6" cy="12" r="3"></circle>
@@ -47,10 +52,10 @@ const emit = defineEmits<{
           </svg>
         </button>
         <button
+          type="button"
           class="btn-secondary config-toggle"
           :class="{ 'config-toggle--active': showSettings }"
-          :aria-label="$t('header.settings')"
-          :title="$t('header.settings')"
+          :aria-label="t('core.settings_btn_label')"
           :aria-expanded="showSettings"
           @click="emit('toggle-settings')"
         >
@@ -137,6 +142,11 @@ const emit = defineEmits<{
 
 .config-toggle:hover {
   background-color: var(--color-bg-hover, rgba(0, 0, 0, 0.05));
+}
+
+.config-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .config-toggle--active {
