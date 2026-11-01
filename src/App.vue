@@ -426,9 +426,7 @@ const shareRoute = async () => {
 }
 
 .footer-container {
-  max-width: 1200px;
   width: 100%;
-  margin: 0 auto;
   padding: 0 1.5rem;
   box-sizing: border-box;
 }
@@ -544,6 +542,10 @@ const shareRoute = async () => {
 @media (max-width: 600px) {
   .app-container {
     padding: 1.25rem 1rem 2rem;
+  }
+
+  .footer-container {
+    padding: 0 1rem;
   }
 }
 </style>
