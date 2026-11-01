@@ -6,6 +6,10 @@ A fast, lightweight web app that compares the real cost and time of your commute
 
 Costs are calculated in your browser, with no account, no cookies and no analytics. Built with **Vue 3 (Composition API)** and **TypeScript**.
 
+**▶ [Try it: desplaza.jnfire.dev/](https://desplaza.jnfire.dev/)**
+
+![Desplaza on desktop and mobile](docs/screenshots/desplaza-hero.png)
+
 ## ✨ Key Features
 - **Compare Options:** Add up to five ways of making the same trip, each with its own name (for example two cars you are choosing between), and rank them by cost, time or a balance of both with your hour valued in €/h. The best option is highlighted with what the others cost more per year.
 - **Option Types:** Combustion car or motorbike (MITECO or manual fuel price), electric car (home and public charging prices and their share) and public transport (monthly pass or single tickets, door-to-door time). Tolls, parking and wear can be added to any vehicle.
@@ -61,6 +65,17 @@ The project follows a clean, modular architecture separating external API servic
    ```sh
    npm run build
    ```
+
+## 📚 Documentation
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Design system](docs/DESIGN-SYSTEM.md), shared with the other portfolio tools
+- [Roadmap](docs/ROADMAP.md)
+- [Evolution](docs/evolution/README.md): how the project has changed, with screenshots
+
+## 🤝 Development
+
+Designed and directed by [Javier Nicolás Pérez Mesa](https://github.com/jnfire): the product, the architecture and the design decisions are the author's. AI has been part of the work as a deliberate experiment in learning new technology: Gemini CLI, Antigravity, GitHub Copilot and Claude Code, tried one after another. It began with small interventions and, as the experiment went on, moved towards more autonomy, always through pull requests that the author reviews. Commits made with Claude Code carry a `Co-Authored-By` trailer.
 
 ## 📄 License
 Copyright (C) 2026 Javier Nicolás Pérez Mesa.

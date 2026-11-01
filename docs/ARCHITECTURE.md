@@ -64,3 +64,7 @@ Electricity prices and public transport fares and times have no official source 
 ### 7. Quality Checks
 - **Vitest** tests in `src/**/__tests__/` cover the travel options and their comparison, local saving, the three service clients (with `fetch` stubbed, so no real API is called), share links in both versions and the parity of the six dictionaries.
 - **ESLint**, **Prettier** and **vue-tsc** run in CI together with the tests and the production build; the GitHub Pages deploy only runs when they pass.
+
+### Shared components
+
+The header, footer, selects, settings card, icons and theme util are shared byte for byte with the other portfolio tools. What differs per app (repository and author) lives in `src/app.config.ts`. See [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md).

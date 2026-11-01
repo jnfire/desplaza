@@ -1,14 +1,16 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Real cost of your car commute, with official fuel prices."
+    "subtitle": "Real cost of your car commute, with official fuel prices.",
+    "settings": "Open settings",
+    "share": "Share link"
   },
   "footer": {
-    "text": "No cookies · No accounts · Open source",
     "source": "Source Code",
     "license": "AGPL-3.0 License",
     "methodology": "Methodology",
-    "madeBy": "Made by {name}"
+    "madeBy": "Made by {name}",
+    "facts": "No cookies · No accounts · Open source"
   },
   "settings": {
     "personalization": "Personalization",
@@ -51,8 +53,6 @@
     "share_title": "My route in Desplaza",
     "share_text": "Check out my mobility cost.",
     "share_copied": "Link copied to clipboard!",
-    "share_btn_label": "Share route link",
-    "settings_btn_label": "Open settings",
     "monthly": "Monthly",
     "annual": "Annual",
     "route_dist": "Route distance:",
@@ -61,8 +61,7 @@
     "define_route": "Define origin and destination to see your real mobility cost.",
     "hide_map": "Hide Map",
     "show_map": "View and adjust on map",
-    "map_region": "Interactive route map",
-    "select_option": "Select an option"
+    "map_region": "Interactive route map"
   },
   "sources": {
     "title": "Sources & Methodology",
@@ -164,5 +163,8 @@
     "col_year": "Per year",
     "col_extra_year": "Difference per year",
     "col_extra_journey": "Difference per trip"
+  },
+  "shared": {
+    "select_option": "Select an option"
   }
 }

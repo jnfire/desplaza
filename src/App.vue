@@ -286,6 +286,7 @@ const shareRoute = async () => {
   <div class="app-wrapper">
     <AppHeader
       :showSettings="showSettings"
+      show-share
       @toggle-settings="showSettings = !showSettings"
       @home="goHome"
       @share="shareRoute"
@@ -380,7 +381,7 @@ const shareRoute = async () => {
     </main>
 
     <div class="footer-container">
-      <AppFooter @show-sources="showSourcesModal = true" />
+      <AppFooter show-methodology @show-sources="showSourcesModal = true" />
     </div>
 
     <OptionEditorModal

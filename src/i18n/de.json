@@ -1,14 +1,16 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Die wahren Kosten Ihrer Autofahrten, mit amtlichen Kraftstoffpreisen."
+    "subtitle": "Die wahren Kosten Ihrer Autofahrten, mit amtlichen Kraftstoffpreisen.",
+    "settings": "Einstellungen öffnen",
+    "share": "Link teilen"
   },
   "footer": {
-    "text": "Keine Cookies · Keine Konten · Open Source",
     "source": "Quellcode",
     "license": "Lizenz AGPL-3.0",
     "methodology": "Methodik",
-    "madeBy": "Erstellt von {name}"
+    "madeBy": "Erstellt von {name}",
+    "facts": "Keine Cookies · Keine Konten · Open Source"
   },
   "settings": {
     "personalization": "Personalisierung",
@@ -51,8 +53,6 @@
     "share_title": "Meine Route auf Desplaza",
     "share_text": "Sehen Sie sich meine Fahrtkosten an.",
     "share_copied": "Link in die Zwischenablage kopiert!",
-    "share_btn_label": "Routenlink teilen",
-    "settings_btn_label": "Einstellungen öffnen",
     "monthly": "Monatlich",
     "annual": "Jährlich",
     "route_dist": "Routendistanz:",
@@ -61,8 +61,7 @@
     "define_route": "Legen Sie Start und Ziel fest, um die tatsächlichen Fahrtkosten zu sehen.",
     "hide_map": "Karte ausblenden",
     "show_map": "Auf Karte ansehen und anpassen",
-    "map_region": "Interaktive Routenkarte",
-    "select_option": "Option auswählen"
+    "map_region": "Interaktive Routenkarte"
   },
   "sources": {
     "title": "Quellen und Methodik",
@@ -164,5 +163,8 @@
     "col_year": "Pro Jahr",
     "col_extra_year": "Differenz pro Jahr",
     "col_extra_journey": "Differenz pro Fahrt"
+  },
+  "shared": {
+    "select_option": "Option auswählen"
   }
 }

@@ -1,14 +1,16 @@
 {
   "header": {
     "title": "Desplaza",
-    "subtitle": "Le coût réel de vos trajets en voiture, avec les prix officiels du carburant."
+    "subtitle": "Le coût réel de vos trajets en voiture, avec les prix officiels du carburant.",
+    "settings": "Ouvrir les paramètres",
+    "share": "Partager le lien"
   },
   "footer": {
-    "text": "Sans cookies · Sans compte · Open source",
     "source": "Code Source",
     "license": "Licence AGPL-3.0",
     "methodology": "Méthodologie",
-    "madeBy": "Créé par {name}"
+    "madeBy": "Créé par {name}",
+    "facts": "Sans cookies · Sans compte · Open source"
   },
   "settings": {
     "personalization": "Personnalisation",
@@ -51,8 +53,6 @@
     "share_title": "Mon trajet sur Desplaza",
     "share_text": "Découvrez le coût de mon déplacement.",
     "share_copied": "Lien copié dans le presse-papiers !",
-    "share_btn_label": "Partager le lien du trajet",
-    "settings_btn_label": "Ouvrir les paramètres",
     "monthly": "Mensuel",
     "annual": "Annuel",
     "route_dist": "Distance du trajet :",
@@ -61,8 +61,7 @@
     "define_route": "Indiquez un point de départ et une destination pour évaluer votre coût réel.",
     "hide_map": "Masquer la carte",
     "show_map": "Voir et ajuster sur la carte",
-    "map_region": "Carte interactive de l'itinéraire",
-    "select_option": "Sélectionner une option"
+    "map_region": "Carte interactive de l'itinéraire"
   },
   "sources": {
     "title": "Sources et Méthodologie",
@@ -164,5 +163,8 @@
     "col_year": "Par an",
     "col_extra_year": "Écart par an",
     "col_extra_journey": "Écart par trajet"
+  },
+  "shared": {
+    "select_option": "Sélectionnez une option"
   }
 }
