@@ -2,7 +2,13 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { MAX_OPTIONS, type TravelOption, type TripSettings } from '../core/travelOptions';
-import { comparableCost, rankResults, type OptionResult, type SortKey } from '../core/comparison';
+import {
+  buildVerdict,
+  comparableCost,
+  rankResults,
+  type OptionResult,
+  type SortKey,
+} from '../core/comparison';
 import { formatMinutes, formatNumber } from '../utils/format';
 import OptionActions from './OptionActions.vue';
 
@@ -55,6 +61,30 @@ const bestId = computed(() => {
 const bestResult = computed(() =>
   bestId.value ? ranked.value.find((result) => result.optionId === bestId.value) : undefined,
 );
+
+/** Cheapest vs most expensive, whatever the sort criterion. */
+const verdict = computed(() => {
+  if (!hasRoute.value || !isComparing.value) return null;
+  const results = props.options
+    .map((option) => props.results[option.id])
+    .filter((result): result is OptionResult => Boolean(result));
+  const found = buildVerdict(results, props.trip);
+  const best = found && optionById.value.get(found.bestId);
+  const worst = found && optionById.value.get(found.worstId);
+  return found && best && worst ? { ...found, best: best.name, worst: worst.name } : null;
+});
+
+/** The time side of the verdict; empty when both take the same or it is unknown. */
+const verdictTime = computed(() => {
+  const found = verdict.value;
+  if (!found || found.extraMinutes === null) return '';
+  const minutes = Math.round(Math.abs(found.extraMinutes));
+  if (minutes < 1) return '';
+  return t(found.extraMinutes > 0 ? 'compare.verdict_slower' : 'compare.verdict_faster', {
+    time: formatMinutes(minutes),
+    period: isRecurring.value ? t('compare.period_day') : t('compare.per_journey'),
+  });
+});
 
 const fuelLabelKeys: Record<string, string> = {
   'Precio Gasolina 95 E5': 'core.fuel_gas95',
@@ -208,6 +238,30 @@ const single = computed(() => {
 
     <!-- Two or more options: ranked comparison. -->
     <template v-else-if="isComparing">
+      <p v-if="verdict" class="verdict" role="status">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 10h12" />
+          <path d="M4 14h9" />
+          <path
+            d="M19 6a7.7 7.7 0 0 0-5.2-2A7.9 7.9 0 0 0 6 12c0 4.4 3.5 8 7.8 8 2 0 3.8-.8 5.2-2"
+          />
+        </svg>
+        <span class="verdict-text">
+          <i18n-t
+            :keypath="isRecurring ? 'compare.verdict_year' : 'compare.verdict_journey'"
+            tag="span"
+          >
+            <template #best>
+              <strong>{{ verdict.best }}</strong>
+            </template>
+            <template #amount>
+              <strong>{{ euro(verdict.saving) }}</strong>
+            </template>
+            <template #worst>{{ verdict.worst }}</template>
+          </i18n-t>
+          <small v-if="verdictTime">{{ verdictTime }}</small>
+        </span>
+      </p>
       <div class="sort-bar">
         <div
           class="mode-selector sort-selector"
@@ -329,6 +383,8 @@ const single = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  /* The table layout depends on the panel's own width, not the window's. */
+  container-type: inline-size;
 }
 
 .panel-header {
@@ -349,15 +405,15 @@ const single = computed(() => {
   font-weight: 600;
   padding: 0.5rem 0.9rem;
   border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  background: var(--bg-body);
-  color: var(--text-main);
+  border: 1px solid var(--accent-color);
+  background: transparent;
+  color: var(--accent-color);
   cursor: pointer;
   white-space: nowrap;
 }
 
 .btn-add:hover:not(:disabled) {
-  background: var(--bg-surface-hover);
+  background: var(--accent-color-alpha);
 }
 
 .btn-add:disabled {
@@ -436,7 +492,7 @@ const single = computed(() => {
 .cost-details {
   border-top: 1px solid var(--border-color);
   padding-top: 1rem;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -510,6 +566,7 @@ const single = computed(() => {
 }
 
 .option-row--best {
+  background: var(--accent-color-alpha);
   border: 2px solid var(--accent-color);
   padding: calc(1rem - 1px);
 }
@@ -525,7 +582,7 @@ const single = computed(() => {
 /* Always above the name, so its position does not depend on the name's length. */
 .best-tag {
   align-self: flex-start;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -550,7 +607,7 @@ const single = computed(() => {
 
 .cell-year {
   grid-area: year;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
 
@@ -564,7 +621,7 @@ const single = computed(() => {
 .cell-extra {
   grid-area: extra;
   flex-wrap: wrap;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
 
@@ -573,7 +630,7 @@ const single = computed(() => {
 }
 
 .cell-unit {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
 
@@ -593,7 +650,7 @@ const single = computed(() => {
 
 /* Wide panels: the list becomes a table with aligned columns, so the figures of
    different options line up and are easy to compare. The labels move to the header. */
-@media (min-width: 760px) {
+@container (min-width: 760px) {
   .table-head,
   .option-row {
     --columns: minmax(0, 2fr) minmax(6.5rem, 1fr) minmax(5.5rem, 0.8fr) minmax(9rem, 1fr) 8rem;
@@ -700,5 +757,39 @@ const single = computed(() => {
   .cost-value {
     font-size: 2rem;
   }
+}
+
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--accent-color);
+  border-radius: var(--radius-md);
+  background: var(--accent-color-alpha);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.verdict svg {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: var(--accent-color);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.verdict strong {
+  font-weight: 700;
+}
+
+.verdict small {
+  display: block;
+  margin-top: 0.125rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
 }
 </style>

@@ -153,3 +153,41 @@ export const rankResults = (
     })
     .map((entry) => entry.result);
 };
+
+export interface Verdict {
+  /** The cheapest complete option and the most expensive one it is compared with. */
+  bestId: string;
+  worstId: string;
+  /** What the cheapest saves: per year for commutes, else per journey. Always positive. */
+  saving: number;
+  /**
+   * Minutes of one journey (a commuting day) the cheapest takes beyond the
+   * other: positive is slower, negative is faster. Null when either is unknown.
+   */
+  extraMinutes: number | null;
+}
+
+/**
+ * One sentence worth of facts: how much the cheapest option saves against the
+ * most expensive one. Needs at least two options with a trustworthy cost that
+ * differ by more than a cent, otherwise there is nothing to say.
+ */
+export const buildVerdict = (results: OptionResult[], trip: TripSettings): Verdict | null => {
+  const priced = results.filter((result) => result.complete);
+  if (priced.length < 2) return null;
+  const byCost = [...priced].sort(
+    (left, right) => comparableCost(left, trip) - comparableCost(right, trip),
+  );
+  const best = byCost[0];
+  const worst = byCost[byCost.length - 1];
+  const saving =
+    trip.tripMode === 'ciclo'
+      ? worst.annual - best.annual
+      : comparableCost(worst, trip) - comparableCost(best, trip);
+  if (saving <= 0.005) return null;
+  const extraMinutes =
+    best.minutesPerJourney === null || worst.minutesPerJourney === null
+      ? null
+      : best.minutesPerJourney - worst.minutesPerJourney;
+  return { bestId: best.optionId, worstId: worst.optionId, saving, extraMinutes };
+};

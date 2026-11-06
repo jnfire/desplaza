@@ -26,7 +26,7 @@ Electricity prices and public transport fares and times have no official source 
 
 ### 1. Domain Layer (`src/core/`)
 - **`travelOptions.ts`**: The shared trip settings (trip type, days per week, active months) and four kinds of travel option, each with a user-chosen name: combustion car, motorbike, electric car and public transport. Creates options with sensible defaults, duplicates them, changes their kind keeping shared fields, gives unique names and sanitizes data read from storage or a shared link.
-- **`comparison.ts`**: For each option on the same trip, the cost per journey, per month and per year, and the minutes per journey. Combustion cars use MITECO or a manual price; electric cars blend home and public charging prices; public transport is a monthly pass or single tickets; vehicles can add wear (€0.08/km by default), tolls per leg and parking per day. Ranks options by cost, time or balance (cost plus time valued at an editable €/h); results with a missing price or time go last.
+- **`comparison.ts`**: For each option on the same trip, the cost per journey, per month and per year, and the minutes per journey. Combustion cars use MITECO or a manual price; electric cars blend home and public charging prices; public transport is a monthly pass or single tickets; vehicles can add wear (€0.08/km by default), tolls per leg and parking per day. Ranks options by cost, time or balance (cost plus time valued at an editable €/h); results with a missing price or time go last. `buildVerdict` compares the cheapest with the most expensive option and returns the saving and the time difference.
 - **`persistence.ts`**: Saves the trip and options in `localStorage` and loads them back, discarding corrupt or invalid data.
 
 ### 2. Services Layer (`src/services/`)
@@ -44,7 +44,7 @@ Electricity prices and public transport fares and times have no official source 
 - **`App.vue`**: Holds the app state. Restores a shared comparison from the URL or the saved one, matches the origin to a MITECO province (Madrid when no match is found), loads fuel prices and routes, computes every option's result, opens the option editor and switches between the desktop and mobile layouts.
 - **`AppHeader.vue`**: Brand, share button and settings toggle.
 - **`TripCard.vue`**: What every option shares: `RouteForm`, trip type, days per week and active months.
-- **`OptionsPanel.vue`**: With one option, the large cost summary; from two options, the ranked comparison with the sort selector, the best option highlighted, the extra cost of the others, and edit, duplicate and delete on every row.
+- **`OptionsPanel.vue`**: With one option, the large cost summary; from two options, the ranked comparison with the sort selector, a verdict line with what the cheapest saves against the most expensive, the best option highlighted, the extra cost of the others, and edit, duplicate and delete on every row.
 - **`OptionEditorModal.vue`**: Dialog to create or edit an option: name, type and only the fields of that type, validation, and a live preview of cost and time.
 - **`BaseModal.vue`**: Accessible dialog shell (focus trap, Escape, focus return, scroll lock, full screen on phones) used by the editor and the sources modal.
 - **`RouteForm.vue`**: Origin and destination fields with debounced Photon suggestions.

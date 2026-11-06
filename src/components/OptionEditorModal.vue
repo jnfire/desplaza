@@ -426,7 +426,7 @@ const kindModel = computed({
 
 .more-settings summary {
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--text-main);
   margin-bottom: 1rem;
@@ -477,7 +477,7 @@ const kindModel = computed({
 
 .btn {
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 600;
   padding: 0.6rem 1.1rem;
   border-radius: var(--radius-md);
@@ -491,9 +491,9 @@ const kindModel = computed({
 }
 
 .btn-primary {
-  background-color: var(--text-main);
+  background-color: var(--accent-color);
   color: var(--bg-body);
-  border-color: var(--text-main);
+  border-color: var(--accent-color);
 }
 
 .btn-primary:hover {

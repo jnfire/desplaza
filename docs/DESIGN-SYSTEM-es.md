@@ -34,8 +34,10 @@ La lista está en `shared-components.json`, junto con el SHA-256 de cada fichero
 | `--text-main` | `#111827` | `#f9fafb` |
 | `--text-muted` | `#6b7280` | `#9ca3af` |
 | `--border-color` | `#e5e7eb` | `#374151` |
-| `--accent-color` | `#000000` | `#ffffff` |
+| `--accent-color` | `#c2410c` (cada app puede elegir el suyo) | `#fdba74` (cada app puede elegir el suyo) |
 | `--error-color` | `#ef4444` | `#f87171` |
+
+El acento es lo único que una app puede cambiar para tener identidad propia sin tocar los componentes compartidos: solo leen `--accent-color` y `--bg-body`. Desplaza usa naranja (`#c2410c` en claro, `#fdba74` en oscuro).
 
 Las tarjetas usan `--bg-surface` sobre `--bg-body`, los controles usan `--bg-body`, y los radios son de 8 px en controles y de 12 px en tarjetas.
 

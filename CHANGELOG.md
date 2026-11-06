@@ -7,6 +7,25 @@ and this project uses [Semantic Versioning](https://semver.org/). The version
 number lives in a single place, `package.json`, and is shown live in the app
 footer.
 
+## [Unreleased]
+
+### Added
+- A verdict line above the comparison: the cheapest option's saving against the
+  most expensive one, per year for commutes or per journey otherwise, and how
+  much longer or shorter it takes.
+
+### Changed
+- Orange accent instead of black and white, in light and dark, including the
+  best option, the sort selector, the route on the map and the save button of
+  the option dialog.
+- One text scale (12, 13.6 and 15.2 px) across the app, shared with the other
+  tools.
+
+### Fixed
+- Between 760 and 900 px wide the comparison switched to a table although its
+  panel was narrow, squeezing each option name into a one-letter column. The
+  switch now depends on the width of the panel, not the window.
+
 ## [2.0.0] - 2026-10-31
 
 Desplaza now compares the real cost and time of several ways of making the

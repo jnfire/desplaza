@@ -162,7 +162,12 @@
     "col_journey": "Pro Fahrt",
     "col_year": "Pro Jahr",
     "col_extra_year": "Differenz pro Jahr",
-    "col_extra_journey": "Differenz pro Fahrt"
+    "col_extra_journey": "Differenz pro Fahrt",
+    "verdict_year": "{best} spart dir {amount} € pro Jahr gegenüber {worst}",
+    "verdict_journey": "{best} spart dir {amount} € pro Fahrt gegenüber {worst}",
+    "verdict_slower": "Es dauert {time} länger {period}.",
+    "verdict_faster": "Und es dauert {time} weniger {period}.",
+    "period_day": "pro Tag"
   },
   "shared": {
     "select_option": "Option auswählen"

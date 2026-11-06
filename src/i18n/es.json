@@ -162,7 +162,12 @@
     "col_journey": "Por viaje",
     "col_year": "Al año",
     "col_extra_year": "Diferencia al año",
-    "col_extra_journey": "Diferencia por viaje"
+    "col_extra_journey": "Diferencia por viaje",
+    "verdict_year": "{best} te ahorra {amount} € al año frente a {worst}",
+    "verdict_journey": "{best} te ahorra {amount} € por viaje frente a {worst}",
+    "verdict_slower": "Tardas {time} más {period}.",
+    "verdict_faster": "Y además tardas {time} menos {period}.",
+    "period_day": "al día"
   },
   "shared": {
     "select_option": "Selecciona una opción"

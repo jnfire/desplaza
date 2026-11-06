@@ -162,7 +162,12 @@
     "col_journey": "Par trajet",
     "col_year": "Par an",
     "col_extra_year": "Écart par an",
-    "col_extra_journey": "Écart par trajet"
+    "col_extra_journey": "Écart par trajet",
+    "verdict_year": "{best} vous fait économiser {amount} € par an par rapport à {worst}",
+    "verdict_journey": "{best} vous fait économiser {amount} € par trajet par rapport à {worst}",
+    "verdict_slower": "Cela prend {time} de plus {period}.",
+    "verdict_faster": "Et cela prend {time} de moins {period}.",
+    "period_day": "par jour"
   },
   "shared": {
     "select_option": "Sélectionnez une option"

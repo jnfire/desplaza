@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   balanceScore,
+  buildVerdict,
   calculateOption,
   comparableCost,
   rankResults,
@@ -190,5 +191,47 @@ describe('ranking', () => {
       'ev',
       'no-time',
     ]);
+  });
+});
+
+describe('buildVerdict', () => {
+  const result = (id: string, monthly: number, minutes: number | null, complete = true) =>
+    ({
+      optionId: id,
+      perJourney: monthly / 20,
+      monthly,
+      annual: monthly * 12,
+      minutesPerJourney: minutes,
+      energyPrice: null,
+      complete,
+    }) satisfies OptionResult;
+
+  it('compares the cheapest with the most expensive, per year for commutes', () => {
+    const verdict = buildVerdict(
+      [result('a', 100, 60), result('b', 50, 90), result('c', 70, 60)],
+      commute,
+    );
+
+    expect(verdict).toEqual({ bestId: 'b', worstId: 'a', saving: 600, extraMinutes: 30 });
+  });
+
+  it('reports the saving per journey outside commutes', () => {
+    const oneWay: TripSettings = { ...commute, tripMode: 'ida' };
+    const verdict = buildVerdict([result('a', 100, 30), result('b', 40, 30)], oneWay);
+
+    expect(verdict?.saving).toBeCloseTo(3, 6);
+    expect(verdict?.extraMinutes).toBe(0);
+  });
+
+  it('has no time difference when either time is unknown', () => {
+    expect(
+      buildVerdict([result('a', 100, null), result('b', 50, 30)], commute)?.extraMinutes,
+    ).toBeNull();
+  });
+
+  it('says nothing with a single option, a tie, or a missing price', () => {
+    expect(buildVerdict([result('a', 100, 30)], commute)).toBeNull();
+    expect(buildVerdict([result('a', 100, 30), result('b', 100, 40)], commute)).toBeNull();
+    expect(buildVerdict([result('a', 100, 30), result('b', 10, 40, false)], commute)).toBeNull();
   });
 });

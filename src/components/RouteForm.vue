@@ -293,7 +293,7 @@ const handleDestKeydown = (event: KeyboardEvent) => {
 }
 
 label {
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-main);
 }
@@ -370,7 +370,7 @@ input:focus-visible {
 .suggestion-item {
   padding: 0.75rem 1rem;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   border-bottom: 1px solid var(--border-color);
   transition: background-color 0.15s ease;
   color: var(--text-main);
