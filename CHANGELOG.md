@@ -7,7 +7,7 @@ and this project uses [Semantic Versioning](https://semver.org/). The version
 number lives in a single place, `package.json`, and is shown live in the app
 footer.
 
-## [Unreleased]
+## [2.1.0] - 2026-11-06
 
 ### Added
 - A verdict line above the comparison: the cheapest option's saving against the
