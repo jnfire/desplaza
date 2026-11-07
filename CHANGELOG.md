@@ -20,6 +20,7 @@ footer.
   the option dialog.
 - One text scale (12, 13.6 and 15.2 px) across the app, shared with the other
   tools.
+- The arrow of the selects is drawn with CSS instead of a text glyph, so it keeps the same size and weight in every browser and animates cleanly when the list opens.
 
 ### Fixed
 - Between 760 and 900 px wide the comparison switched to a table although its
