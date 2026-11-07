@@ -19,7 +19,7 @@ Versiones: la v1.0.0 y la v1.0.1 (agosto de 2026) se quedan como estaban; la com
 | Agosto de 2026 | Primer commit y primeras versiones públicas (v1.0.0 y v1.0.1): un coche, los precios del MITECO, una ruta en un mapa y el coste mensual y anual. Una rama con trabajo de accesibilidad y usabilidad se quedó sin integrar. |
 | Octubre de 2026 | Software libre (AGPL-3.0), sin Google Analytics ni banner de cookies, documentación honesta de los servicios de terceros, un sistema de diseño compartido con las otras dos herramientas y CI que condiciona cada despliegue. Se integró la rama de accesibilidad: la búsqueda de direcciones pasó a ser un combobox accesible con teclado y la ventana de fuentes un diálogo de verdad. |
 | Octubre de 2026 | Comparativa de varias opciones sobre el mismo trayecto: coches, una moto, un coche eléctrico y transporte público, ordenadas por coste, tiempo o equilibrio, editadas en un modal y mostradas como tabla en pantallas anchas. Publicada como v2.0.0, sobre la v1.0.0 y la v1.0.1. |
-| Noviembre de 2026 | Un aspecto nuevo y una frase de veredicto: acento naranja en claro y oscuro, una escala de texto común con las otras dos herramientas, una frase sobre la comparativa con lo que ahorra la opción más barata frente a la más cara y cuánto más tarda, y el arreglo de la tabla que aplastaba los nombres entre 760 y 900 px. Publicada como v2.1.0. |
+| Noviembre de 2026 | Un aspecto nuevo y una frase de veredicto: acento verde hoja en claro y oscuro, una escala de texto común con las otras dos herramientas, una frase sobre la comparativa con lo que ahorra la opción más barata frente a la más cara y cuánto más tarda, y el arreglo de la tabla que aplastaba los nombres entre 760 y 900 px. Publicada como v2.1.0. |
 
 ## En cifras
 

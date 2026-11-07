@@ -19,7 +19,7 @@ Releases: v1.0.0 and v1.0.1 (August 2026) stay as they were; the comparison of o
 | August 2026 | First commit and first public versions (v1.0.0 and v1.0.1): one car, MITECO fuel prices, a route on a map and the monthly and yearly cost. A branch with accessibility and usability work stayed unmerged. |
 | October 2026 | Free software (AGPL-3.0), no Google Analytics or cookie banner, honest documentation of the third-party services, one design system shared with the other two tools and CI that gates every deploy. The accessibility branch was brought in: the address search became a keyboard-accessible combobox and the sources dialog a real dialog. |
 | October 2026 | Comparison of several options on the same trip: cars, a motorbike, an electric car and public transport, ranked by cost, time or balance, edited in a dialog and shown as a table on wide screens. Published as v2.0.0, on top of v1.0.0 and v1.0.1. |
-| November 2026 | A new look and a verdict line: orange accent in light and dark, one text scale shared with the other two tools, a sentence above the comparison with what the cheapest option saves against the most expensive one and how much longer it takes, and a fix for the table that squeezed option names between 760 and 900 px. Published as v2.1.0. |
+| November 2026 | A new look and a verdict line: leaf green accent in light and dark, one text scale shared with the other two tools, a sentence above the comparison with what the cheapest option saves against the most expensive one and how much longer it takes, and a fix for the table that squeezed option names between 760 and 900 px. Published as v2.1.0. |
 
 ## In numbers
 

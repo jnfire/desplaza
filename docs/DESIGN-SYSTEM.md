@@ -34,10 +34,10 @@ The list lives in `shared-components.json`, together with the SHA-256 of each fi
 | `--text-main` | `#111827` | `#f9fafb` |
 | `--text-muted` | `#6b7280` | `#9ca3af` |
 | `--border-color` | `#e5e7eb` | `#374151` |
-| `--accent-color` | `#c2410c` (each app may choose its own) | `#fdba74` (each app may choose its own) |
+| `--accent-color` | `#627a03` (each app may choose its own) | `#93b403` (each app may choose its own) |
 | `--error-color` | `#ef4444` | `#f87171` |
 
-The accent color is the one thing an app can change to have its own identity without touching the shared components: they only read `--accent-color` and `--bg-body`. Desplaza uses orange (`#c2410c` in light, `#fdba74` in dark).
+The accent color is the one thing an app can change to have its own identity without touching the shared components: they only read `--accent-color` and `--bg-body`. Desplaza uses leaf green (`#627a03` in light, `#93b403` in dark).
 
 Cards use `--bg-surface` over `--bg-body`, controls use `--bg-body`, and radii are 8 px for controls and 12 px for cards.
 

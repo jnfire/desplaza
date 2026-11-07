@@ -15,8 +15,8 @@ footer.
   much longer or shorter it takes.
 
 ### Changed
-- Orange accent instead of black and white, in light and dark, including the
-  best option, the sort selector, the route on the map and the save button of
+- Leaf green accent instead of black and white, with the same hue in light and
+  dark, including the best option, the sort selector, the route on the map and the save button of
   the option dialog.
 - One text scale (12, 13.6 and 15.2 px) across the app, shared with the other
   tools.
