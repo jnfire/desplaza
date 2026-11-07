@@ -521,7 +521,7 @@ const shareRoute = async () => {
   color: var(--bg-body);
   border-radius: var(--radius-md);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .toast-action {
