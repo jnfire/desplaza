@@ -40,7 +40,3 @@ Todas las imágenes están en esta carpeta y en [`../screenshots`](../screenshot
 - [`desplaza-evolution-desktop.png`](desplaza-evolution-desktop.png): Antes y ahora, en escritorio
 - [`desplaza-evolution-mobile.png`](desplaza-evolution-mobile.png): Antes y ahora, en el móvil
 - [`desplaza-editor.png`](../screenshots/desplaza-editor.png): El modal para crear o editar una opción
-
-## Cómo se ha construido
-
-Diseñado y dirigido por [Javier Nicolás Pérez Mesa](https://github.com/jnfire): el producto, la arquitectura y las decisiones de diseño son del autor. La IA ha formado parte del trabajo como un experimento deliberado para aprender tecnología nueva: Gemini CLI, Antigravity, GitHub Copilot y Claude Code, probados uno tras otro. Empezó con pequeñas intervenciones y, a medida que avanzaba el experimento, fue ganando autonomía, siempre mediante pull requests que revisa el autor. Los commits hechos con Claude Code llevan un `Co-Authored-By`.
